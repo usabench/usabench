@@ -1,0 +1,14 @@
+[project]
+name = "usabench"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "litellm>=1.78.5",
+    "numpy>=2.3.4",
+    "pandas>=2.3.3",
+    "pydantic>=2.12.3",
+    "python-dotenv>=1.1.1",
+    "sqlparse>=0.5.3",
+]
