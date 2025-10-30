@@ -1,0 +1,6224 @@
+{
+  "generation_metadata": {
+    "timestamp": "2025-09-01T13:10:19.423875",
+    "generator_version": "enhanced_v2",
+    "total_questions": 166,
+    "successful_generations": 166,
+    "success_rate": 1.0,
+    "improvement_over_original": 125,
+    "difficulty_breakdown": {
+      "easy": 11,
+      "medium": 48,
+      "hard": 107
+    },
+    "method_breakdown": {
+      "single_query": 139,
+      "comparative_analysis": 11,
+      "fallback_workflow": 2,
+      "trend_analysis": 12,
+      "multi_step_analysis": 1,
+      "pattern_discovery": 1
+    },
+    "workflow_breakdown": {
+      "single": 139,
+      "comparative": 11,
+      "fallback": 2,
+      "sequential": 12,
+      "multi_step": 1,
+      "pattern_discovery": 1
+    },
+    "function_usage": {
+      "query_economic_data": 126,
+      "query_budget_data": 17,
+      "compare_categories": 11,
+      "analyze_trends": 13,
+      "identify_patterns": 1
+    }
+  },
+  "available_functions": {
+    "query_budget_data": {
+      "description": "Query government budget and spending data",
+      "parameters": {
+        "function_name": "str - Budget function name (optional)",
+        "fiscal_year": "int - Specific fiscal year (optional)",
+        "year_range": "tuple - Year range (optional)",
+        "min_amount": "float - Minimum spending amount (optional)",
+        "max_amount": "float - Maximum spending amount (optional)",
+        "aggregation": "str - sum, avg, count, max, min"
+      }
+    },
+    "query_economic_data": {
+      "description": "Query economic indicators and time series data",
+      "parameters": {
+        "category": "str - Economic category (optional)",
+        "source": "str - Data source (BLS, BEA, etc.)",
+        "year_range": "tuple - (start_year, end_year)",
+        "indicator_type": "str - CPI, GDP, employment, etc.",
+        "aggregation": "str - Statistical operation"
+      }
+    },
+    "analyze_trends": {
+      "description": "Analyze trends and patterns in data",
+      "parameters": {
+        "data_type": "str - budget, economic, or combined",
+        "time_period": "tuple - (start, end)",
+        "analysis_type": "str - trend, correlation, comparison",
+        "categories": "list - Categories to analyze",
+        "metrics": "list - Specific metrics to calculate"
+      }
+    },
+    "compare_categories": {
+      "description": "Compare different categories or time periods",
+      "parameters": {
+        "category1": "str - First category to compare",
+        "category2": "str - Second category to compare",
+        "metric": "str - Comparison metric",
+        "time_period": "tuple - Time period for comparison",
+        "comparison_type": "str - absolute, relative, percentage"
+      }
+    },
+    "calculate_aggregations": {
+      "description": "Calculate aggregated values and statistics",
+      "parameters": {
+        "data_source": "str - Data source to aggregate",
+        "aggregation_type": "str - sum, average, growth_rate, etc.",
+        "groupby": "str - Group by field",
+        "filters": "dict - Filter conditions",
+        "time_window": "str - Time aggregation window"
+      }
+    },
+    "identify_patterns": {
+      "description": "Identify patterns, cycles, and relationships in data",
+      "parameters": {
+        "data_sources": "list - Data sources to analyze",
+        "pattern_type": "str - cyclical, seasonal, correlation, anomaly",
+        "time_horizon": "str - Analysis time horizon",
+        "confidence_threshold": "float - Pattern detection threshold"
+      }
+    },
+    "explain_relationships": {
+      "description": "Analyze causal and correlational relationships",
+      "parameters": {
+        "dependent_variable": "str - Variable to explain",
+        "independent_variables": "list - Explanatory variables",
+        "analysis_method": "str - correlation, regression, causality",
+        "control_variables": "list - Variables to control for"
+      }
+    },
+    "synthesize_insights": {
+      "description": "Synthesize complex multi-domain insights",
+      "parameters": {
+        "data_domains": "list - Domains to synthesize",
+        "synthesis_type": "str - integration, comparison, causality",
+        "research_question": "str - Core question to address",
+        "evidence_sources": "list - Supporting evidence types"
+      }
+    }
+  },
+  "ground_truth_data": [
+    {
+      "question_id": 17,
+      "question_text": "What economic indicators show double-digit percentage changes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 60,
+      "question_text": "How do economic cycles affect different types of government spending?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 63,
+      "question_text": "How do quarterly employment patterns vary across different industries?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "source": "BLS",
+            "indicator_type": "employment",
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "source": "BLS",
+              "indicator_type": "employment",
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 68,
+      "question_text": "How do inflation patterns correlate with government spending changes?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 74,
+      "question_text": "How do unexpected economic events affect budget reallocation patterns?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 77,
+      "question_text": "How do emerging industries appear in GDP contribution data over time?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "source": "BEA",
+            "indicator_type": "GDP",
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "source": "BEA",
+              "indicator_type": "GDP",
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 80,
+      "question_text": "How do different sectors show maturation vs. expansion patterns?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 85,
+      "question_text": "How do different economic sectors respond to policy changes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 92,
+      "question_text": "What factors explain why certain industries maintain stable GDP contributions while others show high volatility, and how do government policies influence these patterns?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "source": "BEA",
+            "indicator_type": "GDP",
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "source": "BEA",
+              "indicator_type": "GDP",
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 162,
+      "question_text": "How do employment classifications align with industry GDP categories?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "source": "BLS",
+            "indicator_type": "employment",
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "source": "BLS",
+              "indicator_type": "employment",
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 165,
+      "question_text": "How do different datasets define similar economic concepts?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "easy",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 178,
+      "question_text": "How do pre-crisis and post-crisis spending priorities typically differ?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 196,
+      "question_text": "How do spending patterns differ under different policy regimes?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 214,
+      "question_text": "How do nominal vs. real comparisons differ most significantly?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 262,
+      "question_text": "How do different exchange rate regimes affect economic comparisons?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 264,
+      "question_text": "How do productivity comparisons vary by international standards used?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {},
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {},
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "fallback",
+      "success_criteria": [
+        "Basic data query executed successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "fallback_workflow"
+    },
+    {
+      "question_id": 277,
+      "question_text": "How do leading, coincident, and lagging indicators create sequential patterns?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 280,
+      "question_text": "How do seasonal patterns evolve or shift over longer time periods?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 283,
+      "question_text": "How do patterns in volatility clustering manifest across different economic series?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 287,
+      "question_text": "What patterns indicate anticipatory vs. reactive policy responses?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 292,
+      "question_text": "How do announcement effects create patterns before actual policy implementation?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 293,
+      "question_text": "What patterns indicate structural transformation vs. cyclical variation?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 295,
+      "question_text": "How do patterns in discretionary spending reveal political economic cycles?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 301,
+      "question_text": "How do spillover effects create patterns across related economic sectors?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 303,
+      "question_text": "What patterns indicate causal relationships vs. mere correlations?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 304,
+      "question_text": "How do network effects manifest in patterns across economic indicators?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 307,
+      "question_text": "How do patterns in economic inequality manifest across different indicators?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 310,
+      "question_text": "How do patterns in budget allocation reveal institutional constraints?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 313,
+      "question_text": "How do compositional shifts create patterns in aggregate measurements?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 321,
+      "question_text": "How do black swan events create distinctive patterns in economic data?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 323,
+      "question_text": "What patterns indicate data quality issues vs. genuine economic phenomena?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 324,
+      "question_text": "How do patterns in revisions reveal initial measurement challenges?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 327,
+      "question_text": "How do turning point patterns differ across various economic indicators?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 330,
+      "question_text": "How do patterns in policy regime changes affect economic indicators?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 332,
+      "question_text": "What patterns indicate successful vs. unsuccessful economic transitions?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 333,
+      "question_text": "How do patterns in institutional changes affect economic measurements?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 336,
+      "question_text": "How do different frequency cycles interact in economic data?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 339,
+      "question_text": "How do amplitude and frequency patterns change over time?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 340,
+      "question_text": "What patterns indicate cycle synchronization vs. desynchronization?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 342,
+      "question_text": "How do patterns in cycle transmission manifest across sectors?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 345,
+      "question_text": "How do cyclical patterns differ in strength across economic variables?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 346,
+      "question_text": "What patterns indicate positive vs. negative feedback mechanisms?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 347,
+      "question_text": "How do amplification patterns manifest in economic crisis propagation?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 350,
+      "question_text": "How do patterns in expectations formation affect economic outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 352,
+      "question_text": "What patterns indicate the presence of economic accelerators or brakes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 353,
+      "question_text": "How do patterns in policy responses create feedback effects?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 356,
+      "question_text": "How do patterns in economic networks reveal systemic vulnerabilities?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 357,
+      "question_text": "What patterns indicate increasing vs. decreasing economic integration?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 359,
+      "question_text": "How do hub-and-spoke patterns manifest in economic relationships?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 362,
+      "question_text": "How do patterns in economic connectivity evolve over time?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 363,
+      "question_text": "What patterns indicate robust vs. fragile network structures?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 365,
+      "question_text": "How do patterns in network centrality relate to economic importance?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 366,
+      "question_text": "What patterns indicate economic learning and adaptation?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 367,
+      "question_text": "How do patterns in innovation diffusion manifest in economic data?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 370,
+      "question_text": "How do patterns in economic diversity relate to system resilience?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 372,
+      "question_text": "What patterns indicate successful vs. failed economic adaptations?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 373,
+      "question_text": "How do patterns in economic experimentation affect outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 379,
+      "question_text": "How do patterns in economic geography evolve over time?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 380,
+      "question_text": "What patterns indicate agglomeration vs. dispersion forces?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 385,
+      "question_text": "How do patterns in spatial inequality manifest in economic data?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 387,
+      "question_text": "How do patterns in forecast accuracy vary across indicators?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 389,
+      "question_text": "What patterns indicate the presence of economic signals vs. noise?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 390,
+      "question_text": "How do patterns in data revisions reveal information discovery?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 393,
+      "question_text": "How do patterns in announcement effects reveal information value?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 395,
+      "question_text": "What patterns indicate efficient vs. inefficient information processing?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 397,
+      "question_text": "How do patterns change when crossing critical economic boundaries?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 399,
+      "question_text": "What patterns indicate regime-dependent economic relationships?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 400,
+      "question_text": "How do patterns in economic constraints manifest in the data?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "medium",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 401,
+      "question_text": "How do interactions between monetary policy, fiscal policy, and economic indicators create emergent patterns that couldn't be predicted from individual components, and what does this reveal about economic system complexity?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 402,
+      "question_text": "What evidence exists for tipping points in economic systems where small changes in government spending or policy create disproportionately large effects, and how can these thresholds be identified in advance?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 403,
+      "question_text": "How do different economic measurement frameworks capture or miss important aspects of economic reality, and what blind spots exist in our current data collection systems?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 404,
+      "question_text": "What role do expectations and forward-looking behavior play in creating self-fulfilling or self-defeating patterns in economic data, and how can policy account for these dynamics?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 405,
+      "question_text": "How do the various time scales of economic phenomena - from high-frequency trading to generational wealth transfers - interact to create the patterns we observe in government and economic data?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 407,
+      "question_text": "How can the relationship between government spending composition and economic outcomes inform optimal policy design for different economic objectives?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 408,
+      "question_text": "What patterns in the data suggest that certain economic policies work better in combination than in isolation, and how should this influence policy sequencing?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 409,
+      "question_text": "How do implementation lags, announcement effects, and expectations formation affect the measured impact of economic policies, and what does this mean for policy evaluation?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 410,
+      "question_text": "What evidence exists for diminishing, constant, or increasing returns to various types of government spending, and how should this influence budget allocation decisions?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 411,
+      "question_text": "What patterns in economic data reveal systemic vulnerabilities before they manifest as crises, and how can early warning systems be designed around these indicators?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 412,
+      "question_text": "How do different economic structures and policy frameworks affect system resilience to various types of shocks, and what trade-offs exist between efficiency and robustness?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 414,
+      "question_text": "How do patterns of economic interconnection create both opportunities for growth and channels for crisis transmission, and what does this mean for policy design?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 415,
+      "question_text": "What can historical patterns teach us about building economic systems that are antifragile - growing stronger from stress rather than merely surviving it?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 416,
+      "question_text": "How can we distinguish between correlation and causation in the complex relationships between government spending, policy interventions, and economic outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 417,
+      "question_text": "What methods can untangle the multiple, overlapping causes of economic phenomena when various policies and external factors operate simultaneously?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 418,
+      "question_text": "How do feedback loops and circular causality in economic systems complicate traditional cause-and-effect analysis, and what alternative frameworks might be more appropriate?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 419,
+      "question_text": "What role does economic structure play in determining whether relationships observed in one period or context will hold in another?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 420,
+      "question_text": "How can counterfactual analysis using economic data help evaluate what would have happened under alternative policy scenarios?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 421,
+      "question_text": "What combinations of leading indicators provide the most reliable predictions of future economic conditions and policy needs?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 422,
+      "question_text": "How do structural breaks and regime changes in economic relationships affect the reliability of forecasting models, and how can models adapt to these changes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 423,
+      "question_text": "What patterns in forecast errors reveal systematic biases in economic prediction, and how can these biases be corrected?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 424,
+      "question_text": "How can machine learning and pattern recognition techniques improve economic forecasting while maintaining interpretability for policy makers?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 425,
+      "question_text": "What are the fundamental limits to economic prediction given the reflexive nature of economic systems where predictions can influence outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 426,
+      "question_text": "How do patterns in government spending and economic policy reveal the influence of political cycles, institutional constraints, and interest group dynamics?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 427,
+      "question_text": "What evidence exists for the economic effects of different institutional arrangements, and how do these effects manifest in measurable outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 428,
+      "question_text": "How do patterns of policy persistence and change reveal the role of institutional inertia vs. political responsiveness in economic governance?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 429,
+      "question_text": "What can economic data tell us about the effectiveness of different mechanisms for economic coordination - markets, hierarchies, networks, and hybrids?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 430,
+      "question_text": "How do formal rules and informal norms interact to shape the economic patterns we observe, and what does this mean for policy design?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 431,
+      "question_text": "How do different patterns of government spending and economic policy affect the distribution of economic opportunities and outcomes across society?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 432,
+      "question_text": "What evidence exists for trade-offs vs. complementarities between economic efficiency and equity, and how do these relationships vary across contexts?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 433,
+      "question_text": "How can economic data reveal both visible and hidden forms of economic inequality, and what are the dynamic effects of these inequalities?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 434,
+      "question_text": "What patterns in economic mobility and opportunity can be discerned from the data, and what policies most effectively promote economic inclusion?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 435,
+      "question_text": "How do different concepts and measurements of economic fairness lead to different policy conclusions, and how can these perspectives be reconciled?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 436,
+      "question_text": "How do patterns in economic data reveal the process of technological adoption and its effects on productivity, employment, and economic structure?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "source": "BLS",
+            "indicator_type": "employment",
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "source": "BLS",
+              "indicator_type": "employment",
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 437,
+      "question_text": "What role does government spending and policy play in fostering or hindering innovation, and how can these effects be measured and optimized?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for budget data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 438,
+      "question_text": "How do disruptive technologies create patterns of creative destruction in economic data, and what does this mean for policy adaptation?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 439,
+      "question_text": "What evidence exists for the economic effects of different innovation systems and policies, and how do these effects propagate through the economy?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 440,
+      "question_text": "How can economic data help identify emerging technologies and sectors before they become economically significant?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 441,
+      "question_text": "How do patterns in economic data reveal the relationship between economic activity, government policy, and environmental outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 442,
+      "question_text": "What evidence exists for the economic costs and benefits of environmental policies, and how do these effects distribute across sectors and time?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 443,
+      "question_text": "How can economic data help identify sustainable vs. unsustainable economic patterns, and what early warning signs exist?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 444,
+      "question_text": "What role do externalities and market failures play in creating observed economic patterns, and how can policy interventions address these issues?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 445,
+      "question_text": "How do different frameworks for valuing environmental and social goods affect economic measurement and policy conclusions?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 446,
+      "question_text": "How do patterns in domestic economic data reveal the influence of global economic forces, and what does this mean for national policy autonomy?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 447,
+      "question_text": "What evidence exists for economic spillovers and contagion effects across countries, and how can these be identified and managed?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 448,
+      "question_text": "How do different models of economic integration affect domestic economic patterns and policy effectiveness?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 449,
+      "question_text": "What can comparative analysis of economic patterns across countries reveal about best practices and policy transferability?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 450,
+      "question_text": "How do global economic cycles and trends constrain or enable domestic economic policy choices?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 451,
+      "question_text": "How do patterns in economic data reveal the influence of behavioral factors like confidence, sentiment, and animal spirits?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 452,
+      "question_text": "What evidence exists for systematic behavioral biases in economic decision-making, and how do these affect policy transmission?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 453,
+      "question_text": "How do framing effects and reference points influence the economic patterns we observe, and what does this mean for policy communication?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 454,
+      "question_text": "What role do social norms and cultural factors play in shaping economic patterns, and how stable are these influences?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 455,
+      "question_text": "How can behavioral insights improve the design and implementation of economic policies?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 456,
+      "question_text": "How do different types of uncertainty - risk, ambiguity, and radical uncertainty - manifest in economic patterns and affect policy decisions?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 457,
+      "question_text": "What patterns in economic data reveal changes in risk appetite and uncertainty levels, and how do these affect economic dynamics?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 458,
+      "question_text": "How can scenario analysis and stress testing using economic data help prepare for various contingencies?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 459,
+      "question_text": "What evidence exists for the economic costs of uncertainty, and how can policy reduce or manage these costs?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 460,
+      "question_text": "How do patterns in tail risks and extreme events challenge traditional economic analysis and policy frameworks?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 461,
+      "question_text": "How do patterns in economic data reveal the long-term consequences of current policies, and what intergenerational trade-offs exist?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 462,
+      "question_text": "What evidence exists for economic hysteresis where temporary shocks have permanent effects, and what does this mean for policy?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 463,
+      "question_text": "How can economic data help evaluate the sustainability of current economic trajectories and identify necessary course corrections?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 464,
+      "question_text": "What role do compound effects and slow-moving variables play in long-term economic outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 465,
+      "question_text": "How do different discount rates and time horizons affect economic evaluation and policy choices?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 466,
+      "question_text": "How do limitations and biases in economic measurement affect our understanding of economic reality and policy effectiveness?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 467,
+      "question_text": "What patterns in data revisions and measurement errors reveal systematic challenges in economic statistics?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 468,
+      "question_text": "How can alternative and complementary indicators provide a more complete picture of economic well-being?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 469,
+      "question_text": "What are the implications of using different methodological approaches to analyze the same economic phenomena?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 470,
+      "question_text": "How do changes in economic structure challenge traditional measurement frameworks and require new approaches?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 471,
+      "question_text": "What patterns in economic data provide early warning of impending crises, and how reliable are these signals?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 472,
+      "question_text": "How do different crisis response strategies affect economic recovery patterns, and what determines their effectiveness?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 473,
+      "question_text": "What evidence exists for the optimal timing, magnitude, and composition of crisis interventions?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {},
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {},
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "fallback",
+      "success_criteria": [
+        "Basic data query executed successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "fallback_workflow"
+    },
+    {
+      "question_id": 474,
+      "question_text": "How do economic systems learn and adapt from crises, and what patterns indicate successful vs. failed adaptations?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 475,
+      "question_text": "What role do automatic stabilizers vs. discretionary interventions play in crisis response, and how can they be optimized?",
+      "function_sequence": [
+        {
+          "function_name": "compare_categories",
+          "arguments": {
+            "category1": "Primary Category",
+            "category2": "Secondary Category",
+            "metric": "total_value",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "comparison_type": "relative"
+          },
+          "expected_response": {
+            "comparison_result": "analysis_complete"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "comparative",
+      "success_criteria": [
+        "Data retrieval functions called for comparison subjects",
+        "Comparison function properly configured",
+        "Analysis results provide meaningful comparison"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "comparative_analysis"
+    },
+    {
+      "question_id": 476,
+      "question_text": "How do patterns in economic data reveal coordination successes and failures in economic policy?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 477,
+      "question_text": "What evidence exists for the benefits of policy coordination across different levels of government and policy domains?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "combined",
+            "analysis_type": "comprehensive",
+            "time_period": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "multi_step",
+      "success_criteria": [
+        "Multi-step workflow executed in logical order",
+        "Each step builds on previous results",
+        "Final analysis integrates all data sources"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "multi_step_analysis"
+    },
+    {
+      "question_id": 478,
+      "question_text": "How do collective action problems manifest in economic patterns, and what mechanisms can address them?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 479,
+      "question_text": "What role do economic expectations and coordination devices play in determining economic outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 480,
+      "question_text": "How can economic data help design mechanisms for better economic coordination?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 481,
+      "question_text": "What patterns characterize successful vs. unsuccessful economic transformations, and what factors determine the outcomes?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 482,
+      "question_text": "How do different transition strategies affect the path and endpoint of economic change?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 483,
+      "question_text": "What evidence exists for the costs and benefits of gradual vs. rapid economic transitions?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 484,
+      "question_text": "How do patterns in economic data reveal the political economy of reform and resistance to change?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 485,
+      "question_text": "What role do complementarities and sequencing play in successful economic transformations?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 486,
+      "question_text": "How do simple rules and interactions at the micro level create complex patterns at the macro level, and what does this mean for policy?",
+      "function_sequence": [
+        {
+          "function_name": "analyze_trends",
+          "arguments": {
+            "data_type": "economic",
+            "time_period": [
+              2014,
+              2024
+            ],
+            "analysis_type": "trend",
+            "categories": [
+              "primary_category"
+            ],
+            "metrics": [
+              "growth_rate",
+              "volatility"
+            ]
+          },
+          "expected_response": {
+            "trend_analysis": "completed"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "sequential",
+      "success_criteria": [
+        "Time series data properly retrieved",
+        "Trend analysis function configured correctly",
+        "Temporal patterns identified"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "trend_analysis"
+    },
+    {
+      "question_id": 487,
+      "question_text": "What evidence exists for emergent properties in economic systems that cannot be reduced to individual components?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 488,
+      "question_text": "How do patterns of self-organization in economic systems both enable and constrain policy interventions?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 489,
+      "question_text": "What role does economic complexity play in determining growth, resilience, and adaptability?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 490,
+      "question_text": "How can complexity science improve our understanding and management of economic systems?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 491,
+      "question_text": "How do patterns in economic data reveal learning processes at individual, organizational, and system levels?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 492,
+      "question_text": "What evidence exists for adaptive expectations and learning in economic behavior, and how does this affect policy transmission?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 493,
+      "question_text": "How do economic systems balance exploration of new possibilities with exploitation of known strategies?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 494,
+      "question_text": "What patterns indicate successful vs. unsuccessful adaptation to changing economic conditions?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 495,
+      "question_text": "How can policy frameworks incorporate learning and adaptation rather than assuming static relationships?",
+      "function_sequence": [
+        {
+          "function_name": "query_budget_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "budget",
+            "records_returned": 150,
+            "query_parameters": {},
+            "execution_time": "0.8s"
+          },
+          "response_type": "data"
+        },
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {},
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        },
+        {
+          "function_name": "identify_patterns",
+          "arguments": {
+            "data_sources": [
+              "budget_data",
+              "economic_data"
+            ],
+            "pattern_type": "correlation",
+            "time_horizon": "2014-2024",
+            "confidence_threshold": 0.7
+          },
+          "expected_response": {
+            "patterns_identified": "success"
+          },
+          "response_type": "analysis"
+        }
+      ],
+      "workflow_type": "pattern_discovery",
+      "success_criteria": [
+        "Multiple data sources accessed",
+        "Pattern identification function properly configured",
+        "Significant patterns detected and reported"
+      ],
+      "evaluation_method": "multi_step_workflow_validation",
+      "difficulty": "hard",
+      "generation_method": "pattern_discovery"
+    },
+    {
+      "question_id": 496,
+      "question_text": "How can synthesis across multiple studies and datasets provide more robust conclusions about economic relationships?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 497,
+      "question_text": "What patterns emerge when analyzing the analysis - looking at how economic research and policy evaluation have evolved?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 498,
+      "question_text": "How do different theoretical frameworks and methodological approaches lead to different interpretations of the same economic patterns?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 499,
+      "question_text": "What are the most important unresolved questions in economic analysis based on current data patterns and gaps?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    },
+    {
+      "question_id": 500,
+      "question_text": "How can we build more integrated and holistic frameworks for understanding the complex interactions between government policy, economic outcomes, and social welfare?",
+      "function_sequence": [
+        {
+          "function_name": "query_economic_data",
+          "arguments": {
+            "year_range": [
+              2014,
+              2024
+            ]
+          },
+          "expected_response": {
+            "status": "success",
+            "data_type": "economic",
+            "records_returned": 200,
+            "query_parameters": {
+              "year_range": [
+                2014,
+                2024
+              ]
+            },
+            "execution_time": "1.2s"
+          },
+          "response_type": "data"
+        }
+      ],
+      "workflow_type": "single",
+      "success_criteria": [
+        "Correct function selected for economic data query",
+        "Function arguments match question requirements",
+        "Query executes successfully"
+      ],
+      "evaluation_method": "single_function_accuracy",
+      "difficulty": "hard",
+      "generation_method": "single_query"
+    }
+  ]
+}
