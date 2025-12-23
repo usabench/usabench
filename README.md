@@ -312,10 +312,10 @@ EVALUATION RESULTS SUMMARY
 
 **USABench** - Benchmarking AI on Government Data
 
+![USAFacts](/usafacts_logo_magenta.svg)
 
 Project support provided by [USAFacts](https://www.usafacts.org). 
 
-[![USAFacts](/usafacts_logo_magenta.svg)
 
 
 # Disclaimer
