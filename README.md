@@ -1,7 +1,6 @@
 # USABench: Government Data Analysis Benchmark
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![LiteLLM](https://img.shields.io/badge/LiteLLM-Supported-green.svg)](https://github.com/BerriAI/litellm)
 
 A comprehensive benchmark framework for evaluating language models on government data analysis tasks, featuring Text2SQL evaluation and function calling evaluation with real API execution.
