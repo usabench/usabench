@@ -315,7 +315,7 @@ EVALUATION RESULTS SUMMARY
 
 Project support provided by [USAFacts](https://www.usafacts.org). 
 
-[USAFacts](/usafacts_logo_magenta.svg)
+[![USAFacts](/usafacts_logo_magenta.svg)
 
 
 # Disclaimer
