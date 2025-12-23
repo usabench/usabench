@@ -254,9 +254,6 @@ python3 -m USABench --evaluation-type full --model gpt-4o \
 # Option 1: Use .env file (recommended)
 # Create .env file with your API keys:
 cat > .env << EOF
-OPENAI_API_KEY=your-key
-BLS_API_KEY=your-bls-key
-BEA_API_KEY=your-bea-key
 EOF
 
 # Option 2: Export environment variables
@@ -318,7 +315,7 @@ EVALUATION RESULTS SUMMARY
 
 Project support provided by [USAFacts](https://www.usafacts.org). 
 
-[]()
+[USAFacts](/usafacts_logo_magenta.svg)
 
 
 # Disclaimer
