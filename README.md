@@ -11,9 +11,17 @@ A comprehensive benchmark framework for evaluating language models on government
 - **Text2SQL Evaluation**: 293 questions with targeted schema injection and binary metrics
 - **Function Calling Evaluation**: 166 questions with real BLS/BEA API execution and 4-component scoring
 
+### 🏆 Multi-Model Benchmark Runner
+- **Automated Benchmarking**: Run evaluations across multiple models with a single command
+- **Leaderboard Generation**: Automatic leaderboard.json output for website integration
+- **Test & Full Modes**: Quick testing (5 samples) or comprehensive evaluation (all 459 samples)
+- **Model Registry**: Pre-configured models from OpenAI, Anthropic, Google, and Groq
+- **Flexible Configuration**: Environment variables or command-line model selection
+
 ### 🏗️ Production Architecture
 - **ProductionSQLEvaluator**: Advanced Text2SQL with question classification and targeted schema
 - **FunctionCallEvaluator**: Real API execution with BLS/BEA integration
+- **BenchmarkRunner**: Multi-model orchestrator with graceful error handling
 - **Clean Architecture**: Modular design with core, evaluators, SDK, and CLI layers
 
 ### 🌐 Real API Integration
@@ -23,6 +31,7 @@ A comprehensive benchmark framework for evaluating language models on government
 
 ### 📊 Comprehensive Results
 - **Multiple Output Formats**: JSON, CSV, Markdown reports
+- **Leaderboard Output**: Website-ready JSON with rankings and success rates
 - **Performance Analytics**: By evaluation type, difficulty, and detailed breakdowns
 - **Error Analysis**: Comprehensive failure analysis and debugging information
 
@@ -76,6 +85,8 @@ export BEA_API_KEY="your-bea-key"              # Optional for function calling
 **Note**: The `.env` file is automatically loaded by python-dotenv when running evaluations. Make sure your `.env` file is not committed to version control.
 
 ### Basic Usage
+
+#### Single Model Evaluation
 ```bash
 # Quick mixed evaluation
 python3 -m USABench --model gpt-4o --sql-samples 10 --function-samples 5
@@ -90,6 +101,24 @@ python3 -m USABench --evaluation-type function --model gpt-4o --function-samples
 python3 -m USABench --evaluation-type full --model gpt-4o --save-results --generate-report
 ```
 
+#### Multi-Model Benchmark Runner
+```bash
+# Quick test with 5 samples per model
+python3 -m USABench --benchmark --test-mode
+
+# Full benchmark with all 459 samples
+python3 -m USABench --benchmark
+
+# Custom model selection
+python3 -m USABench --benchmark --test-mode --benchmark-models gpt-4o claude-3-5-sonnet-20241022
+
+# Environment variable override
+BENCHMARK_MODELS="gpt-4o,gpt-4o-mini" python3 -m USABench --benchmark --test-mode
+
+# Verbose output for detailed progress
+python3 -m USABench --benchmark --test-mode --verbose
+```
+
 ## 📁 Architecture
 
 ```
@@ -97,7 +126,7 @@ USABench/
 ├── core/                     # Core framework components
 │   ├── base.py              # Base classes and data models
 │   ├── loader.py            # Data loading and management
-│   ├── production_client.py # LiteLLM integration
+│   ├── production_client.py # LiteLLM integration with auto param handling
 │   └── client.py            # Legacy LLM client
 ├── evaluators/              # Evaluation implementations
 │   ├── production_sql.py    # Production Text2SQL evaluator
@@ -107,13 +136,15 @@ USABench/
 ├── sdk/                     # High-level SDK interface
 │   ├── api.py              # Main USABench class
 │   ├── config.py           # Configuration management
-│   └── results.py          # Results analysis
+│   ├── results.py          # Results analysis
+│   └── benchmark.py        # Multi-model benchmark runner (NEW)
 ├── metrics/                 # Evaluation metrics
 ├── data/                    # Dataset and database
-│   ├── usafacts.db         # SQLite database
-│   ├── comprehensive_parallel_ground_truth.json
-│   └── enhanced_function_calling_ground_truth.json
-├── cli.py                   # Command-line interface
+│   ├── usafacts.db         # SQLite database (459 samples total)
+│   ├── text2sql_ground_truth.json           # 293 SQL questions
+│   └── enhanced_function_calling_ground_truth.json # 166 function questions
+├── cli.py                   # Command-line interface with benchmark mode
+├── run_baseline.sh          # Shell script for multi-model benchmarks
 └── README.md               # This file
 ```
 
@@ -135,23 +166,30 @@ USABench/
 
 ### Model Configuration
 ```bash
---model gpt-4o                    # Model selection
+--model gpt-4o                    # Model selection (single model)
 --temperature 0.0                 # Sampling temperature
 --max-tokens 2000                 # Maximum response tokens
+```
+
+### Benchmark Mode (Multi-Model)
+```bash
+--benchmark                       # Enable multi-model benchmark mode
+--test-mode                       # Run with 5 samples (default: all samples)
+--benchmark-models gpt-4o gpt-4o-mini  # Specify models to benchmark
 ```
 
 ### Evaluation Types
 ```bash
 --evaluation-type sql             # Text2SQL only
 --evaluation-type function        # Function calling only
---evaluation-type mixed           # Both evaluations
+--evaluation-type mixed           # Both evaluations (default for benchmark)
 --evaluation-type full            # All available samples
 ```
 
 ### Sample Control
 ```bash
---sql-samples 50                  # Number of SQL questions
---function-samples 25             # Number of function calling questions
+--sql-samples 50                  # Number of SQL questions (default: all 293)
+--function-samples 25             # Number of function calling questions (default: all 166)
 --difficulty easy medium          # Filter by difficulty
 ```
 
@@ -160,24 +198,35 @@ USABench/
 --save-results                    # Save JSON/CSV results
 --generate-report                 # Generate Markdown report
 --output-dir ./results            # Custom output directory
---verbose                         # Detailed logging
+--verbose                         # Detailed logging (recommended for benchmarks)
 ```
 
 ## 🌟 Supported Models
 
-### OpenAI Models
-- `gpt-4o` (Recommended)
-- `gpt-4o-mini`
-- `gpt-4-turbo`
-- `gpt-3.5-turbo`
+### Model Registry (Pre-configured for Benchmarks)
 
-### Anthropic Models
-- `claude-3-5-sonnet-20241022`
-- `claude-3-5-haiku-20241022`
-- `claude-3-opus-20240229`
+#### OpenAI Models
+- `gpt-5-chat` - GPT-5 Chat
+- `gpt-5-mini` - GPT-5 Mini
+- `gpt-4o` - GPT-4o (Recommended)
+- `gpt-3.5-turbo` - GPT-3.5 Turbo
 
-### Other Models
-Any model supported by [LiteLLM](https://docs.litellm.ai/docs/providers)
+#### Anthropic Models
+- `claude-3-5-sonnet-20241022` - Claude 3.5 Sonnet
+- `claude-3-5-haiku-20241022` - Claude 3.5 Haiku
+- `claude-sonnet-4-5-20250929` - Claude 4.5 Sonnet
+- `claude-opus-4-5-20251101` - Claude 4.5 Opus
+
+#### Google Models
+- `gemini/gemini-2.0-flash` - Gemini 2.0 Flash (requires `GEMINI_API_KEY`)
+
+#### Groq Models
+- `groq/llama-3.3-70b-versatile` - Llama 3.3 70B (requires `GROQ_API_KEY`)
+
+### Custom Models
+Any model supported by [LiteLLM](https://docs.litellm.ai/docs/providers) can be used with the `--model` flag.
+
+**Note**: The benchmark runner automatically handles model-specific parameter constraints (e.g., temperature requirements) using LiteLLM's parameter dropping feature.
 
 ## 📊 Performance Benchmarks
 
@@ -218,6 +267,24 @@ python3 -m USABench --model gpt-4o --difficulty hard --sql-samples 20
 ```
 
 ### Production Benchmarking
+
+#### Multi-Model Benchmarks
+```bash
+# Full benchmark across all models (459 samples each)
+python3 -m USABench --benchmark --verbose
+
+# Test mode for quick validation
+python3 -m USABench --benchmark --test-mode --verbose
+
+# Custom model selection
+python3 -m USABench --benchmark --benchmark-models gpt-4o claude-3-5-sonnet-20241022
+
+# Using shell script with test flag
+./run_baseline.sh --test  # 5 samples per model
+./run_baseline.sh         # All samples per model
+```
+
+#### Single Model Evaluation
 ```bash
 # Comprehensive evaluation with all features
 python3 -m USABench --evaluation-type full --model gpt-4o \
@@ -228,7 +295,7 @@ python3 -m USABench --evaluation-type full --model gpt-4o \
 ## 🔍 Dataset Information
 
 ### SQL Dataset
-- **File**: `comprehensive_parallel_ground_truth.json`
+- **File**: `text2sql_ground_truth.json`
 - **Questions**: 293 Text2SQL evaluation questions
 - **Difficulty**: Easy (30%), Medium (50%), Hard (20%)
 - **Tables**: Government economic data (budget, GDP, employment, etc.)
@@ -238,6 +305,11 @@ python3 -m USABench --evaluation-type full --model gpt-4o \
 - **Questions**: 166 function calling evaluation questions
 - **APIs**: Real BLS and BEA government data APIs
 - **Functions**: 5+ government data API functions with real execution
+
+### Total Dataset
+- **Total Questions**: 459 (293 SQL + 166 Function)
+- **Full Mode**: Evaluates all 459 questions per model
+- **Test Mode**: Evaluates 10 questions (5 SQL + 5 Function) per model
 
 ### Database Schema
 - **File**: `usafacts.db` (SQLite)
@@ -275,7 +347,7 @@ pip install litellm sqlparse pydantic numpy pandas python-dotenv
 
 ## 📈 Output Examples
 
-### Console Output
+### Single Model Console Output
 ```
 🚀 Initializing USABench...
    Model: gpt-4o
@@ -306,6 +378,53 @@ EVALUATION RESULTS SUMMARY
      - Avg Score: 0.200
 
 ✅ Evaluation completed successfully!
+```
+
+### Benchmark Mode Output
+```
+============================================================
+USABench Multi-Model Benchmark Runner
+============================================================
+Models to benchmark: 3
+SQL samples per model: All available
+Function samples per model: All available
+Output directory: results/benchmark-20260106_120000
+
+============================================================
+Running benchmark for: GPT-4o
+============================================================
+✓ Successfully completed: GPT-4o
+  Total Samples: 459
+  SQL Success: 65.2%
+  Function Success: 42.1%
+  Execution Time: 245.3s
+
+============================================================
+BASELINE BENCHMARK SUMMARY
+============================================================
+Total Models: 3
+Successful Runs: 3
+Failed Runs: 0
+
+Results directory: results/benchmark-20260106_120000
+Leaderboard JSON: results/benchmark-20260106_120000/leaderboard.json
+```
+
+### Leaderboard JSON Output
+```json
+[
+  {
+    "rank": 1,
+    "model": "GPT-4o",
+    "organization": "OpenAI",
+    "easy_success": 85.2,
+    "medium_success": 62.3,
+    "hard_success": 34.1,
+    "sql_success": 65.2,
+    "function_success": 42.1,
+    "lastUpdated": "2026-01-06"
+  }
+]
 ```
 ---
 

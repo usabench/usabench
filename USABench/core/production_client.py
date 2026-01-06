@@ -8,6 +8,8 @@ from typing import Any, Dict, List, Optional, Union
 try:
     import litellm
     from litellm import acompletion, completion
+    # Enable automatic dropping of unsupported params (like temperature constraints)
+    litellm.drop_params = True
 except ImportError:
     raise ImportError("litellm is required. Install with: pip install litellm")
 
@@ -117,6 +119,14 @@ class ProductionLLMClient:
 
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
+            error_str = str(e).lower()
+
+            # Re-raise temperature errors so they can be handled by fallback logic
+            if 'temperature' in error_str or 'unsupportedparams' in error_str:
+                logger.error(f"Error with {model}: {e}")
+                raise  # Re-raise to allow temperature fallback
+
+            # For other errors, log and return error response
             logger.error(f"Error with {model}: {e}")
 
             return ModelResponse(

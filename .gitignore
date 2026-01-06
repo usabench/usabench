@@ -78,3 +78,8 @@ PROMPT_IMPROVEMENTS_SUMMARY.md
 .envrc
 uv.lock
 .venv/
+
+
+# do not commit results
+/results
+/results/*
