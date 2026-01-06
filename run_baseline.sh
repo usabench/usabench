@@ -33,20 +33,22 @@ fi
 if [ "$TEST_MODE" = true ]; then
     SQL_SAMPLES=5
     FUNCTION_SAMPLES=5
+    SAMPLE_ARG="--sql-samples $SQL_SAMPLES --function-samples $FUNCTION_SAMPLES"
     echo -e "${YELLOW}===========================================================${NC}"
     echo -e "${YELLOW}Running BASELINE BENCHMARK - TEST MODE${NC}"
     echo -e "${YELLOW}===========================================================${NC}"
+    echo "Configuration:"
+    echo "  SQL Samples: $SQL_SAMPLES"
+    echo "  Function Samples: $FUNCTION_SAMPLES"
 else
-    SQL_SAMPLES=10
-    FUNCTION_SAMPLES=10
+    SAMPLE_ARG=""  # No limit - use all samples
     echo -e "${BLUE}===========================================================${NC}"
     echo -e "${BLUE}Running BASELINE BENCHMARK - FULL MODE${NC}"
     echo -e "${BLUE}===========================================================${NC}"
+    echo "Configuration:"
+    echo "  SQL Samples: All available"
+    echo "  Function Samples: All available"
 fi
-
-echo "Configuration:"
-echo "  SQL Samples: $SQL_SAMPLES"
-echo "  Function Samples: $FUNCTION_SAMPLES"
 echo ""
 
 # Define models to benchmark
@@ -111,8 +113,7 @@ run_benchmark() {
     if python3 -m USABench \
         --model "$model" \
         --evaluation-type mixed \
-        --sql-samples "$SQL_SAMPLES" \
-        --function-samples "$FUNCTION_SAMPLES" \
+        $SAMPLE_ARG \
         --output-dir "$output_dir" \
         --save-results \
         --generate-report \

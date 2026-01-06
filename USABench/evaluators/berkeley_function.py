@@ -248,6 +248,12 @@ Parameters: series_id=CUUR0000SA0, start_year=2020, end_year=2024
             return response.content
 
         except Exception as e:
+            error_str = str(e).lower()
+            # Re-raise temperature errors for fallback handling
+            if 'temperature' in error_str or 'unsupportedparams' in error_str:
+                logger.error(f"Response generation failed: {e}")
+                raise  # Re-raise to allow temperature fallback
+
             logger.error(f"Response generation failed: {e}")
             return f"Error: {e}"
 

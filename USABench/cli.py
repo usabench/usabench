@@ -10,6 +10,13 @@ from pathlib import Path
 import sys
 from typing import List, Optional
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv not installed, will use system environment variables
+
 # Add USABench to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -165,6 +172,25 @@ Examples:
         '--verbose', '-v',
         action='store_true',
         help='Enable verbose output'
+    )
+
+    # Benchmark mode options
+    benchmark_group = parser.add_argument_group('Benchmark Mode')
+    benchmark_group.add_argument(
+        '--benchmark',
+        action='store_true',
+        help='Run multi-model benchmark mode'
+    )
+    benchmark_group.add_argument(
+        '--test-mode',
+        action='store_true',
+        help='Run in test mode with 5 samples each (default: all available samples)'
+    )
+    benchmark_group.add_argument(
+        '--benchmark-models',
+        type=str,
+        nargs='+',
+        help='Models to benchmark (default: all models in registry or BENCHMARK_MODELS env var)'
     )
 
     return parser
@@ -349,6 +375,48 @@ def main():
     if args.dataset_info:
         success = show_dataset_info(args.data_dir)
         return 0 if success else 1
+
+    # Handle benchmark mode
+    if args.benchmark:
+        from USABench.sdk.benchmark import BenchmarkRunner, BenchmarkRunnerConfig, get_default_models
+
+        # Determine sample counts
+        if args.test_mode:
+            sql_samples = 5
+            function_samples = 5
+        else:
+            # In full mode, use all samples (None means no limit)
+            sql_samples = args.sql_samples  # None if not specified
+            function_samples = args.function_samples  # None if not specified
+
+        # Get models to benchmark
+        if args.benchmark_models:
+            models = args.benchmark_models
+        else:
+            models = get_default_models()
+
+        # Parse difficulty filter if specified
+        difficulty_filter = parse_difficulty_filter(args.difficulty)
+
+        # Create benchmark config
+        config = BenchmarkRunnerConfig(
+            models=models,
+            sql_samples=sql_samples,
+            function_samples=function_samples,
+            output_dir=args.output_dir,
+            temperature=args.temperature,
+            max_tokens=args.max_tokens,
+            difficulty_filter=difficulty_filter,
+            data_dir=args.data_dir,
+            db_path=args.db_path
+        )
+
+        # Run benchmark
+        runner = BenchmarkRunner(config)
+        runner.run_all_models()
+        runner.save_results()
+
+        return 0
 
     # Validate arguments
     if not validate_arguments(args):
