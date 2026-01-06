@@ -65,16 +65,20 @@ class APIExecutor:
             elif function_name == "get_gdp_by_industry":
                 return self._call_bea_api(
                     dataset="GDPbyIndustry",
-                    year=parameters.get("year", 2023),
-                    industry=parameters.get("industry", "ALL"),
-                    table_id=parameters.get("table_id", "1")
+                    Year=parameters.get("year", 2023),
+                    Industry=parameters.get("industry", "ALL"),
+                    TableID=parameters.get("table_id", "1"),
+                    Frequency=parameters.get("frequency", "A")  # A=Annual, Q=Quarterly
                 )
             elif function_name == "get_regional_income":
+                # Regional API requires GeoFips, Year, LineCode, and TableName
+                state = parameters.get("state", "CA")
                 return self._call_bea_api(
                     dataset="Regional",
-                    state=parameters.get("state", "CA"),
-                    year=parameters.get("year", 2023),
-                    line_code=parameters.get("line_code", "SA1-1")
+                    GeoFips=state if len(state) == 2 else "STATE",  # State abbreviation or STATE for all
+                    Year=parameters.get("year", 2023),
+                    LineCode=parameters.get("line_code", "1"),  # Line code for Personal Income
+                    TableName=parameters.get("table_name", "SAINC1")  # State Annual Income table
                 )
             else:
                 return {"success": False, "error": f"Unknown function: {function_name}"}
@@ -124,8 +128,17 @@ class APIExecutor:
             response.raise_for_status()
 
             result = response.json()
-            # BEA API doesn't have a status field, check for BEAAPI key
-            result["success"] = "BEAAPI" in result and "Results" in result.get("BEAAPI", {})
+            # BEA API doesn't have a status field, check for BEAAPI key and no errors
+            if "BEAAPI" in result and "Results" in result.get("BEAAPI", {}):
+                results = result["BEAAPI"]["Results"]
+                # Check if Results contains an Error
+                if isinstance(results, dict) and "Error" in results:
+                    result["success"] = False
+                    result["error"] = results["Error"].get("APIErrorDescription", "Unknown error")
+                else:
+                    result["success"] = True
+            else:
+                result["success"] = False
             return result
 
         except Exception as e:
@@ -531,19 +544,28 @@ Parameters: series_id=CUUR0000SA0, start_year=2020, end_year=2024
         """Check if API result contains meaningful data."""
         try:
             if function_name.startswith("get_cpi_") or function_name.startswith("get_employment_") or function_name.startswith("get_productivity_"):
-                # BLS API
+                # BLS API - Results is a dict with "series" key
                 if "Results" in result:
                     results = result["Results"]
-                    if isinstance(results, list) and results:
-                        series = results[0].get("series", [])
-                        if series and "data" in series[0]:
-                            return len(series[0]["data"]) > 0
+                    if isinstance(results, dict) and "series" in results:
+                        series = results.get("series", [])
+                        if series and isinstance(series, list) and len(series) > 0:
+                            if "data" in series[0]:
+                                return len(series[0]["data"]) > 0
 
             elif function_name.startswith("get_gdp_") or function_name.startswith("get_regional_"):
-                # BEA API
+                # BEA API - Results can be dict or list depending on dataset
                 if "BEAAPI" in result and "Results" in result["BEAAPI"]:
-                    data = result["BEAAPI"]["Results"].get("Data", [])
-                    return len(data) > 0
+                    results = result["BEAAPI"]["Results"]
+                    # Handle dict format (Regional API)
+                    if isinstance(results, dict):
+                        data = results.get("Data", [])
+                        return len(data) > 0
+                    # Handle list format (GDPbyIndustry API)
+                    elif isinstance(results, list) and len(results) > 0:
+                        first_result = results[0]
+                        if isinstance(first_result, dict) and "Data" in first_result:
+                            return len(first_result["Data"]) > 0
 
             return False
 
