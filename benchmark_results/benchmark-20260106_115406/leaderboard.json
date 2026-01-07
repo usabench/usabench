@@ -1,0 +1,90 @@
+[
+  {
+    "model": "GPT 5.2",
+    "organization": "OpenAI",
+    "easy_success": 54.54545454545454,
+    "medium_success": 44.57478005865102,
+    "hard_success": 7.476635514018691,
+    "sql_success": 49.829351535836174,
+    "function_success": 12.048192771084338,
+    "lastUpdated": "2026-01-06",
+    "rank": 1
+  },
+  {
+    "model": "Claude 4.5 Opus",
+    "organization": "Anthropic",
+    "easy_success": 36.36363636363637,
+    "medium_success": 45.16129032258064,
+    "hard_success": 1.8691588785046727,
+    "sql_success": 50.85324232081911,
+    "function_success": 6.626506024096386,
+    "lastUpdated": "2026-01-06",
+    "rank": 2
+  },
+  {
+    "model": "GPT-4o",
+    "organization": "OpenAI",
+    "easy_success": 54.54545454545454,
+    "medium_success": 31.671554252199414,
+    "hard_success": 3.7383177570093453,
+    "sql_success": 36.177474402730375,
+    "function_success": 7.228915662650602,
+    "lastUpdated": "2026-01-06",
+    "rank": 3
+  },
+  {
+    "model": "Claude 4.5 Sonnet",
+    "organization": "Anthropic",
+    "easy_success": 45.45454545454545,
+    "medium_success": 31.378299120234605,
+    "hard_success": 0.9345794392523363,
+    "sql_success": 36.51877133105802,
+    "function_success": 3.614457831325301,
+    "lastUpdated": "2026-01-06",
+    "rank": 4
+  },
+  {
+    "model": "Grok 4.1 Fast Reasoning",
+    "organization": "xAI",
+    "easy_success": 27.27272727272727,
+    "medium_success": 36.65689149560117,
+    "hard_success": 2.803738317757009,
+    "sql_success": 41.979522184300336,
+    "function_success": 4.819277108433735,
+    "lastUpdated": "2026-01-06",
+    "rank": 5
+  },
+  {
+    "model": "Claude 3 Haiku",
+    "organization": "Anthropic",
+    "easy_success": 54.54545454545454,
+    "medium_success": 23.75366568914956,
+    "hard_success": 0.9345794392523363,
+    "sql_success": 26.96245733788396,
+    "function_success": 5.421686746987952,
+    "lastUpdated": "2026-01-06",
+    "rank": 6
+  },
+  {
+    "model": "GPT-5 Mini",
+    "organization": "OpenAI",
+    "easy_success": 18.181818181818183,
+    "medium_success": 34.60410557184751,
+    "hard_success": 4.672897196261682,
+    "sql_success": 38.907849829351534,
+    "function_success": 6.626506024096386,
+    "lastUpdated": "2026-01-06",
+    "rank": 7
+  },
+  {
+    "model": "Gemini 2.5 Flash",
+    "organization": "Google",
+    "easy_success": 27.27272727272727,
+    "medium_success": 7.624633431085044,
+    "hard_success": 4.672897196261682,
+    "sql_success": 8.532423208191126,
+    "function_success": 5.421686746987952,
+    "lastUpdated": "2026-01-06",
+    "rank": 8
+  }
+]
