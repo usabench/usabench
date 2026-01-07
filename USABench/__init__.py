@@ -13,10 +13,10 @@ Key Components:
 
 Quick Start:
     from USABench import USABench, quick_eval
-    
+
     # Quick evaluation
     results = quick_eval(model_name="gpt-4o", evaluation_type="mixed")
-    
+
     # Advanced usage
     benchmark = USABench()
     results = benchmark.run_and_analyze(evaluation_type="sql", sql_samples=50)
@@ -29,10 +29,10 @@ from .core import (
     EvaluationConfig,
     EvaluationResult,
     EvaluationType,
-    LLMClient,
+    ProductionLLMClient,
     UnifiedSample,
 )
-from .evaluators import FunctionEvaluator, SQLEvaluator
+from .evaluators import FunctionCallEvaluator, ProductionSQLEvaluator
 from .sdk import BenchmarkConfig, ResultsAnalyzer, USABench, quick_eval
 
 __version__ = "1.0.0"
@@ -52,10 +52,10 @@ __all__ = [
     'EvaluationType',
     'Difficulty',
     'EvaluationConfig',
-    'LLMClient',
+    'ProductionLLMClient',
     'DataLoader',
 
     # Evaluators
-    'SQLEvaluator',
-    'FunctionEvaluator'
+    'ProductionSQLEvaluator',
+    'FunctionCallEvaluator'
 ]

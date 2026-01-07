@@ -81,14 +81,6 @@ Examples:
     )
 
     parser.add_argument(
-        '--eval-mode',
-        type=str,
-        choices=['simple', 'enhanced', 'function-eval'],
-        default='simple',
-        help='Evaluation mode: simple (original), enhanced (binary SQL metrics), function-eval (4-component function calling metrics)'
-    )
-
-    parser.add_argument(
         '--sql-samples',
         type=int,
         help='Number of SQL samples to evaluate'
@@ -212,15 +204,26 @@ def list_supported_models():
     """List supported models."""
     models = [
         "OpenAI Models:",
-        "  - gpt-4o",
+        "  - gpt-5-chat",
+        "  - gpt-5-mini",
+        "  - gpt-4o (Recommended)",
         "  - gpt-4o-mini",
-        "  - gpt-4-turbo",
-        "  - gpt-3.5-turbo",
         "",
         "Anthropic Models:",
-        "  - claude-3-5-sonnet-20241022",
-        "  - claude-3-5-haiku-20241022",
-        "  - claude-3-opus-20240229",
+        "  - claude-3-5-sonnet-20240620",
+        "  - claude-3-haiku-20240307",
+        "  - claude-sonnet-4-5-20250929",
+        "  - claude-opus-4-5-20251101",
+        "",
+        "Google Models:",
+        "  - gemini/gemini-2.0-flash (requires GEMINI_API_KEY)",
+        "  - gemini/gemini-flash-latest (requires GEMINI_API_KEY)",
+        "",
+        "Groq Models:",
+        "  - groq/llama-3.3-70b-versatile (requires GROQ_API_KEY)",
+        "",
+        "xAI Models:",
+        "  - xai/grok-4-1-fast-non-reasoning (requires XAI_API_KEY)",
         "",
         "Other Models:",
         "  - Any model supported by LiteLLM",

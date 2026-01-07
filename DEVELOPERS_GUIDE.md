@@ -463,11 +463,11 @@ else:
     score = 0.0  # No credit
 ```
 
-### The Four Evaluators Explained
+### The Two Production Evaluators
 
 #### 1. ProductionSQLEvaluator
 **Purpose:** Production-ready Text2SQL evaluation
-**Dataset:** comprehensive_parallel_ground_truth.json (293 questions)
+**Dataset:** text2sql_ground_truth.json (293 questions)
 **Special Features:**
 - Smart table selection (only shows relevant tables)
 - Fixes common model mistakes (wrong table names)
@@ -479,25 +479,11 @@ else:
 3. Generates SQL
 4. Executes and validates
 
-#### 2. FunctionEvaluator (Generic)
-**Purpose:** Basic function calling evaluation
+#### 2. FunctionCallEvaluator
+**Purpose:** Real API calling with live data
 **Dataset:** enhanced_function_calling_ground_truth.json (166 questions)
 **Special Features:**
-- Pattern matching for function names
-- Similarity scoring for parameters
-- Supports complex workflows
-
-**How it works:**
-1. Model generates function call
-2. Compares to expected function
-3. Checks parameter similarity
-4. Assigns partial credit
-
-#### 3. BerkeleyFunctionEvaluator
-**Purpose:** Real API calling with live data
-**Dataset:** None (generates expectations from questions)
-**Special Features:**
-- Actually calls government APIs
+- Actually calls government APIs (BLS/BEA)
 - 4-component binary scoring
 - Real data validation
 
@@ -506,20 +492,6 @@ else:
 2. Generates API call
 3. System executes real API call
 4. Validates all four components
-
-#### 4. BerkeleyFCLEvaluator
-**Purpose:** Advanced function calling with ground truth
-**Dataset:** fcl_ground_truth.json (167 questions)
-**Special Features:**
-- Cached API responses for consistency
-- Detailed error analysis
-- Performance metrics
-
-**How it works:**
-1. Model generates function call
-2. Compares to expected call
-3. Validates against cached real data
-4. Provides detailed scoring
 
 ### Scoring Systems
 
@@ -546,15 +518,13 @@ Each component is worth 0.25 points:
 USABench/
 ├── data/                           # All datasets and database
 │   ├── usafacts.db                # SQLite database with government data
-│   ├── comprehensive_parallel_ground_truth.json  # 293 SQL questions
+│   ├── text2sql_ground_truth.json  # 293 SQL questions
 │   ├── enhanced_function_calling_ground_truth.json  # 166 analytical questions
 │   └── fcl_ground_truth.json      # 167 API calling questions
 │
 ├── evaluators/                     # Evaluation implementations
 │   ├── production_sql.py          # Production SQL evaluator
-│   ├── function.py                # Generic function evaluator
-│   ├── berkeley_function.py       # Real API evaluator
-│   └── berkeley_fcl.py            # FCL-style evaluator
+│   └── berkeley_function.py       # Real API evaluator
 │
 ├── core/                          # Core framework
 │   ├── loader.py                  # Data loading logic
@@ -1487,7 +1457,7 @@ python3 -m USABench --dataset-info
 
 ```
 data/usafacts.db                                    # SQL database
-data/comprehensive_parallel_ground_truth.json       # SQL questions (293)
+data/text2sql_ground_truth.json                     # SQL questions (293)
 data/enhanced_function_calling_ground_truth.json    # Analytical functions (166)
 data/fcl_ground_truth.json                         # API functions (167)
 ```

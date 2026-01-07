@@ -7,8 +7,8 @@ from .base import (
     UnifiedSample,
     ValidationStrategy,
 )
-from .client import LLMClient
 from .loader import DataLoader
+from .production_client import ProductionLLMClient
 
 __all__ = [
     'BaseEvaluator',
@@ -18,6 +18,6 @@ __all__ = [
     'Difficulty',
     'ValidationStrategy',
     'EvaluationConfig',
-    'LLMClient',
+    'ProductionLLMClient',
     'DataLoader'
 ]

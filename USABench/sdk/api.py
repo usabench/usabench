@@ -153,41 +153,6 @@ class USABench:
         """Get information about available datasets."""
         return self.data_loader.get_dataset_info()
 
-    # Fluent API methods for configuration
-    def with_model(self, model_name: str) -> 'USABench':
-        """Set model name."""
-        self.config.model_name = model_name
-        # Reset evaluators to use new model
-        self._sql_evaluator = None
-        self._function_evaluator = None
-        return self
-
-    def with_temperature(self, temperature: float) -> 'USABench':
-        """Set temperature."""
-        self.config.temperature = temperature
-        # Reset evaluators
-        self._sql_evaluator = None
-        self._function_evaluator = None
-        return self
-
-    def with_data_dir(self, data_dir: str) -> 'USABench':
-        """Set data directory."""
-        self.config.data_dir = data_dir
-        self.data_loader = DataLoader(data_dir)
-        return self
-
-    def with_db_path(self, db_path: str) -> 'USABench':
-        """Set database path."""
-        self.config.db_path = db_path
-        # Reset SQL evaluator
-        self._sql_evaluator = None
-        return self
-
-    def with_output_dir(self, output_dir: str) -> 'USABench':
-        """Set output directory."""
-        self.config.output_dir = output_dir
-        return self
-
 
 # Convenience function for quick evaluation
 def quick_eval(

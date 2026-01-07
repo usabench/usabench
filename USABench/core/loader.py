@@ -61,7 +61,7 @@ class DataLoader:
                     "category": item.get("category"),
                     "complexity": item.get("complexity"),
                     "expected_result": item.get("expected_result"),
-                    "source": "comprehensive_parallel_ground_truth"
+                    "source": "text2sql_ground_truth"
                 }
             )
             samples.append(sample)
