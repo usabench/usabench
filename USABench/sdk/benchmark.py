@@ -30,10 +30,11 @@ logger = logging.getLogger(__name__)
 
 
 # Model Registry - Core Configuration
+# Use BENCHMARK_MODELS env var to override
 MODEL_REGISTRY = {
     # OpenAI Models
-    "gpt-5-chat": {
-        "display_name": "GPT-5 Chat",
+    "gpt-5.2": {
+        "display_name": "GPT 5.2",
         "organization": "OpenAI",
         "requires_api_keys": ["OPENAI_API_KEY"]
     },
@@ -47,19 +48,19 @@ MODEL_REGISTRY = {
         "organization": "OpenAI",
         "requires_api_keys": ["OPENAI_API_KEY"]
     },
-    "gpt-3.5-turbo": {
-        "display_name": "GPT-3.5 Turbo",
+    "gpt-4o-mini": {
+        "display_name": "GPT-4o Mini",
         "organization": "OpenAI",
         "requires_api_keys": ["OPENAI_API_KEY"]
     },
     # Anthropic Models
-    "claude-3-5-sonnet-20241022": {
+    "claude-3-5-sonnet-20240620": {
         "display_name": "Claude 3.5 Sonnet",
         "organization": "Anthropic",
         "requires_api_keys": ["ANTHROPIC_API_KEY"]
     },
-    "claude-3-5-haiku-20241022": {
-        "display_name": "Claude 3.5 Haiku",
+    "claude-3-haiku-20240307": {
+        "display_name": "Claude 3 Haiku",
         "organization": "Anthropic",
         "requires_api_keys": ["ANTHROPIC_API_KEY"]
     },
@@ -74,16 +75,27 @@ MODEL_REGISTRY = {
         "requires_api_keys": ["ANTHROPIC_API_KEY"]
     },
     # Gemini Models
-    "gemini/gemini-2.0-flash": {
-        "display_name": "Gemini 2.0 Flash",
+    "gemini/gemini-2.5-flash": {
+        "display_name": "Gemini 2.5 Flash",
         "organization": "Google",
         "requires_api_keys": ["GEMINI_API_KEY"]
     },
     # Groq
     "groq/llama-3.3-70b-versatile": {
-        "display_name": "Froq Llama 3.3 70B Versatile",
-        "organization": "Groq",
+        "display_name": "Llama 3.3 70B Versatile",
+        "organization": "Meta (via Groq)",
         "requires_api_keys": ["GROQ_API_KEY"]
+    },
+    # Grok 
+    "xai/grok-4-1-fast-non-reasoning": {
+        "display_name": "Grok 4.1 Fast Non-Reasoning",
+        "organization": "xAI",
+        "requires_api_keys": ["XAI_API_KEY"]
+    },
+    "xai/grok-4-1-fast-reasoning": {
+        "display_name": "Grok 4.1 Fast Reasoning",
+        "organization": "xAI",
+        "requires_api_keys": ["XAI_API_KEY"]
     }
 }
 

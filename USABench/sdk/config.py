@@ -28,13 +28,9 @@ class BenchmarkConfig:
     save_results: bool = True
     generate_report: bool = True
 
-    # Execution configuration
-    parallel: bool = False
-    batch_size: int = 10
-
     def to_evaluation_config(self):
         """Convert to core EvaluationConfig."""
-        from core.base import EvaluationConfig
+        from USABench.core.base import EvaluationConfig
         return EvaluationConfig(
             model_name=self.model_name,
             temperature=self.temperature,

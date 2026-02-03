@@ -316,6 +316,19 @@ python3 -m USABench --evaluation-type full --model gpt-4o \
 - **Tables**: `budget_outlays`, `time_series_data`, `industry_gdp`, `gdp_by_industry`
 - **Data**: Real government economic data from USAFacts, BLS, and BEA
 
+### Golden Records Export
+Export all 459 questions to a unified CSV for easy viewing and analysis:
+```bash
+# Export to USABench/data/golden_records_consolidated.csv
+python3 -m USABench.scripts.export_golden_records
+```
+
+The consolidated CSV includes:
+- **Summary Columns**: question_id, question_type, question_text, difficulty, primary_tables, expected_output_rows, workflow_complexity
+- **Metadata**: generation_model, generation_timestamp
+- **Technical Details**: reference_sql (SQL questions), function_sequence (Function questions), expected_result_summary, success_criteria
+- **459 Total Records**: All ground truth questions in a single, easy-to-view spreadsheet format
+
 ## 🐛 Troubleshooting
 
 ### Common Issues

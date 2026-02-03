@@ -92,6 +92,9 @@ npm run lint
 
 # Run tests (validation through running evaluations)
 python3 -m USABench --model gpt-4o --sql-samples 5 --function-samples 5
+
+# Export golden records to CSV
+python3 -m USABench.scripts.export_golden_records
 ```
 
 ## Architecture
@@ -116,10 +119,14 @@ USABench/
 │   ├── results.py          # Results analysis
 │   └── benchmark.py        # Multi-model benchmark runner
 ├── metrics/                 # Evaluation metrics
+├── scripts/                 # Utility scripts
+│   ├── __init__.py         # Package marker
+│   └── export_golden_records.py # Export all 459 questions to CSV
 ├── data/                    # Dataset and database
 │   ├── usafacts.db         # SQLite database (459 samples total)
 │   ├── text2sql_ground_truth.json           # 293 SQL questions
-│   └── enhanced_function_calling_ground_truth.json # 166 function questions
+│   ├── enhanced_function_calling_ground_truth.json # 166 function questions
+│   └── golden_records_consolidated.csv      # All questions in single CSV (generated)
 ├── cli.py                   # Command-line interface with benchmark mode
 ├── run_baseline.sh          # Shell script for multi-model benchmarks
 └── __main__.py             # Module entry point
@@ -260,3 +267,24 @@ Can be set via .env file (recommended) or environment variables:
 - **Full Mode**: All 459 questions for comprehensive evaluation
 - **Database Schema**: Government economic data from USAFacts, BLS, and BEA in SQLite format
 - **Difficulty Levels**: Easy/Medium/Hard classifications for both evaluation types
+
+### Golden Records Export
+
+Export all 459 ground truth questions to a unified CSV:
+```bash
+python3 -m USABench.scripts.export_golden_records
+```
+
+**Output**: `USABench/data/golden_records_consolidated.csv`
+
+**Structure** (13 columns):
+- **Summary**: question_id, question_type, question_text, difficulty, primary_tables, expected_output_rows, workflow_complexity
+- **Metadata**: generation_model, generation_timestamp
+- **Technical Details**: reference_sql (SQL only), function_sequence (Function only), expected_result_summary, success_criteria
+
+**Features**:
+- All 459 questions in single spreadsheet
+- SQL difficulty inferred via heuristics (easy: simple queries, medium: GROUP BY/JOINs, hard: subqueries/HAVING/multiple JOINs)
+- Function difficulty from source data (easy: 11, medium: 48, hard: 107)
+- Easy viewing in Excel, Google Sheets, or any CSV viewer
+- Hybrid format: human-readable summary columns first, technical details at end
