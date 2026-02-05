@@ -270,11 +270,14 @@ Parameters: series_id=CUUR0000SA0, start_year=2020, end_year=2024
             # Get expected calls from sample
             expected_calls = self._get_expected_calls(sample)
 
-            # Calculate 4-component binary metrics
+            # Execute API calls once and cache results
+            execution_results = self._execute_api_calls_once(predicted_calls)
+
+            # Calculate 4-component binary metrics using cached execution results
             function_selection_score = self._evaluate_function_selection(predicted_calls, expected_calls)
             parameter_accuracy_score = self._evaluate_parameter_accuracy(predicted_calls, expected_calls)
-            execution_success_score = self._evaluate_execution_success(predicted_calls)
-            result_accuracy_score = self._evaluate_result_accuracy(predicted_calls, sample)
+            execution_success_score = self._evaluate_execution_success_from_cache(execution_results)
+            result_accuracy_score = self._evaluate_result_accuracy_from_cache(execution_results)
 
             # Overall score (average of 4 binary metrics)
             overall_score = (function_selection_score + parameter_accuracy_score +
@@ -300,6 +303,72 @@ Parameters: series_id=CUUR0000SA0, start_year=2020, end_year=2024
         except Exception as e:
             logger.error(f"Function call validation failed: {e}")
             return False, 0.0, {"error": str(e), "function_eval_v2": True}
+
+    def _execute_api_calls_once(self, predicted_calls: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Execute API calls once and cache results for use by multiple evaluation metrics.
+
+        This prevents duplicate API execution which was causing 2x slowdown.
+        """
+        execution_results = []
+
+        for call in predicted_calls:
+            function_name = call["function_name"]
+            parameters = call.get("parameters", {})
+
+            try:
+                # Execute the API call once
+                result = self.api_executor.execute_function(function_name, parameters)
+                execution_results.append({
+                    "function_name": function_name,
+                    "parameters": parameters,
+                    "result": result,
+                    "success": result.get("success", False)
+                })
+
+                if result.get("success", False):
+                    logger.info(f"✅ API execution successful for {function_name}")
+                else:
+                    logger.warning(f"❌ API execution failed for {function_name}: {result.get('error')}")
+
+            except Exception as e:
+                logger.warning(f"API execution error for {function_name}: {e}")
+                execution_results.append({
+                    "function_name": function_name,
+                    "parameters": parameters,
+                    "result": {"success": False, "error": str(e)},
+                    "success": False
+                })
+
+        return execution_results
+
+    def _evaluate_execution_success_from_cache(self, execution_results: List[Dict[str, Any]]) -> float:
+        """Evaluate execution success using cached API results (Binary Metric 3)."""
+        if not execution_results:
+            return 0.0
+
+        successful_calls = sum(1 for result in execution_results if result["success"])
+        return successful_calls / len(execution_results)
+
+    def _evaluate_result_accuracy_from_cache(self, execution_results: List[Dict[str, Any]]) -> float:
+        """Evaluate result accuracy using cached API results (Binary Metric 4)."""
+        if not execution_results:
+            return 0.0
+
+        successful_results = 0
+
+        for exec_result in execution_results:
+            if exec_result["success"]:
+                # Check if we got meaningful data
+                result = exec_result["result"]
+                function_name = exec_result["function_name"]
+
+                if self._has_meaningful_data(result, function_name):
+                    successful_results += 1
+                    logger.info(f"✅ Meaningful data retrieved from {function_name}")
+                else:
+                    logger.warning(f"⚠️ Empty or invalid data from {function_name}")
+
+        return successful_results / len(execution_results)
 
     def _extract_function_calls(self, response_text: str) -> List[Dict[str, Any]]:
         """Extract function calls from model response."""
@@ -405,8 +474,18 @@ Parameters: series_id=CUUR0000SA0, start_year=2020, end_year=2024
             return {}
 
     def _get_expected_calls(self, sample: UnifiedSample) -> List[Dict[str, Any]]:
-        """Extract expected function calls from sample."""
-        # For now, infer expected calls based on question content
+        """Extract expected function calls from sample ground truth."""
+        # Use ground truth functions from sample if available
+        if sample.ground_truth_functions:
+            expected_calls = []
+            for func in sample.ground_truth_functions:
+                expected_calls.append({
+                    "function_name": func.get("name"),
+                    "parameters": func.get("arguments", {})
+                })
+            return expected_calls
+
+        # Fallback: infer expected calls based on question content (for backward compatibility)
         question_lower = sample.question.lower()
 
         if "cpi" in question_lower or "consumer price" in question_lower:
