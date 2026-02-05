@@ -104,9 +104,10 @@ python3 -m USABench.scripts.export_golden_records
 ```
 USABench/
 ├── core/                     # Core framework components
-│   ├── base.py              # Base classes and data models
-│   ├── loader.py            # Data loading and management
-│   ├── production_client.py # LiteLLM integration with auto param handling
+│   ├── base.py              # Base classes, data models, parallel batch evaluation
+│   ├── loader.py            # Data loading with caching
+│   ├── production_client.py # Thread-safe LiteLLM integration
+│   ├── rate_limiter.py      # Thread-safe rate limiting for API calls
 │   └── client.py            # Legacy LLM client
 ├── evaluators/              # Evaluation implementations
 │   ├── production_sql.py    # Production Text2SQL evaluator
@@ -144,6 +145,10 @@ USABench/
 - **Graceful Degradation**: API key validation with early warnings, continues with available models
 - **Real API Integration**: Function calling evaluation uses actual BLS/BEA government APIs
 - **Environment-based Configuration**: Automatic .env file loading via python-dotenv for local development
+- **Parallel Batch Evaluation**: ThreadPoolExecutor-based parallel sample processing (configurable workers)
+- **Thread-Safe Components**: Lock-protected usage tracking, thread-local database connections
+- **Connection Pooling**: HTTP session pooling for API calls, SQLite connection reuse per thread
+- **Rate Limiting**: Thread-safe sliding window rate limiter for API throttling
 
 ### Data Flow
 
@@ -258,6 +263,65 @@ Can be set via .env file (recommended) or environment variables:
 - **Results Directory**: Configurable via `--output-dir` (default: `results/`)
 - **Output Formats**: JSON, CSV, and Markdown reports
 - **Leaderboard Output**: Website-ready JSON at `results/benchmark-{timestamp}/leaderboard.json`
+
+## Performance Optimizations
+
+The framework includes several performance optimizations for faster benchmark execution:
+
+### Parallel Batch Evaluation
+- **ThreadPoolExecutor**: Parallel sample processing with configurable worker count
+- **Default Workers**: 5 parallel workers (configurable via `EvaluationConfig.max_workers`)
+- **Thread Safety**: All shared resources protected with locks
+- **Expected Speedup**: 4-6x for I/O-bound LLM API calls
+
+```python
+from USABench.core.base import EvaluationConfig
+
+# Configure parallel workers
+config = EvaluationConfig(
+    model_name="gpt-4o",
+    max_workers=10  # Increase for higher throughput
+)
+```
+
+### HTTP Connection Pooling
+- **Session Reuse**: `requests.Session()` with connection pooling for government APIs
+- **Retry Logic**: Automatic retries (3x) with exponential backoff for transient errors
+- **Status Codes**: Handles 429, 500, 502, 503, 504 with automatic retry
+- **Pool Size**: 10 connections, max 20 per pool
+
+### Database Connection Pooling
+- **Thread-Local Connections**: SQLite connections reused within same thread
+- **Connection Parameters**: `check_same_thread=False`, 30s timeout
+- **Eliminates Overhead**: No connect/close per query
+
+### Rate Limiting
+- **Thread-Safe Rate Limiter**: Sliding window algorithm in `core/rate_limiter.py`
+- **Pre-configured Limits**: OpenAI (3500 RPM), BLS (100/min), BEA (80/min)
+
+```python
+from USABench.core.rate_limiter import RateLimiter, create_openai_limiter
+
+# Create rate limiter
+limiter = create_openai_limiter()  # 3500 requests/minute
+
+# Use in API calls
+if limiter.acquire():  # Blocks until slot available
+    # Make API call
+    pass
+```
+
+### Data Caching
+- **DataLoader Caching**: JSON files loaded once and cached in memory
+- **Cache Methods**: `_load_sql_data()`, `_load_function_data()`, `_load_function_eval_data()`
+- **Cache Control**: `clear_cache()` method for invalidation
+
+### Performance Estimates
+| Scenario | Before | After | Speedup |
+|----------|--------|-------|---------|
+| Test mode (10 samples) | ~8 min | ~2 min | 4x |
+| Single model (460 samples) | ~10 hours | ~1.5-2 hours | 5-6x |
+| 3-model benchmark | ~30 hours | ~5 hours | 6x |
 
 ## Datasets
 
