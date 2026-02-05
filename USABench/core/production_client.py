@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 import logging
+import threading
 import time
 from typing import Any, Dict, List, Optional, Union
 
@@ -62,7 +63,8 @@ class ProductionLLMClient:
         self.max_tokens = max_tokens
         self.timeout = timeout
 
-        # Track usage
+        # Track usage (thread-safe)
+        self._usage_lock = threading.Lock()
         self.total_usage = {
             "prompt_tokens": 0,
             "completion_tokens": 0,
@@ -138,7 +140,8 @@ class ProductionLLMClient:
             )
 
     def _update_usage(self, usage: Dict[str, Any]):
-        """Update usage statistics."""
-        self.total_usage["prompt_tokens"] += usage.get("prompt_tokens", 0)
-        self.total_usage["completion_tokens"] += usage.get("completion_tokens", 0)
-        self.total_usage["total_tokens"] += usage.get("total_tokens", 0)
+        """Update usage statistics (thread-safe)."""
+        with self._usage_lock:
+            self.total_usage["prompt_tokens"] += usage.get("prompt_tokens", 0)
+            self.total_usage["completion_tokens"] += usage.get("completion_tokens", 0)
+            self.total_usage["total_tokens"] += usage.get("total_tokens", 0)

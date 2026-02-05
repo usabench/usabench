@@ -142,7 +142,7 @@ USABench/
 ├── data/                    # Dataset and database
 │   ├── usafacts.db         # SQLite database (459 samples total)
 │   ├── text2sql_ground_truth.json           # 293 SQL questions
-│   └── enhanced_function_calling_ground_truth.json # 166 function questions
+│   └── fcl_ground_truth.json # 166 function questions
 ├── cli.py                   # Command-line interface with benchmark mode
 ├── run_baseline.sh          # Shell script for multi-model benchmarks
 └── README.md               # This file
@@ -301,7 +301,7 @@ python3 -m USABench --evaluation-type full --model gpt-4o \
 - **Tables**: Government economic data (budget, GDP, employment, etc.)
 
 ### Function Calling Dataset
-- **File**: `enhanced_function_calling_ground_truth.json`
+- **File**: `fcl_ground_truth.json`
 - **Questions**: 166 function calling evaluation questions
 - **APIs**: Real BLS and BEA government data APIs
 - **Functions**: 5+ government data API functions with real execution

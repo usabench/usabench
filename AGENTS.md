@@ -5,7 +5,7 @@
 - `USABench/evaluators/` hosts three parallel stacks: production Text2SQL (`production_sql.py`), production function calling with real BLS/BEA APIs (`berkeley_function.py`), and legacy/lightweight variants (`sql.py`, `function.py`, `berkeley_fcl.py`, `enhanced_sql.py`).
 - `USABench/sdk/` exposes contributor entrypoints: `api.py` orchestrates evaluators, `config.py` bridges CLI flags to `EvaluationConfig`, and `results.py` performs pandas-based analysis and report generation.
 - `USABench/metrics/` contains `binary_sql_metrics.py`, the deterministic execution/result checker that `ProductionSQLEvaluator` relies on; update here if you touch scoring thresholds or similarity logic.
-- `USABench/data/` stores immutable assets: `usafacts.db` (SQLite with 2014–2024 coverage), `text2sql_ground_truth.json`, `enhanced_function_calling_ground_truth.json`, and `fcl_ground_truth.json` with rich metadata blocks; regenerate datasets elsewhere and drop new versions in-place only after validation.
+- `USABench/data/` stores immutable assets: `usafacts.db` (SQLite with 2014–2024 coverage), `text2sql_ground_truth.json`, `mock_fcl_ground_truth.json`, and `fcl_ground_truth.json` with rich metadata blocks; regenerate datasets elsewhere and drop new versions in-place only after validation.
 - Repository root keeps operational scripts (`run_baseline.sh`, `test_prompt_improvements.py`), marketing collateral (`usabench-landing-page.html`, `package.json`), and knowledge docs (`README.md`, `USABench_Technical_Documentation.md`, `PROMPT_IMPROVEMENTS_SUMMARY.md`).
 - Empty helper directories (`USABench/cli/`, `USABench/pipeline/`, `USABench/compat/`) are placeholders for future expansion—do not remove; populate them when adding new command modules or migration utilities.
 
@@ -28,7 +28,7 @@
 
 ## Data Assets & Schemas
 - `text2sql_ground_truth.json` enumerates 293 questions with `question_text`, `reference_sql`, optional `expected_result`, and difficulty—augmenting it requires preserving metadata keys consumed by `DataLoader.load_sql_samples`.
-- `enhanced_function_calling_ground_truth.json` carries 166 higher-level workflow questions referencing abstract tools like `query_budget_data`; additions must keep `function_sequence` arrays so they translate into `ground_truth_functions`.
+- `mock_fcl_ground_truth.json` carries 166 higher-level workflow questions referencing abstract tools like `query_budget_data`; additions must keep `function_sequence` arrays so they translate into `ground_truth_functions`.
 - `fcl_ground_truth.json` powers the Berkeley-style evaluator with 167 real API calls; each entry exposes `expected_functions` that map directly to `APIExecutor` endpoints (BLS vs BEA) and includes difficulty and category stats used in reports.
 - `usafacts.db` holds primary tables `budget_outlays`, `time_series_data`, `industry_gdp`, `regional_data`, and `gdp_by_industry`; schema documentation lives inside `ProductionSchemaProvider`—update both the DB and schema strings together to stay in sync.
 - Keep datasets under version control but immutable; if you must regenerate, produce a fresh file, run the full evaluation suite, and document provenance changes in `PROMPT_IMPROVEMENTS_SUMMARY.md` or an equivalent changelog.

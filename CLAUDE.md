@@ -125,7 +125,8 @@ USABench/
 ├── data/                    # Dataset and database
 │   ├── usafacts.db         # SQLite database (459 samples total)
 │   ├── text2sql_ground_truth.json           # 293 SQL questions
-│   ├── enhanced_function_calling_ground_truth.json # 166 function questions
+│   ├── fcl_ground_truth.json                # 167 function questions (BLS/BEA APIs)
+│   ├── mock_fcl_ground_truth.json           # 166 mock functions (abstract APIs)
 │   └── golden_records_consolidated.csv      # All questions in single CSV (generated)
 ├── cli.py                   # Command-line interface with benchmark mode
 ├── run_baseline.sh          # Shell script for multi-model benchmarks
@@ -261,10 +262,15 @@ Can be set via .env file (recommended) or environment variables:
 ## Datasets
 
 - **SQL Dataset**: 293 Text2SQL questions in `text2sql_ground_truth.json`
-- **Function Calling Dataset**: 166 questions in `enhanced_function_calling_ground_truth.json`
-- **Total Questions**: 459 (293 SQL + 166 Function)
+- **Function Calling Dataset**: 167 questions in `fcl_ground_truth.json` (concrete BLS/BEA API functions)
+  - Used for benchmark evaluations with real API execution
+  - Functions: `get_gdp_by_industry`, `get_cpi_data`, `get_employment_cost_index`, etc.
+- **Mock Function Dataset**: 166 questions in `mock_fcl_ground_truth.json` (abstract functions)
+  - Used for CSV exports and future mock testing
+  - Functions: `query_economic_data`, `query_budget_data`, etc.
+- **Total Questions**: 460 (293 SQL + 167 Function)
 - **Test Mode**: 10 questions (5 SQL + 5 Function) for quick validation
-- **Full Mode**: All 459 questions for comprehensive evaluation
+- **Full Mode**: All 460 questions for comprehensive evaluation
 - **Database Schema**: Government economic data from USAFacts, BLS, and BEA in SQLite format
 - **Difficulty Levels**: Easy/Medium/Hard classifications for both evaluation types
 

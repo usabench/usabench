@@ -46,7 +46,7 @@ When reviewing the codebase, we discovered an important discrepancy:
 **What actually exists:**
 ```
 USABench/data/
-├── enhanced_function_calling_ground_truth.json (166 questions)
+├── fcl_ground_truth.json (166 questions)
 └── fcl_ground_truth.json (167 questions)  ← This one isn't documented!
 ```
 
@@ -481,7 +481,7 @@ else:
 
 #### 2. FunctionCallEvaluator
 **Purpose:** Real API calling with live data
-**Dataset:** enhanced_function_calling_ground_truth.json (166 questions)
+**Dataset:** fcl_ground_truth.json (166 questions)
 **Special Features:**
 - Actually calls government APIs (BLS/BEA)
 - 4-component binary scoring
@@ -519,7 +519,7 @@ USABench/
 ├── data/                           # All datasets and database
 │   ├── usafacts.db                # SQLite database with government data
 │   ├── text2sql_ground_truth.json  # 293 SQL questions
-│   ├── enhanced_function_calling_ground_truth.json  # 166 analytical questions
+│   ├── fcl_ground_truth.json  # 166 analytical questions
 │   └── fcl_ground_truth.json      # 167 API calling questions
 │
 ├── evaluators/                     # Evaluation implementations
@@ -775,7 +775,7 @@ curl "https://api.bls.gov/publicAPI/v2/timeseries/data/CUUR0000SA0?startyear=202
 
 **Symptoms:**
 ```
-FileNotFoundError: enhanced_function_calling_ground_truth.json not found
+FileNotFoundError: fcl_ground_truth.json not found
 ```
 
 **Causes:**
@@ -1458,7 +1458,7 @@ python3 -m USABench --dataset-info
 ```
 data/usafacts.db                                    # SQL database
 data/text2sql_ground_truth.json                     # SQL questions (293)
-data/enhanced_function_calling_ground_truth.json    # Analytical functions (166)
+data/fcl_ground_truth.json    # Analytical functions (166)
 data/fcl_ground_truth.json                         # API functions (167)
 ```
 

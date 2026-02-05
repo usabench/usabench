@@ -7,6 +7,8 @@ import re
 from typing import Any, Dict, List
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from USABench.core.base import BaseEvaluator, EvaluationConfig, UnifiedSample
 from USABench.core.production_client import ProductionLLMClient
@@ -30,7 +32,7 @@ class APIExecutor:
     """Execute real API calls for BLS and BEA."""
 
     def __init__(self):
-        """Initialize with API keys."""
+        """Initialize with API keys and HTTP session with connection pooling."""
         self.bls_api_key = os.getenv('BLS_API_KEY')
         self.bea_api_key = os.getenv('BEA_API_KEY')
 
@@ -39,6 +41,27 @@ class APIExecutor:
             logger.warning("BLS_API_KEY not set. Some function calls may fail.")
         if not self.bea_api_key:
             logger.warning("BEA_API_KEY not set. Some function calls may fail.")
+
+        # Create session with connection pooling and retry logic
+        self.session = requests.Session()
+
+        # Configure retry strategy for transient errors
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=0.5,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "POST"]
+        )
+
+        # Mount adapter for both HTTP and HTTPS with connection pooling
+        adapter = HTTPAdapter(
+            max_retries=retry_strategy,
+            pool_connections=10,
+            pool_maxsize=20
+        )
+        self.session.mount("https://", adapter)
+        self.session.mount("http://", adapter)
+
         logger.info(f"APIExecutor initialized with BLS key: {self.bls_api_key[:8]}... and BEA key: {self.bea_api_key[:8]}...")
 
     def execute_function(self, function_name: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
@@ -100,7 +123,7 @@ class APIExecutor:
                 'registrationkey': self.bls_api_key
             }
 
-            response = requests.post(url, json=data, headers=headers, timeout=30)
+            response = self.session.post(url, json=data, headers=headers, timeout=30)
             response.raise_for_status()
 
             result = response.json()
@@ -124,7 +147,7 @@ class APIExecutor:
             }
             api_params.update(params)
 
-            response = requests.get(base_url, params=api_params, timeout=30)
+            response = self.session.get(base_url, params=api_params, timeout=30)
             response.raise_for_status()
 
             result = response.json()
@@ -569,61 +592,6 @@ Parameters: series_id=CUUR0000SA0, start_year=2020, end_year=2024
                     key_matches += 1
 
         return key_matches / total_keys if total_keys > 0 else 1.0
-
-    def _evaluate_execution_success(self, predicted_calls: List[Dict]) -> float:
-        """Evaluate execution success (Binary Metric 3)."""
-        if not predicted_calls:
-            return 0.0
-
-        successful_calls = 0
-
-        for call in predicted_calls:
-            function_name = call["function_name"]
-            parameters = call.get("parameters", {})
-
-            try:
-                # Actually execute the function
-                result = self.api_executor.execute_function(function_name, parameters)
-                if result.get("success", False):
-                    successful_calls += 1
-                    logger.info(f"✅ API execution successful for {function_name}")
-                else:
-                    logger.warning(f"❌ API execution failed for {function_name}: {result.get('error')}")
-            except Exception as e:
-                logger.warning(f"Execution failed for {function_name}: {e}")
-                continue
-
-        return successful_calls / len(predicted_calls)
-
-    def _evaluate_result_accuracy(self, predicted_calls: List[Dict], sample: UnifiedSample) -> float:
-        """Evaluate result accuracy by comparing actual API results (Binary Metric 4)."""
-        if not predicted_calls:
-            return 0.0
-
-        # For now, if we can execute the function and get some data back, consider it accurate
-        # This could be enhanced with ground truth comparison in the future
-        successful_results = 0
-
-        for call in predicted_calls:
-            function_name = call["function_name"]
-            parameters = call.get("parameters", {})
-
-            try:
-                result = self.api_executor.execute_function(function_name, parameters)
-
-                if result.get("success", False):
-                    # Check if we got meaningful data
-                    if self._has_meaningful_data(result, function_name):
-                        successful_results += 1
-                        logger.info(f"✅ Meaningful data retrieved from {function_name}")
-                    else:
-                        logger.warning(f"⚠️ Empty or invalid data from {function_name}")
-
-            except Exception as e:
-                logger.warning(f"Result evaluation failed for {function_name}: {e}")
-                continue
-
-        return successful_results / len(predicted_calls)
 
     def _has_meaningful_data(self, result: Dict[str, Any], function_name: str) -> bool:
         """Check if API result contains meaningful data."""
