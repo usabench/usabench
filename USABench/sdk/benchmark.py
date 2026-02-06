@@ -32,12 +32,18 @@ logger = logging.getLogger(__name__)
 # Model Registry - Core Configuration
 # Use BENCHMARK_MODELS env var to override
 MODEL_REGISTRY = {
-    # OpenAI Models
+    # OpenAI Models - GPT-5 Series
     "gpt-5.2": {
-        "display_name": "GPT 5.2",
+        "display_name": "GPT-5.2",
         "organization": "OpenAI",
         "requires_api_keys": ["OPENAI_API_KEY"],
         "max_workers": 10  # OpenAI has generous concurrency limits
+    },
+    "gpt-5.3-codex": {
+        "display_name": "GPT-5.3 Codex",
+        "organization": "OpenAI",
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10
     },
     "gpt-5-mini": {
         "display_name": "GPT-5 Mini",
@@ -45,6 +51,26 @@ MODEL_REGISTRY = {
         "requires_api_keys": ["OPENAI_API_KEY"],
         "max_workers": 10
     },
+    # OpenAI Models - Reasoning Series
+    "o4-mini": {
+        "display_name": "o4-mini",
+        "organization": "OpenAI",
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10
+    },
+    "o3-mini": {
+        "display_name": "o3-mini",
+        "organization": "OpenAI",
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10
+    },
+    "o3": {
+        "display_name": "o3",
+        "organization": "OpenAI",
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10
+    },
+    # OpenAI Models - GPT-4 Series
     "gpt-4o": {
         "display_name": "GPT-4o",
         "organization": "OpenAI",
@@ -82,12 +108,39 @@ MODEL_REGISTRY = {
         "requires_api_keys": ["ANTHROPIC_API_KEY"],
         "max_workers": 1
     },
-    # Gemini Models
+    # Gemini Models - 3.0 Series
+    "gemini/gemini-3-pro-preview": {
+        "display_name": "Gemini 3 Pro Preview",
+        "organization": "Google",
+        "requires_api_keys": ["GEMINI_API_KEY"],
+        "max_workers": 5  # Google has moderate concurrency limits
+    },
+    # Gemini Models - 2.5 Series
     "gemini/gemini-2.5-flash": {
         "display_name": "Gemini 2.5 Flash",
         "organization": "Google",
         "requires_api_keys": ["GEMINI_API_KEY"],
-        "max_workers": 5  # Google has moderate concurrency limits
+        "max_workers": 5
+    },
+    # Gemini Models - 2.0 Series
+    "gemini/gemini-2.0-flash-thinking-exp-01-21": {
+        "display_name": "Gemini 2.0 Flash Thinking",
+        "organization": "Google",
+        "requires_api_keys": ["GEMINI_API_KEY"],
+        "max_workers": 5
+    },
+    "gemini/gemini-2.0-flash": {
+        "display_name": "Gemini 2.0 Flash",
+        "organization": "Google",
+        "requires_api_keys": ["GEMINI_API_KEY"],
+        "max_workers": 5
+    },
+    # Gemini Models - 1.5 Series
+    "gemini/gemini-1.5-pro-latest": {
+        "display_name": "Gemini 1.5 Pro",
+        "organization": "Google",
+        "requires_api_keys": ["GEMINI_API_KEY"],
+        "max_workers": 5
     },
     # Groq
     "groq/llama-3.3-70b-versatile": {

@@ -250,10 +250,16 @@ Can be set via .env file (recommended) or environment variables:
 
 ### Model Selection
 **Pre-configured Models** (in MODEL_REGISTRY):
-- **OpenAI**: gpt-5-chat, gpt-5-mini, gpt-4o, gpt-3.5-turbo
-- **Anthropic**: claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022, claude-sonnet-4-5-20250929, claude-opus-4-5-20251101
-- **Google**: gemini/gemini-2.0-flash
+- **OpenAI GPT-5**: gpt-5-pro, gpt-5.2, gpt-5-mini
+- **OpenAI Reasoning**: o4-mini, o3-mini, o3
+- **OpenAI GPT-4**: gpt-4o, gpt-4o-mini
+- **Anthropic**: claude-sonnet-4-5-20250929, claude-opus-4-5-20251101, claude-3-haiku-20240307
+- **Google Gemini 3.0**: gemini/gemini-3-pro-preview
+- **Google Gemini 2.5**: gemini/gemini-2.5-flash
+- **Google Gemini 2.0**: gemini/gemini-2.0-flash-thinking-exp-01-21, gemini/gemini-2.0-flash
+- **Google Gemini 1.5**: gemini/gemini-1.5-pro-latest
 - **Groq**: groq/llama-3.3-70b-versatile
+- **xAI Grok**: xai/grok-4-1-fast-non-reasoning, xai/grok-4-1-fast-reasoning
 - **Custom**: Any model supported by LiteLLM can be used with `--model` flag
 
 **Parameter Handling**: The production client automatically handles model-specific parameter constraints via `litellm.drop_params = True` (e.g., temperature requirements for different models)
