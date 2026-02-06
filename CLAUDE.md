@@ -270,19 +270,27 @@ The framework includes several performance optimizations for faster benchmark ex
 
 ### Parallel Batch Evaluation
 - **ThreadPoolExecutor**: Parallel sample processing with configurable worker count
-- **Default Workers**: 5 parallel workers (configurable via `EvaluationConfig.max_workers`)
+- **Model-Specific Concurrency**: Automatic worker count adjustment based on provider rate limits
+  - OpenAI models: 10 workers (generous concurrency limits)
+  - Claude models: 1 worker (strict concurrent connection limits)
+  - Grok models: 1 worker (very strict concurrent connection limits)
+  - Gemini models: 5 workers (moderate limits)
+  - Groq models: 5 workers (moderate limits)
+- **Automatic Retry Logic**: 3 retries with exponential backoff for rate limit errors
 - **Thread Safety**: All shared resources protected with locks
-- **Expected Speedup**: 4-6x for I/O-bound LLM API calls
+- **Expected Speedup**: 4-10x for OpenAI/Gemini/Groq, sequential for Claude/Grok (prevents rate limit errors)
 
 ```python
 from USABench.core.base import EvaluationConfig
 
-# Configure parallel workers
+# Configure parallel workers (overrides model-specific defaults)
 config = EvaluationConfig(
     model_name="gpt-4o",
     max_workers=10  # Increase for higher throughput
 )
 ```
+
+**Important**: The MODEL_REGISTRY in `sdk/benchmark.py` specifies optimal `max_workers` for each model based on their API rate limits. During benchmarks, these values are used automatically to prevent concurrent connection errors.
 
 ### HTTP Connection Pooling
 - **Session Reuse**: `requests.Session()` with connection pooling for government APIs

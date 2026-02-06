@@ -36,66 +36,78 @@ MODEL_REGISTRY = {
     "gpt-5.2": {
         "display_name": "GPT 5.2",
         "organization": "OpenAI",
-        "requires_api_keys": ["OPENAI_API_KEY"]
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10  # OpenAI has generous concurrency limits
     },
     "gpt-5-mini": {
         "display_name": "GPT-5 Mini",
         "organization": "OpenAI",
-        "requires_api_keys": ["OPENAI_API_KEY"]
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10
     },
     "gpt-4o": {
         "display_name": "GPT-4o",
         "organization": "OpenAI",
-        "requires_api_keys": ["OPENAI_API_KEY"]
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10
     },
     "gpt-4o-mini": {
         "display_name": "GPT-4o Mini",
         "organization": "OpenAI",
-        "requires_api_keys": ["OPENAI_API_KEY"]
+        "requires_api_keys": ["OPENAI_API_KEY"],
+        "max_workers": 10
     },
-    # Anthropic Models
+    # Anthropic Models - CRITICAL: Low concurrency limits
     "claude-3-5-sonnet-20240620": {
         "display_name": "Claude 3.5 Sonnet",
         "organization": "Anthropic",
-        "requires_api_keys": ["ANTHROPIC_API_KEY"]
+        "requires_api_keys": ["ANTHROPIC_API_KEY"],
+        "max_workers": 1  # Anthropic has strict concurrent connection limits
     },
     "claude-3-haiku-20240307": {
         "display_name": "Claude 3 Haiku",
         "organization": "Anthropic",
-        "requires_api_keys": ["ANTHROPIC_API_KEY"]
+        "requires_api_keys": ["ANTHROPIC_API_KEY"],
+        "max_workers": 1
     },
     "claude-sonnet-4-5-20250929": {
         "display_name": "Claude 4.5 Sonnet",
         "organization": "Anthropic",
-        "requires_api_keys": ["ANTHROPIC_API_KEY"]
+        "requires_api_keys": ["ANTHROPIC_API_KEY"],
+        "max_workers": 1
     },
     "claude-opus-4-5-20251101": {
         "display_name": "Claude 4.5 Opus",
         "organization": "Anthropic",
-        "requires_api_keys": ["ANTHROPIC_API_KEY"]
+        "requires_api_keys": ["ANTHROPIC_API_KEY"],
+        "max_workers": 1
     },
     # Gemini Models
     "gemini/gemini-2.5-flash": {
         "display_name": "Gemini 2.5 Flash",
         "organization": "Google",
-        "requires_api_keys": ["GEMINI_API_KEY"]
+        "requires_api_keys": ["GEMINI_API_KEY"],
+        "max_workers": 5  # Google has moderate concurrency limits
     },
     # Groq
     "groq/llama-3.3-70b-versatile": {
         "display_name": "Llama 3.3 70B Versatile",
         "organization": "Meta (via Groq)",
-        "requires_api_keys": ["GROQ_API_KEY"]
+        "requires_api_keys": ["GROQ_API_KEY"],
+        "max_workers": 5
     },
-    # Grok 
+    # Grok - xAI has strict limits
     "xai/grok-4-1-fast-non-reasoning": {
         "display_name": "Grok 4.1 Fast Non-Reasoning",
         "organization": "xAI",
-        "requires_api_keys": ["XAI_API_KEY"]
+        "requires_api_keys": ["XAI_API_KEY"],
+        "max_workers": 1  # xAI has very strict concurrent connection limits
     },
     "xai/grok-4-1-fast-reasoning": {
         "display_name": "Grok 4.1 Fast Reasoning",
         "organization": "xAI",
-        "requires_api_keys": ["XAI_API_KEY"]
+        "requires_api_keys": ["XAI_API_KEY"],
+        "max_workers": 1
     }
 }
 
@@ -234,6 +246,12 @@ class BenchmarkRunner:
         """
         temperature = initial_temperature
 
+        # Get model-specific max_workers from registry (default to 5 if not specified)
+        model_info = MODEL_REGISTRY.get(model_id, {})
+        max_workers = model_info.get("max_workers", 5)
+
+        logger.info(f"Using {max_workers} parallel workers for {model_id}")
+
         for attempt in range(2):  # Try up to 2 times
             try:
                 config = BenchmarkConfig(
@@ -241,6 +259,7 @@ class BenchmarkRunner:
                     temperature=temperature,
                     max_tokens=self.config.max_tokens,
                     timeout=self.config.timeout,
+                    max_workers=max_workers,  # Model-specific concurrency limit
                     data_dir=self.config.data_dir,
                     db_path=self.config.db_path,
                     sql_samples=self.config.sql_samples,

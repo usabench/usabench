@@ -11,6 +11,17 @@
     "rank": 1
   },
   {
+    "model": "Claude 4.5 Opus",
+    "organization": "Anthropic",
+    "easy_success": 46.0,
+    "medium_success": 47.55043227665706,
+    "hard_success": 14.285714285714285,
+    "sql_success": 49.829351535836174,
+    "function_success": 30.538922155688624,
+    "lastUpdated": "2026-02-05",
+    "rank": 2
+  },
+  {
     "model": "GPT-4o",
     "organization": "OpenAI",
     "easy_success": 44.0,
@@ -19,7 +30,18 @@
     "sql_success": 35.49488054607509,
     "function_success": 40.7185628742515,
     "lastUpdated": "2026-02-05",
-    "rank": 2
+    "rank": 3
+  },
+  {
+    "model": "Claude 4.5 Sonnet",
+    "organization": "Anthropic",
+    "easy_success": 40.0,
+    "medium_success": 39.481268011527376,
+    "hard_success": 19.047619047619047,
+    "sql_success": 38.907849829351534,
+    "function_success": 32.93413173652694,
+    "lastUpdated": "2026-02-05",
+    "rank": 4
   },
   {
     "model": "GPT-5 Mini",
@@ -30,61 +52,43 @@
     "sql_success": 39.249146757679185,
     "function_success": 29.34131736526946,
     "lastUpdated": "2026-02-05",
-    "rank": 3
-  },
-  {
-    "model": "Grok 4.1 Fast Reasoning",
-    "organization": "xAI",
-    "easy_success": 24.0,
-    "medium_success": 30.835734870317005,
-    "hard_success": 15.873015873015872,
-    "sql_success": 30.034129692832767,
-    "function_success": 24.550898203592812,
-    "lastUpdated": "2026-02-05",
-    "rank": 4
-  },
-  {
-    "model": "Gemini 2.5 Flash",
-    "organization": "Google",
-    "easy_success": 30.0,
-    "medium_success": 15.273775216138327,
-    "hard_success": 26.984126984126984,
-    "sql_success": 9.556313993174061,
-    "function_success": 34.13173652694611,
-    "lastUpdated": "2026-02-05",
     "rank": 5
   },
-  {
-    "model": "Claude 3 Haiku",
-    "organization": "Anthropic",
-    "easy_success": 10.0,
-    "medium_success": 3.170028818443804,
-    "hard_success": 3.1746031746031744,
-    "sql_success": 2.7303754266211606,
-    "function_success": 5.9880239520958085,
+ {
+    "model": "Grok 4.1 Fast Reasoning",
+    "organization": "xAI",
+    "easy_success": 36.0,
+    "medium_success": 38.90489913544668,
+    "hard_success": 15.873015873015872,
+    "sql_success": 39.249146757679185,
+    "function_success": 28.74251497005988,
     "lastUpdated": "2026-02-05",
     "rank": 6
   },
   {
-    "model": "Claude 4.5 Sonnet",
+    "model": "Claude 3 Haiku",
     "organization": "Anthropic",
-    "easy_success": 6.0,
-    "medium_success": 2.5936599423631126,
-    "hard_success": 0.0,
-    "sql_success": 2.3890784982935154,
-    "function_success": 2.9940119760479043,
+    "easy_success": 42.0,
+    "medium_success": 28.530259365994237,
+    "hard_success": 19.047619047619047,
+    "sql_success": 26.621160409556317,
+    "function_success": 32.33532934131736,
     "lastUpdated": "2026-02-05",
     "rank": 7
   },
   {
-    "model": "Claude 4.5 Opus",
-    "organization": "Anthropic",
-    "easy_success": 4.0,
-    "medium_success": 1.1527377521613833,
-    "hard_success": 1.5873015873015872,
-    "sql_success": 1.3651877133105803,
-    "function_success": 1.7964071856287425,
+    "model": "Gemini 2.5 Flash",
+    "organization": "Google",
+    "easy_success": 34.0,
+    "medium_success": 16.714697406340058,
+    "hard_success": 26.984126984126984,
+    "sql_success": 10.580204778156997,
+    "function_success": 36.52694610778443,
     "lastUpdated": "2026-02-05",
     "rank": 8
   }
+
 ]
+
+
+ 

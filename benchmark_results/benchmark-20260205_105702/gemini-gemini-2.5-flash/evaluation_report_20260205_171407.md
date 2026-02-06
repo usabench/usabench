@@ -1,40 +1,40 @@
 # USABench Evaluation Report
-Generated: 2026-02-05 12:59:04
+Generated: 2026-02-05 17:14:08
 
 ## Overall Performance
 - Total Samples: 460
-- Correct Samples: 85
-- Overall Accuracy: 18.48%
-- Average Score: 0.187
-- Average Execution Time: 7.16s
+- Correct Samples: 92
+- Overall Accuracy: 20.00%
+- Average Score: 0.198
+- Average Execution Time: 7.01s
 - Error Rate: 0.22%
 
 ## Performance by Evaluation Type
 ### SQL
 - Samples: 293
-- Accuracy: 9.56%
-- Average Score: 0.123
+- Accuracy: 10.58%
+- Average Score: 0.132
 
 ### FUNCTION
 - Samples: 167
-- Accuracy: 34.13%
-- Average Score: 0.301
+- Accuracy: 36.53%
+- Average Score: 0.315
 
 ## Performance by Difficulty
 ### MEDIUM
 - Samples: 347
-- Accuracy: 15.27%
-- Average Score: 0.162
+- Accuracy: 16.71%
+- Average Score: 0.173
 
 ### EASY
 - Samples: 50
-- Accuracy: 30.00%
-- Average Score: 0.270
+- Accuracy: 34.00%
+- Average Score: 0.305
 
 ### HARD
 - Samples: 63
 - Accuracy: 26.98%
-- Average Score: 0.262
+- Average Score: 0.252
 
 ## Error Analysis
 - Total Errors: 1

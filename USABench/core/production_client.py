@@ -75,69 +75,96 @@ class ProductionLLMClient:
     def generate(self,
                  prompt: Union[str, EvaluationPrompt],
                  model: Optional[str] = None,
+                 max_retries: int = 3,
                  **kwargs) -> ModelResponse:
-        """Generate response from model."""
+        """Generate response from model with retry logic for rate limits.
+
+        Args:
+            prompt: Prompt to generate from
+            model: Model identifier
+            max_retries: Maximum number of retries for rate limit errors
+            **kwargs: Additional parameters
+
+        Returns:
+            ModelResponse with content or error
+        """
         model = model or self.default_model
         start_time = time.time()
 
-        try:
-            # Prepare messages
-            if isinstance(prompt, str):
-                messages = [{"role": "user", "content": prompt}]
-            elif isinstance(prompt, EvaluationPrompt):
-                messages = prompt.to_messages()
-            else:
-                messages = [{"role": "user", "content": str(prompt)}]
+        # Retry loop for rate limit errors
+        for attempt in range(max_retries):
+            try:
+                # Prepare messages
+                if isinstance(prompt, str):
+                    messages = [{"role": "user", "content": prompt}]
+                elif isinstance(prompt, EvaluationPrompt):
+                    messages = prompt.to_messages()
+                else:
+                    messages = [{"role": "user", "content": str(prompt)}]
 
-            # Prepare parameters
-            params = {
-                "model": model,
-                "messages": messages,
-                "timeout": kwargs.get("timeout", self.timeout),
-                "max_tokens": kwargs.get("max_tokens", self.max_tokens),
-                "temperature": kwargs.get("temperature", self.temperature)
-            }
+                # Prepare parameters
+                params = {
+                    "model": model,
+                    "messages": messages,
+                    "timeout": kwargs.get("timeout", self.timeout),
+                    "max_tokens": kwargs.get("max_tokens", self.max_tokens),
+                    "temperature": kwargs.get("temperature", self.temperature)
+                }
 
-            logger.debug(f"Calling {model} with {len(messages)} messages")
+                logger.debug(f"Calling {model} with {len(messages)} messages (attempt {attempt + 1}/{max_retries})")
 
-            # Make API call
-            response = completion(**params)
+                # Make API call
+                response = completion(**params)
 
-            execution_time = (time.time() - start_time) * 1000
+                execution_time = (time.time() - start_time) * 1000
 
-            # Extract content
-            content = response.choices[0].message.content
+                # Extract content
+                content = response.choices[0].message.content
 
-            # Track usage
-            usage = response.usage.model_dump() if hasattr(response.usage, 'model_dump') else response.usage.__dict__
-            self._update_usage(usage)
+                # Track usage
+                usage = response.usage.model_dump() if hasattr(response.usage, 'model_dump') else response.usage.__dict__
+                self._update_usage(usage)
 
-            return ModelResponse(
-                content=content,
-                model=model,
-                usage=usage,
-                execution_time_ms=execution_time
-            )
+                return ModelResponse(
+                    content=content,
+                    model=model,
+                    usage=usage,
+                    execution_time_ms=execution_time
+                )
 
-        except Exception as e:
-            execution_time = (time.time() - start_time) * 1000
-            error_str = str(e).lower()
+            except Exception as e:
+                execution_time = (time.time() - start_time) * 1000
+                error_str = str(e).lower()
 
-            # Re-raise temperature errors so they can be handled by fallback logic
-            if 'temperature' in error_str or 'unsupportedparams' in error_str:
+                # Re-raise temperature errors so they can be handled by fallback logic
+                if 'temperature' in error_str or 'unsupportedparams' in error_str:
+                    logger.error(f"Error with {model}: {e}")
+                    raise  # Re-raise to allow temperature fallback
+
+                # Check for rate limit errors
+                is_rate_limit = ('rate' in error_str and 'limit' in error_str) or \
+                               'ratelimiterror' in error_str or \
+                               'rate_limit_error' in error_str or \
+                               'concurrent' in error_str or \
+                               '429' in error_str
+
+                if is_rate_limit and attempt < max_retries - 1:
+                    # Exponential backoff: 2^attempt seconds
+                    wait_time = 2 ** attempt
+                    logger.warning(f"Rate limit hit for {model}, retrying in {wait_time}s (attempt {attempt + 1}/{max_retries})")
+                    time.sleep(wait_time)
+                    continue  # Retry
+
+                # Final attempt failed or non-rate-limit error
                 logger.error(f"Error with {model}: {e}")
-                raise  # Re-raise to allow temperature fallback
 
-            # For other errors, log and return error response
-            logger.error(f"Error with {model}: {e}")
-
-            return ModelResponse(
-                content="",
-                model=model,
-                usage={"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
-                execution_time_ms=execution_time,
-                error=str(e)
-            )
+                return ModelResponse(
+                    content="",
+                    model=model,
+                    usage={"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
+                    execution_time_ms=execution_time,
+                    error=str(e)
+                )
 
     def _update_usage(self, usage: Dict[str, Any]):
         """Update usage statistics (thread-safe)."""
