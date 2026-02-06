@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import difflib
 import re
 import sqlite3
+import threading
 from typing import Any, Dict, List, Optional, Union
 
 
@@ -26,15 +27,45 @@ class Text2SQLEvaluator:
     """
     Production Text2SQL evaluator from usafacts_eval_v2.
     Implements deterministic pass/fail evaluation with binary metrics.
+    Thread-safe with connection pooling per thread.
     """
 
     def __init__(self, db_path: str):
         """Initialize with database path.
-        
+
         Args:
             db_path: Path to SQLite database
         """
         self.db_path = db_path
+        # Thread-local storage for connections
+        self._local = threading.local()
+
+    def _get_connection(self) -> sqlite3.Connection:
+        """Get a thread-local database connection.
+
+        Reuses connections within the same thread for better performance.
+        """
+        if not hasattr(self._local, 'connection') or self._local.connection is None:
+            self._local.connection = sqlite3.connect(
+                self.db_path,
+                check_same_thread=False,
+                timeout=30.0
+            )
+        return self._local.connection
+
+    def _get_connection_with_row_factory(self) -> sqlite3.Connection:
+        """Get a thread-local database connection with row factory.
+
+        Reuses connections within the same thread for better performance.
+        """
+        if not hasattr(self._local, 'connection_row') or self._local.connection_row is None:
+            self._local.connection_row = sqlite3.connect(
+                self.db_path,
+                check_same_thread=False,
+                timeout=30.0
+            )
+            self._local.connection_row.row_factory = sqlite3.Row
+        return self._local.connection_row
 
     def evaluate_binary_correctness(
         self,
@@ -117,7 +148,7 @@ class Text2SQLEvaluator:
     def _test_execution(self, candidate_sql: str) -> Dict[str, Union[bool, float, str]]:
         """Test if SQL executes without errors."""
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self._get_connection()
             cursor = conn.cursor()
 
             # Clean and prepare SQL
@@ -127,8 +158,6 @@ class Text2SQLEvaluator:
             cursor.execute(clean_sql)
             cursor.fetchall()  # Consume results
 
-            conn.close()
-
             return {
                 'pass': True,
                 'score': 1.0,
@@ -136,16 +165,12 @@ class Text2SQLEvaluator:
             }
 
         except sqlite3.Error as e:
-            if 'conn' in locals():
-                conn.close()
             return {
                 'pass': False,
                 'score': 0.0,
                 'details': f'SQL execution failed: {str(e)}'
             }
         except Exception as e:
-            if 'conn' in locals():
-                conn.close()
             return {
                 'pass': False,
                 'score': 0.0,
@@ -159,8 +184,7 @@ class Text2SQLEvaluator:
     ) -> Dict[str, Union[bool, float, str]]:
         """Test if query results match expected results."""
         try:
-            conn = sqlite3.connect(self.db_path)
-            conn.row_factory = sqlite3.Row
+            conn = self._get_connection_with_row_factory()
             cursor = conn.cursor()
 
             # Execute candidate SQL
@@ -168,8 +192,6 @@ class Text2SQLEvaluator:
             cursor.execute(clean_sql)
             candidate_rows = cursor.fetchall()
             candidate_result = [dict(row) for row in candidate_rows]
-
-            conn.close()
 
             # Compare results (values only, not column names)
             similarity_score = self._compare_results(candidate_result, expected_results)
@@ -184,8 +206,6 @@ class Text2SQLEvaluator:
             }
 
         except Exception as e:
-            if 'conn' in locals():
-                conn.close()
             return {
                 'pass': False,
                 'score': 0.0,

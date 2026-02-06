@@ -1,8 +1,12 @@
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+import logging
 from typing import Any, Dict, List, Optional, Protocol
+
+logger = logging.getLogger(__name__)
 
 
 class EvaluationType(Enum):
@@ -92,6 +96,7 @@ class EvaluationConfig:
     timeout: int = 30
     temperature: float = 0.0
     max_tokens: int = 2000
+    max_workers: int = 5  # Number of parallel workers for batch evaluation
 
 
 class BaseEvaluator(ABC):
@@ -100,12 +105,69 @@ class BaseEvaluator(ABC):
     def __init__(self, config: EvaluationConfig):
         self.config = config
 
-    def evaluate_batch(self, samples: List[UnifiedSample]) -> List[EvaluationResult]:
-        """Evaluate a batch of samples."""
-        results = []
-        for sample in samples:
-            result = self.evaluate_single(sample)
-            results.append(result)
+    def evaluate_batch(
+        self,
+        samples: List[UnifiedSample],
+        max_workers: Optional[int] = None,
+        parallel: bool = True
+    ) -> List[EvaluationResult]:
+        """Evaluate a batch of samples with optional parallel execution.
+
+        Args:
+            samples: List of samples to evaluate.
+            max_workers: Number of parallel workers. Defaults to config.max_workers.
+            parallel: Whether to use parallel execution. Defaults to True.
+
+        Returns:
+            List of evaluation results in the same order as input samples.
+        """
+        if not parallel or len(samples) <= 1:
+            # Sequential evaluation
+            results = []
+            for sample in samples:
+                result = self.evaluate_single(sample)
+                results.append(result)
+            return results
+
+        # Parallel evaluation with ThreadPoolExecutor
+        workers = max_workers or self.config.max_workers
+        results = [None] * len(samples)
+
+        logger.info(f"Starting parallel evaluation of {len(samples)} samples with {workers} workers")
+
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            # Submit all tasks
+            future_to_idx = {
+                executor.submit(self.evaluate_single, sample): idx
+                for idx, sample in enumerate(samples)
+            }
+
+            # Collect results as they complete
+            completed = 0
+            for future in as_completed(future_to_idx):
+                idx = future_to_idx[future]
+                try:
+                    results[idx] = future.result()
+                    completed += 1
+                    if completed % 10 == 0:
+                        logger.info(f"Completed {completed}/{len(samples)} evaluations")
+                except Exception as e:
+                    # Handle any unexpected errors
+                    sample = samples[idx]
+                    logger.error(f"Evaluation failed for sample {sample.id}: {e}")
+                    results[idx] = EvaluationResult(
+                        sample_id=sample.id,
+                        question=sample.question,
+                        evaluation_type=sample.evaluation_type,
+                        difficulty=sample.difficulty,
+                        model_response="",
+                        is_correct=False,
+                        score=0.0,
+                        error_message=f"Parallel execution error: {str(e)}",
+                        timestamp=datetime.now()
+                    )
+
+        logger.info(f"Completed parallel evaluation of {len(samples)} samples")
         return results
 
     def evaluate_single(self, sample: UnifiedSample) -> EvaluationResult:

@@ -13,6 +13,7 @@ class BenchmarkConfig:
     temperature: float = 0.0
     max_tokens: int = 2000
     timeout: int = 30
+    max_workers: int = 5  # Parallel workers for batch evaluation
 
     # Dataset configuration
     data_dir: str = "data"
@@ -36,5 +37,6 @@ class BenchmarkConfig:
             temperature=self.temperature,
             max_tokens=self.max_tokens,
             timeout=self.timeout,
-            difficulty_filter=self.difficulty_filter
+            difficulty_filter=self.difficulty_filter,
+            max_workers=self.max_workers
         )

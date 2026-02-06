@@ -6,13 +6,53 @@ from .base import Difficulty, EvaluationType, UnifiedSample
 
 
 class DataLoader:
-    """Enhanced data loader for ground truth datasets."""
+    """Enhanced data loader for ground truth datasets with caching."""
 
     def __init__(self, data_dir: str = "data"):
         self.data_dir = Path(data_dir)
         self.sql_ground_truth_file = self.data_dir / "text2sql_ground_truth.json"
-        self.function_ground_truth_file = self.data_dir / "enhanced_function_calling_ground_truth.json"
+        self.function_ground_truth_file = self.data_dir / "fcl_ground_truth.json"
+        self.mock_function_ground_truth_file = self.data_dir / "mock_fcl_ground_truth.json"
+        # Legacy alias for backward compatibility
         self.function_eval_file = self.data_dir / "fcl_ground_truth.json"
+
+        # Cache for loaded data (avoids redundant disk I/O)
+        self._sql_cache: Optional[Dict[str, Any]] = None
+        self._function_cache: Optional[Dict[str, Any]] = None
+        self._function_eval_cache: Optional[Dict[str, Any]] = None
+
+    def _load_sql_data(self) -> Dict[str, Any]:
+        """Load SQL data with caching."""
+        if self._sql_cache is None:
+            if not self.sql_ground_truth_file.exists():
+                raise FileNotFoundError(f"SQL ground truth file not found: {self.sql_ground_truth_file}")
+            with open(self.sql_ground_truth_file) as f:
+                self._sql_cache = json.load(f)
+        return self._sql_cache
+
+    def _load_function_data(self) -> Dict[str, Any]:
+        """Load function data with caching."""
+        if self._function_cache is None:
+            if not self.function_ground_truth_file.exists():
+                raise FileNotFoundError(f"Function ground truth file not found: {self.function_ground_truth_file}")
+            with open(self.function_ground_truth_file) as f:
+                self._function_cache = json.load(f)
+        return self._function_cache
+
+    def _load_function_eval_data(self) -> Dict[str, Any]:
+        """Load function eval data with caching."""
+        if self._function_eval_cache is None:
+            if not self.function_eval_file.exists():
+                raise FileNotFoundError(f"Function eval ground truth file not found: {self.function_eval_file}")
+            with open(self.function_eval_file) as f:
+                self._function_eval_cache = json.load(f)
+        return self._function_eval_cache
+
+    def clear_cache(self):
+        """Clear all cached data."""
+        self._sql_cache = None
+        self._function_cache = None
+        self._function_eval_cache = None
 
     def load_sql_samples(
         self,
@@ -20,11 +60,7 @@ class DataLoader:
         difficulty_filter: Optional[List[Difficulty]] = None
     ) -> List[UnifiedSample]:
         """Load SQL evaluation samples from ground truth."""
-        if not self.sql_ground_truth_file.exists():
-            raise FileNotFoundError(f"SQL ground truth file not found: {self.sql_ground_truth_file}")
-
-        with open(self.sql_ground_truth_file) as f:
-            data = json.load(f)
+        data = self._load_sql_data()
 
         # Handle different JSON structures
         questions = data.get("questions", data.get("ground_truth_data", []))
@@ -74,11 +110,7 @@ class DataLoader:
         difficulty_filter: Optional[List[Difficulty]] = None
     ) -> List[UnifiedSample]:
         """Load function calling evaluation samples from ground truth."""
-        if not self.function_ground_truth_file.exists():
-            raise FileNotFoundError(f"Function ground truth file not found: {self.function_ground_truth_file}")
-
-        with open(self.function_ground_truth_file) as f:
-            data = json.load(f)
+        data = self._load_function_data()
 
         # Handle different JSON structures
         questions = data.get("questions", data.get("ground_truth_data", []))
@@ -104,9 +136,17 @@ class DataLoader:
             if difficulty_filter and difficulty not in difficulty_filter:
                 continue
 
-            # Convert function_sequence to ground_truth_functions format
+            # Convert function_sequence or expected_functions to ground_truth_functions format
             ground_truth_functions = []
-            if "function_sequence" in item:
+            if "expected_functions" in item:
+                # fcl_ground_truth.json format
+                for func in item["expected_functions"]:
+                    ground_truth_functions.append({
+                        "name": func.get("function_name"),
+                        "arguments": func.get("parameters", {})
+                    })
+            elif "function_sequence" in item:
+                # mock_fcl_ground_truth.json format
                 for func in item["function_sequence"]:
                     ground_truth_functions.append({
                         "name": func.get("function_name"),
@@ -126,7 +166,8 @@ class DataLoader:
                 metadata={
                     "category": item.get("category"),
                     "workflow_type": item.get("workflow_type"),
-                    "source": "enhanced_function_calling_ground_truth"
+                    "ground_truth_results": item.get("ground_truth_results"),
+                    "source": "fcl_ground_truth"
                 }
             )
             samples.append(sample)
@@ -164,11 +205,7 @@ class DataLoader:
         difficulty_filter: Optional[List[Difficulty]] = None
     ) -> List[UnifiedSample]:
         """Load function calling evaluation samples."""
-        if not self.function_eval_file.exists():
-            raise FileNotFoundError(f"Function eval ground truth file not found: {self.function_eval_file}")
-
-        with open(self.function_eval_file) as f:
-            data = json.load(f)
+        data = self._load_function_eval_data()
 
         questions = data.get("questions", [])
 

@@ -24,6 +24,12 @@ A comprehensive benchmark framework for evaluating language models on government
 - **BenchmarkRunner**: Multi-model orchestrator with graceful error handling
 - **Clean Architecture**: Modular design with core, evaluators, SDK, and CLI layers
 
+### ⚡ Performance Optimizations
+- **Parallel Evaluation**: ThreadPoolExecutor-based parallel sample processing (5-6x speedup)
+- **Connection Pooling**: HTTP session pooling for APIs, thread-local SQLite connections
+- **Rate Limiting**: Thread-safe sliding window rate limiter for API throttling
+- **Data Caching**: In-memory caching for ground truth datasets
+
 ### 🌐 Real API Integration
 - **BLS (Bureau of Labor Statistics)**: CPI, Employment Cost Index, Productivity data
 - **BEA (Bureau of Economic Analysis)**: GDP by Industry, Regional Income data
@@ -124,9 +130,10 @@ python3 -m USABench --benchmark --test-mode --verbose
 ```
 USABench/
 ├── core/                     # Core framework components
-│   ├── base.py              # Base classes and data models
-│   ├── loader.py            # Data loading and management
-│   ├── production_client.py # LiteLLM integration with auto param handling
+│   ├── base.py              # Base classes, parallel batch evaluation
+│   ├── loader.py            # Data loading with caching
+│   ├── production_client.py # Thread-safe LiteLLM integration
+│   ├── rate_limiter.py      # Thread-safe API rate limiting
 │   └── client.py            # Legacy LLM client
 ├── evaluators/              # Evaluation implementations
 │   ├── production_sql.py    # Production Text2SQL evaluator
@@ -142,7 +149,7 @@ USABench/
 ├── data/                    # Dataset and database
 │   ├── usafacts.db         # SQLite database (459 samples total)
 │   ├── text2sql_ground_truth.json           # 293 SQL questions
-│   └── enhanced_function_calling_ground_truth.json # 166 function questions
+│   └── fcl_ground_truth.json # 166 function questions
 ├── cli.py                   # Command-line interface with benchmark mode
 ├── run_baseline.sh          # Shell script for multi-model benchmarks
 └── README.md               # This file
@@ -292,6 +299,35 @@ python3 -m USABench --evaluation-type full --model gpt-4o \
   --verbose
 ```
 
+## ⚡ Performance & Parallelization
+
+USABench includes built-in performance optimizations for faster benchmark execution:
+
+### Parallel Batch Evaluation
+The framework uses `ThreadPoolExecutor` for parallel sample processing, providing 4-6x speedup for I/O-bound LLM API calls:
+
+- **Default Workers**: 5 parallel workers (configurable)
+- **Thread Safety**: All shared resources (usage tracking, database connections) are thread-safe
+- **Order Preservation**: Results maintain original sample order despite parallel execution
+
+### Connection Pooling
+- **HTTP Sessions**: Persistent connections with retry logic for BLS/BEA APIs
+- **SQLite Connections**: Thread-local connection reuse eliminates connect/close overhead
+- **Automatic Retries**: 3 retries with exponential backoff for 429/5xx errors
+
+### Rate Limiting
+Thread-safe sliding window rate limiter respects API limits:
+- OpenAI: 3500 requests/minute
+- BLS API: 100 requests/minute
+- BEA API: 80 requests/minute
+
+### Performance Estimates
+| Scenario | Sequential | Parallel (5 workers) | Speedup |
+|----------|------------|---------------------|---------|
+| Test mode (10 samples) | ~8 min | ~2 min | 4x |
+| Single model (460 samples) | ~10 hours | ~1.5-2 hours | 5-6x |
+| 3-model benchmark | ~30 hours | ~5 hours | 6x |
+
 ## 🔍 Dataset Information
 
 ### SQL Dataset
@@ -301,7 +337,7 @@ python3 -m USABench --evaluation-type full --model gpt-4o \
 - **Tables**: Government economic data (budget, GDP, employment, etc.)
 
 ### Function Calling Dataset
-- **File**: `enhanced_function_calling_ground_truth.json`
+- **File**: `fcl_ground_truth.json`
 - **Questions**: 166 function calling evaluation questions
 - **APIs**: Real BLS and BEA government data APIs
 - **Functions**: 5+ government data API functions with real execution

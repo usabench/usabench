@@ -104,9 +104,10 @@ python3 -m USABench.scripts.export_golden_records
 ```
 USABench/
 ├── core/                     # Core framework components
-│   ├── base.py              # Base classes and data models
-│   ├── loader.py            # Data loading and management
-│   ├── production_client.py # LiteLLM integration with auto param handling
+│   ├── base.py              # Base classes, data models, parallel batch evaluation
+│   ├── loader.py            # Data loading with caching
+│   ├── production_client.py # Thread-safe LiteLLM integration
+│   ├── rate_limiter.py      # Thread-safe rate limiting for API calls
 │   └── client.py            # Legacy LLM client
 ├── evaluators/              # Evaluation implementations
 │   ├── production_sql.py    # Production Text2SQL evaluator
@@ -125,7 +126,8 @@ USABench/
 ├── data/                    # Dataset and database
 │   ├── usafacts.db         # SQLite database (459 samples total)
 │   ├── text2sql_ground_truth.json           # 293 SQL questions
-│   ├── enhanced_function_calling_ground_truth.json # 166 function questions
+│   ├── fcl_ground_truth.json                # 167 function questions (BLS/BEA APIs)
+│   ├── mock_fcl_ground_truth.json           # 166 mock functions (abstract APIs)
 │   └── golden_records_consolidated.csv      # All questions in single CSV (generated)
 ├── cli.py                   # Command-line interface with benchmark mode
 ├── run_baseline.sh          # Shell script for multi-model benchmarks
@@ -143,6 +145,10 @@ USABench/
 - **Graceful Degradation**: API key validation with early warnings, continues with available models
 - **Real API Integration**: Function calling evaluation uses actual BLS/BEA government APIs
 - **Environment-based Configuration**: Automatic .env file loading via python-dotenv for local development
+- **Parallel Batch Evaluation**: ThreadPoolExecutor-based parallel sample processing (configurable workers)
+- **Thread-Safe Components**: Lock-protected usage tracking, thread-local database connections
+- **Connection Pooling**: HTTP session pooling for API calls, SQLite connection reuse per thread
+- **Rate Limiting**: Thread-safe sliding window rate limiter for API throttling
 
 ### Data Flow
 
@@ -244,10 +250,16 @@ Can be set via .env file (recommended) or environment variables:
 
 ### Model Selection
 **Pre-configured Models** (in MODEL_REGISTRY):
-- **OpenAI**: gpt-5-chat, gpt-5-mini, gpt-4o, gpt-3.5-turbo
-- **Anthropic**: claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022, claude-sonnet-4-5-20250929, claude-opus-4-5-20251101
-- **Google**: gemini/gemini-2.0-flash
+- **OpenAI GPT-5**: gpt-5-pro, gpt-5.2, gpt-5-mini
+- **OpenAI Reasoning**: o4-mini, o3-mini, o3
+- **OpenAI GPT-4**: gpt-4o, gpt-4o-mini
+- **Anthropic**: claude-sonnet-4-5-20250929, claude-opus-4-5-20251101, claude-3-haiku-20240307
+- **Google Gemini 3.0**: gemini/gemini-3-pro-preview
+- **Google Gemini 2.5**: gemini/gemini-2.5-flash
+- **Google Gemini 2.0**: gemini/gemini-2.0-flash-thinking-exp-01-21, gemini/gemini-2.0-flash
+- **Google Gemini 1.5**: gemini/gemini-1.5-pro-latest
 - **Groq**: groq/llama-3.3-70b-versatile
+- **xAI Grok**: xai/grok-4-1-fast-non-reasoning, xai/grok-4-1-fast-reasoning
 - **Custom**: Any model supported by LiteLLM can be used with `--model` flag
 
 **Parameter Handling**: The production client automatically handles model-specific parameter constraints via `litellm.drop_params = True` (e.g., temperature requirements for different models)
@@ -258,13 +270,85 @@ Can be set via .env file (recommended) or environment variables:
 - **Output Formats**: JSON, CSV, and Markdown reports
 - **Leaderboard Output**: Website-ready JSON at `results/benchmark-{timestamp}/leaderboard.json`
 
+## Performance Optimizations
+
+The framework includes several performance optimizations for faster benchmark execution:
+
+### Parallel Batch Evaluation
+- **ThreadPoolExecutor**: Parallel sample processing with configurable worker count
+- **Model-Specific Concurrency**: Automatic worker count adjustment based on provider rate limits
+  - OpenAI models: 10 workers (generous concurrency limits)
+  - Claude models: 1 worker (strict concurrent connection limits)
+  - Grok models: 1 worker (very strict concurrent connection limits)
+  - Gemini models: 5 workers (moderate limits)
+  - Groq models: 5 workers (moderate limits)
+- **Automatic Retry Logic**: 3 retries with exponential backoff for rate limit errors
+- **Thread Safety**: All shared resources protected with locks
+- **Expected Speedup**: 4-10x for OpenAI/Gemini/Groq, sequential for Claude/Grok (prevents rate limit errors)
+
+```python
+from USABench.core.base import EvaluationConfig
+
+# Configure parallel workers (overrides model-specific defaults)
+config = EvaluationConfig(
+    model_name="gpt-4o",
+    max_workers=10  # Increase for higher throughput
+)
+```
+
+**Important**: The MODEL_REGISTRY in `sdk/benchmark.py` specifies optimal `max_workers` for each model based on their API rate limits. During benchmarks, these values are used automatically to prevent concurrent connection errors.
+
+### HTTP Connection Pooling
+- **Session Reuse**: `requests.Session()` with connection pooling for government APIs
+- **Retry Logic**: Automatic retries (3x) with exponential backoff for transient errors
+- **Status Codes**: Handles 429, 500, 502, 503, 504 with automatic retry
+- **Pool Size**: 10 connections, max 20 per pool
+
+### Database Connection Pooling
+- **Thread-Local Connections**: SQLite connections reused within same thread
+- **Connection Parameters**: `check_same_thread=False`, 30s timeout
+- **Eliminates Overhead**: No connect/close per query
+
+### Rate Limiting
+- **Thread-Safe Rate Limiter**: Sliding window algorithm in `core/rate_limiter.py`
+- **Pre-configured Limits**: OpenAI (3500 RPM), BLS (100/min), BEA (80/min)
+
+```python
+from USABench.core.rate_limiter import RateLimiter, create_openai_limiter
+
+# Create rate limiter
+limiter = create_openai_limiter()  # 3500 requests/minute
+
+# Use in API calls
+if limiter.acquire():  # Blocks until slot available
+    # Make API call
+    pass
+```
+
+### Data Caching
+- **DataLoader Caching**: JSON files loaded once and cached in memory
+- **Cache Methods**: `_load_sql_data()`, `_load_function_data()`, `_load_function_eval_data()`
+- **Cache Control**: `clear_cache()` method for invalidation
+
+### Performance Estimates
+| Scenario | Before | After | Speedup |
+|----------|--------|-------|---------|
+| Test mode (10 samples) | ~8 min | ~2 min | 4x |
+| Single model (460 samples) | ~10 hours | ~1.5-2 hours | 5-6x |
+| 3-model benchmark | ~30 hours | ~5 hours | 6x |
+
 ## Datasets
 
 - **SQL Dataset**: 293 Text2SQL questions in `text2sql_ground_truth.json`
-- **Function Calling Dataset**: 166 questions in `enhanced_function_calling_ground_truth.json`
-- **Total Questions**: 459 (293 SQL + 166 Function)
+- **Function Calling Dataset**: 167 questions in `fcl_ground_truth.json` (concrete BLS/BEA API functions)
+  - Used for benchmark evaluations with real API execution
+  - Functions: `get_gdp_by_industry`, `get_cpi_data`, `get_employment_cost_index`, etc.
+- **Mock Function Dataset**: 166 questions in `mock_fcl_ground_truth.json` (abstract functions)
+  - Used for CSV exports and future mock testing
+  - Functions: `query_economic_data`, `query_budget_data`, etc.
+- **Total Questions**: 460 (293 SQL + 167 Function)
 - **Test Mode**: 10 questions (5 SQL + 5 Function) for quick validation
-- **Full Mode**: All 459 questions for comprehensive evaluation
+- **Full Mode**: All 460 questions for comprehensive evaluation
 - **Database Schema**: Government economic data from USAFacts, BLS, and BEA in SQLite format
 - **Difficulty Levels**: Easy/Medium/Hard classifications for both evaluation types
 

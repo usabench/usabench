@@ -3,6 +3,9 @@
 This script combines SQL and function calling ground truth data into a single CSV
 file with 459 total records (293 SQL + 166 Function Calling).
 
+Note: This uses mock_fcl_ground_truth.json (abstract functions) for human-readable
+exports. The benchmark evaluations use fcl_ground_truth.json (concrete BLS/BEA APIs).
+
 Usage:
     python3 -m USABench.scripts.export_golden_records
 """
@@ -20,7 +23,7 @@ class GoldenRecordExporter:
     def __init__(self, data_dir: str = "USABench/data"):
         self.data_dir = Path(data_dir)
         self.sql_file = self.data_dir / "text2sql_ground_truth.json"
-        self.func_file = self.data_dir / "enhanced_function_calling_ground_truth.json"
+        self.func_file = self.data_dir / "mock_fcl_ground_truth.json"
         self.output_file = self.data_dir / "golden_records_consolidated.csv"
 
     def infer_sql_difficulty(self, sql_query: str) -> str:

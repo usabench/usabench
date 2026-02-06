@@ -1,0 +1,2839 @@
+sample_id,question,evaluation_type,difficulty,model_response,is_correct,score,execution_time,error_message,timestamp
+1,What are the top 10 government spending categories by total outlays?,sql,medium,"```sql
+SELECT
+  function_name,
+  SUM(outlay_amount) AS total_outlays
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  total_outlays DESC
+LIMIT 10;
+```",True,1.0,12.602842,,2026-02-05 17:03:30.087269
+2,Which budget functions spend more than $100 billion annually?,sql,medium,"```sql
+SELECT
+  function_name,
+  fiscal_year,
+  SUM(outlay_amount) AS annual_outlay_in_millions
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name,
+  fiscal_year
+HAVING
+  SUM(outlay_amount) > 100000;
+```",True,1.0,14.835623,,2026-02-05 17:03:32.321944
+3,What are the smallest government spending categories by total outlays?,sql,medium,"```sqlite
+SELECT
+  function_name,
+  SUM(outlay_amount) AS total_outlays
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  total_outlays ASC;
+```",False,0.0,12.579447,,2026-02-05 17:03:30.068038
+4,Which departments have outlays between $50-200 billion?,sql,medium,"```sqlite
+SELECT
+  function_name
+FROM
+  budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+HAVING
+  SUM(
+    CASE
+      WHEN unit = 'millions' THEN outlay_amount / 1000.0
+      WHEN unit = 'billions' THEN outlay_amount
+      ELSE 0 -- Assuming other units are negligible or not relevant for this calculation
+    END
+  ) BETWEEN 50 AND 200;
+```",False,0.0,19.497536,,2026-02-05 17:03:36.987620
+5,What spending categories exist in the defense budget?,sql,medium,"```sqlite
+SELECT DISTINCT function_name
+FROM budget_outlays
+WHERE superfunction = 'National Defense';
+```",False,0.0,13.048022,,2026-02-05 17:03:30.539453
+6,Which economic indicators are tracked in the Consumer Price Index data?,sql,medium,"```sqlite
+SELECT DISTINCT indicator_id
+FROM time_series_data
+WHERE category = 'consumer_price_index'
+```",False,0.0,5.957642,,2026-02-05 17:03:36.025763
+7,What categories of goods and services are measured for price changes?,sql,medium,"```sqlite
+SELECT DISTINCT function_name
+FROM budget_outlays
+WHERE fiscal_year BETWEEN 2014 AND 2024;
+```",False,0.0,10.064236,,2026-02-05 17:03:40.151582
+8,Which worker classifications are included in the Employment Cost Index?,sql,medium,"```sql
+SELECT DISTINCT subcategory
+FROM time_series_data
+WHERE category = 'employment_cost_index';
+```",True,1.0,6.093318,,2026-02-05 17:03:36.632841
+9,What time periods are covered in the economic data?,sql,medium,"```sql
+SELECT MIN(fiscal_year) AS start_year, MAX(fiscal_year) AS end_year
+FROM budget_outlays;
+```",False,0.4,6.621015,,2026-02-05 17:03:38.943057
+10,Which industries are tracked for GDP contribution measurements?,sql,medium,"```sqlite
+SELECT DISTINCT industry_name
+FROM industry_gdp;
+```",False,0.0,0.771254,,2026-02-05 17:03:36.797099
+11,What years of budget data are available in the database?,sql,medium,"```sql
+SELECT DISTINCT fiscal_year
+FROM budget_outlays
+WHERE fiscal_year BETWEEN 2014 AND 2024
+ORDER BY fiscal_year;
+```",True,1.0,0.977243,,2026-02-05 17:03:37.610231
+12,Which government functions have the most granular spending breakdowns?,sql,medium,"```sqlite
+SELECT
+  superfunction
+FROM
+  budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction
+ORDER BY
+  COUNT(DISTINCT function_name) DESC
+LIMIT 1;
+```",False,0.0,3.507987,,2026-02-05 17:03:40.305180
+13,What types of economic measurements are collected quarterly vs. monthly?,sql,medium,"The provided database schema does not contain information about ""types of economic measurements"" or their collection frequency (quarterly vs. monthly). The `budget_outlays` table only contains government spending data.",False,0.0,0.944824,,2026-02-05 17:03:37.932544
+14,Which datasets include both nominal and real (inflation-adjusted) values?,sql,medium,"```sqlite
+SELECT DISTINCT T1.indicator_id
+FROM time_series_data AS T1
+WHERE EXISTS (
+    SELECT 1
+    FROM time_series_data AS T2
+    WHERE T2.indicator_id = T1.indicator_id
+      AND T2.year BETWEEN 2014 AND 2024
+",False,0.0,8.993107,,2026-02-05 17:03:46.603423
+15,What industries contribute more than 5% to total GDP?,sql,medium,"```sql
+SELECT DISTINCT industry_name
+FROM gdp_by_industry
+WHERE percentage_of_total > 5;
+```",False,0.0,7.806936,,2026-02-05 17:03:45.739569
+16,Which budget categories exceed $1 trillion in total spending?,sql,medium,"```sqlite
+SELECT
+  superfunction
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction
+HAVING
+  SUM(outlay_amount) > 1000000000000;
+```",False,0.0,1.093212,,2026-02-05 17:03:40.036375
+18,Which industries have GDP contributions below 1%?,sql,medium,"```sqlite
+SELECT DISTINCT industry_name
+FROM gdp_by_industry
+WHERE percentage_of_total < 1.0
+  AND year BETWEEN 2014 AND 2024;
+```",False,0.0,1.066715,,2026-02-05 17:03:41.103189
+19,What spending functions have outlays under $10 billion?,sql,medium,"```sqlite
+SELECT
+  function_name
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+HAVING
+  SUM(outlay_amount) < 10000;
+```",False,0.0,3.86832,,2026-02-05 17:03:44.019947
+21,What is the full range of years covered in the employment data?,sql,medium,"```sqlite
+SELECT MIN(fiscal_year), MAX(fiscal_year) FROM budget_outlays
+```",False,0.0,4.771557,,2026-02-05 17:03:45.076822
+22,Which budget functions appear in every fiscal year?,sql,medium,"```sqlite
+SELECT
+  function_name
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+HAVING
+  COUNT(DISTINCT fiscal_year) = (
+    SELECT
+      COUNT(DISTINCT fiscal_year)
+    FROM budget_outlays
+    WHERE
+      fiscal_year BETWEEN 2014 AND 2024
+  );
+```",False,0.0,1.39464,,2026-02-05 17:03:42.497890
+23,What seasonal patterns exist in data collection timing?,sql,medium,"The provided database schema does not contain information about data collection timing (e.g., month, day, or timestamp) or sufficient granularity to determine seasonal patterns. The `fiscal_year` column only provides yearly information, which is too broad for seasonal analysis.",False,0.0,9.969979,,2026-02-05 17:03:52.467973
+24,Which economic indicators have the most frequent measurement intervals?,sql,medium,"```sql
+WITH PeriodFrequencyRank AS (
+  SELECT
+    indicator_id,
+    period_type,
+    COUNT(*) AS num_records,
+    CASE period_type
+      WHEN 'daily' THEN 8
+      WHEN 'weekly' THEN 7
+      WHEN 'monthly' THEN 6
+      WHEN 'quarterly' THEN 5
+      WHEN '",False,0.0,8.314156,,2026-02-05 17:03:52.334171
+27,How do defense spending levels compare to social services spending?,sql,medium,"```sqlite
+SELECT
+  CASE
+    WHEN superfunction = 'National Defense' THEN 'Defense Spending'
+    WHEN superfunction IN ('Social Security', 'Medicare', 'Health', 'Income Security', 'Veterans Benefits and Services') THEN 'Social Services Spending'
+    ELSE 'Other'
+  END AS spending_category,
+  SUM(outlay_amount) AS total_outlays
+FROM budget_outlays
+WHERE fiscal_year BETWEEN 2014 AND 2024
+  AND superfunction IN ('National Defense', 'Social Security', 'Medicare', 'Health', 'Income Security', 'Veterans Benefits and Services')
+GROUP BY spending_category;
+```",False,0.0,5.567164,,2026-02-05 17:03:50.644059
+28,Which budget functions show the largest year-over-year increases?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        fiscal_year
+)
+SELECT
+    function_name,
+    fiscal_year,
+    (total_outlay - LAG(total_outlay) OVER (PARTITION BY function_name ORDER BY fiscal_year)) AS year_over_year_increase
+FROM
+    YearlyOutlays
+WHERE
+    LAG(total_outlay) OVER (PARTITION BY function_name ORDER BY fiscal_year) IS NOT NULL
+ORDER BY
+    year_over_year_increase DESC;
+```",False,0.0,6.497525,,2026-02-05 17:03:52.237159
+30,How does current healthcare spending compare to education spending?,sql,medium,"```sql
+SELECT
+  function_name,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+WHERE
+  fiscal_year = 2024 AND function_name IN ('Healthcare', 'Education')
+GROUP BY
+  function_name;
+```",False,0.4,1.67429,,2026-02-05 17:03:48.277797
+31,How do private sector wage increases compare to public sector wage increases?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but it does not include information on private sector wages, public sector wages, or wage increases for either sector.",False,0.0,0.889578,,2026-02-05 17:03:49.167490
+33,How do different worker categories compare in total compensation growth?,sql,medium,"```sql
+WITH CompensationData AS (
+    SELECT
+        subcategory,
+        year,
+        numeric_value,
+        LAG(numeric_value, 1) OVER (PARTITION BY subcategory ORDER BY year) AS previous_year_value
+    FROM
+        time_series_data
+    WHERE
+        category = 'employment_cost_index'",False,0.0,8.952674,,2026-02-05 17:03:58.120232
+34,Which economic indicators move in opposite directions?,sql,medium,"```sqlite
+WITH IndicatorChanges AS (
+    SELECT
+        indicator_id,
+        year,
+        numeric_value,
+        LAG(numeric_value, 1) OVER (PARTITION BY indicator_id ORDER BY year) AS prev_year_value
+    FROM
+        time_series_data
+    WHERE
+        year BETWEEN 201",False,0.0,8.95363,,2026-02-05 17:03:59.597770
+35,How does wage growth compare to productivity growth across sectors?,sql,medium,"```sql
+WITH WageGrowthData AS (
+    SELECT
+        year,
+        subcategory,
+        series_id,
+        numeric_value AS current_wage_value,
+        LAG(numeric_value, 1) OVER (PARTITION BY subcategory, series_id ORDER BY year) AS previous_wage_value
+    FROM
+        time_",False,0.0,8.875098,,2026-02-05 17:04:01.112350
+36,Which industries show higher GDP growth rates than the national average?,sql,medium,"```sqlite
+WITH NationalGDP AS (
+    SELECT
+        year,
+        SUM(gdp_value) AS national_gdp
+    FROM industry_gdp
+    WHERE year BETWEEN 2014 AND 2024
+    GROUP BY year
+),
+NationalGrowthRates AS (
+    SELECT
+        t1.year,
+        (t1.national_gdp - t2.national",False,0.0,8.919904,,2026-02-05 17:04:01.254139
+37,How do service sector contributions compare to manufacturing contributions?,sql,medium,"```sqlite
+SELECT
+  SUM(CASE WHEN industry_name LIKE '%Manufacturing%' THEN gdp_contribution ELSE 0 END) AS manufacturing_contribution,
+  SUM(CASE WHEN industry_name LIKE '%Services%' OR
+                industry_name LIKE '%Trade%' OR
+                industry_name LIKE '%Finance%' OR
+                industry_name LIKE '%Real estate%' OR
+                ",False,0.0,8.896034,,2026-02-05 17:04:01.364089
+38,Which industries contribute disproportionately to economic growth vs. their size?,sql,medium,"```sql
+WITH IndustryGDP_Current AS (
+    SELECT
+        industry_code,
+        industry_name,
+        gdp_value AS gdp_value_current
+    FROM
+        industry_gdp
+    WHERE
+        year = 2024
+),
+IndustryGDP_Previous AS (
+    SELECT
+        industry_code,
+        ",False,0.0,8.990841,,2026-02-05 17:04:07.111179
+39,How do different sectors compare in terms of economic stability?,sql,medium,"The provided database schema does not contain information that directly measures or allows for the assessment of ""economic stability"" across different sectors. The `budget_outlays` table provides government spending data, which can indicate government priorities or responses, but not the inherent economic stability of sectors.",False,0.0,7.883705,,2026-02-05 17:04:07.481578
+40,Which industries show the strongest vs. weakest GDP contributions?,sql,medium,"```sql
+SELECT
+  industry_name,
+  SUM(gdp_value * unit_multiplier) AS total_gdp_contribution
+FROM industry_gdp
+WHERE
+  year BETWEEN 2014 AND 2024
+GROUP BY
+  industry_name
+ORDER BY
+  total_gdp_contribution DESC;
+```",True,1.0,6.591843,,2026-02-05 17:04:07.704268
+43,How do current inflation rates compare to historical averages?,sql,medium,"```sql
+WITH AnnualCPI AS (
+    SELECT
+        year,
+        AVG(numeric_value) AS cpi_value -- Calculate annual average CPI from potentially monthly data
+    FROM
+        time_series_data
+    WHERE
+        category = 'consumer_price_index'
+        AND year BETWEEN 2014 AND 2024
+",False,0.0,9.648853,,2026-02-05 17:04:10.903046
+44,Which spending categories show consistent vs. variable year-over-year changes?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS yearly_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+",False,0.0,9.334941,,2026-02-05 17:04:10.699121
+46,How do inflation rates compare to wage growth rates across different periods?,sql,medium,"```sql
+WITH InflationData AS (
+    SELECT
+        year,
+        numeric_value AS cpi_value
+    FROM
+        time_series_data
+    WHERE
+        category = 'consumer_price_index'
+        AND unit = 'Index'
+        AND period_type = 'Annual'
+        AND geographic_level = 'National'
+        ",False,0.0,8.671747,,2026-02-05 17:04:15.782980
+47,Which budget priorities shift more: defense vs. domestic spending?,sql,medium,"```sqlite
+WITH AnnualSpending AS (
+    SELECT
+        fiscal_year,
+        SUM(CASE WHEN superfunction = 'National Defense' THEN outlay_amount ELSE 0 END) AS defense_outlays,
+        SUM(CASE WHEN superfunction != 'National Defense' THEN outlay_amount ELSE 0 END) AS domestic_outlays
+    FROM
+        ",False,0.0,8.641064,,2026-02-05 17:04:16.122739
+48,How do government spending trends compare to private sector investment trends?,sql,medium,"I am sorry, but I cannot provide a SQL query to compare government spending trends with private sector investment trends. The provided database schema only contains information about `budget_outlays` (government spending) and does not include any tables or columns related to ""private sector investment trends"".",False,0.0,2.940532,,2026-02-05 17:04:10.644853
+49,Which economic indicators show stronger correlation with GDP growth?,sql,medium,"```sqlite
+WITH AnnualGDP AS (
+    SELECT
+        year,
+        SUM(gdp_value) AS total_gdp
+    FROM
+        industry_gdp
+    WHERE
+        year BETWEEN 2014 AND 2024
+    GROUP BY
+        year
+),
+GDPGrowth AS (
+    SELECT
+        year,
+        (",False,0.0,8.13108,,2026-02-05 17:04:18.775966
+50,How do federal budget compositions compare across different presidential administrations?,sql,medium,"```sql
+WITH AdministrationOutlays AS (
+    SELECT
+        CASE
+            WHEN fiscal_year BETWEEN 2014 AND 2017 THEN 'Obama Administration'
+            WHEN fiscal_year BETWEEN 2018 AND 2021 THEN 'Trump Administration'
+            WHEN fiscal_year BETWEEN 2022 AND 2024 THEN 'Biden Administration'
+            ELSE 'Unknown Administration' -- Should not be reached given the WHERE clause
+        END AS administration,
+        superfunction,
+        SUM(outlay_amount) AS total_superfunction_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        administration,
+        superfunction
+),
+AdministrationTotals AS (
+    SELECT
+        administration,
+        SUM(total_superfunction_outlay) AS total_administration_outlay
+    FROM
+        AdministrationOutlays
+    GROUP BY
+        administration
+)
+SELECT
+    ao.administration,
+    ao.superfunction,
+    ROUND((CAST(ao.total_superfunction_outlay AS REAL) * 100.0 / at.total_administration_outlay), 2) AS percentage_of_total_outlay
+FROM
+    AdministrationOutlays ao
+JOIN
+    AdministrationTotals at ON ao.administration = at.administration
+ORDER BY
+    ao.administration,
+    percentage_of_total_outlay DESC;
+```",False,0.4,7.680814,,2026-02-05 17:04:18.379998
+51,Which government functions show the best spending efficiency trends?,sql,medium,"```sql
+WITH FunctionYearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay_year
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name",False,0.0,9.116256,,2026-02-05 17:04:20.019373
+52,How do administrative costs compare across different departments?,sql,medium,"```sql
+SELECT
+  superfunction,
+  SUM(outlay_amount) AS total_administrative_costs
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+  AND (
+    function_name LIKE '%administration%'
+    OR function_name LIKE '%management%'
+    OR function_name LIKE '%general support%'
+    OR function_name LIKE '%executive direction%'
+    OR function_name LIKE '%central operations%'
+    OR function_name LIKE '%overhead%'
+  )
+GROUP BY
+  superfunction
+ORDER BY
+  total_administrative_costs DESC;
+```",False,0.4,6.731397,,2026-02-05 17:04:22.514488
+53,Which economic policies show measurable impact in the spending data?,sql,medium,"```sql
+SELECT
+  function_name
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  SUM(outlay_amount) DESC;
+```",False,0.4,5.421918,,2026-02-05 17:04:21.544724
+54,How do projected vs. actual spending figures compare across categories?,sql,medium,"```sqlite
+SELECT
+  superfunction,
+  function_name,
+  SUM(CASE WHEN source = 'Actual' THEN outlay_amount ELSE 0 END) AS actual_spending,
+  SUM(CASE WHEN source = 'Projected' THEN outlay_amount ELSE 0 END) AS projected_spending
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction,
+  function_name
+ORDER BY
+  superfunction,
+  function_name;
+```",False,0.0,4.997508,,2026-02-05 17:04:23.377572
+55,Which budget categories show the most vs. least predictable spending patterns?,sql,medium,"```sql
+WITH AnnualSpending AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS annual_spending
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        fiscal_year
+),
+CategoryVariability AS (
+    SELECT
+        function_name,
+        STDEV_SAMP(annual_spending) AS spending_std_dev,
+        AVG(annual_spending) AS average_spending,
+        (STDEV_SAMP(annual_spending) / AVG(annual_spending)) AS coefficient_of_variation
+    FROM
+        AnnualSpending
+    GROUP BY
+        function_name
+    HAVING
+        COUNT(fiscal_year) >= 2 AND AVG(annual_spending) > 0
+)
+SELECT
+    function_name,
+    coefficient_of_variation,
+    'Least Predictable' AS predictability_type
+FROM
+    CategoryVariability
+ORDER BY
+    coefficient_of_variation DESC
+LIMIT 5
+
+UNION ALL
+
+SELECT
+    function_name,
+    coefficient_of_variation,
+    'Most Predictable' AS predictability_type
+FROM
+    CategoryVariability
+ORDER BY
+    coefficient_of_variation ASC
+LIMIT 5;
+```",False,0.0,7.988248,,2026-02-05 17:04:26.764271
+56,How has the composition of federal spending changed over the past decade?,sql,medium,"```sql
+SELECT
+  fiscal_year,
+  function_name,
+  SUM(outlay_amount) AS total_function_outlay,
+  (CAST(SUM(outlay_amount) AS REAL) * 100.0 / SUM(SUM(outlay_amount)) OVER (PARTITION BY fiscal_year)) AS percentage_of_total_outlay
+FROM
+  budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  fiscal_year,
+  function_name
+ORDER BY
+  fiscal_year ASC,
+  percentage_of_total_outlay DESC;
+```",False,0.4,6.16369,,2026-02-05 17:04:26.183157
+57,Which economic indicators show clear seasonal patterns?,sql,medium,"```sql
+SELECT DISTINCT
+  indicator_id,
+  category,
+  subcategory
+FROM time_series_data
+WHERE
+  period_type NOT IN ('annual', 'annual_average')
+GROUP BY
+  indicator_id,
+  category,
+  subcategory
+HAVING
+  COUNT(DISTINCT period_name) > 1 AND COUNT(",False,0.0,9.257399,,2026-02-05 17:04:30.802234
+58,What long-term trends are evident in healthcare vs. education spending?,sql,medium,"```sqlite
+SELECT
+  fiscal_year,
+  SUM(CASE WHEN superfunction = 'Health' THEN outlay_amount ELSE 0 END) AS healthcare_spending,
+  SUM(CASE WHEN superfunction = 'Education, Training, Employment, and Social Services' THEN outlay_amount ELSE 0 END) AS education_spending
+FROM budget_outlays
+WHERE
+  superfunction IN ('Health', 'Education, Training, Employment, and Social Services')
+  AND fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  fiscal_year
+ORDER BY
+  fiscal_year;
+```",False,0.0,7.08181,,2026-02-05 17:04:29.596406
+62,Which spending categories increase during recession periods?,sql,medium,"-- The database schema does not contain information about recession periods.
+-- Therefore, it is not possible to identify which spending categories increase during recession periods using only the provided schema.
+-- A query to answer this question would require a table or a mechanism to define recession years.",False,0.0,9.775048,,2026-02-05 17:04:33.152692
+64,Which economic indicators show predictable annual cycles?,sql,medium,"```sql
+SELECT DISTINCT indicator_id
+FROM time_series_data
+WHERE period_type NOT IN ('annual', 'yearly')
+  AND year BETWEEN 2014 AND 2024
+GROUP BY indicator_id, period_type
+HAVING COUNT(DISTINCT year) >= 3
+   AND COUNT(DISTINCT period_value) > 1",True,1.0,9.36984,,2026-02-05 17:04:35.553126
+65,What patterns emerge in budget allocations during election years?,sql,medium,"```sql
+SELECT
+  fiscal_year,
+  superfunction,
+  SUM(outlay_amount) AS total_outlay_in_election_year
+FROM
+  budget_outlays
+WHERE
+  fiscal_year IN (2014, 2016, 2018, 2020, 2022, 2024)
+GROUP BY
+  fiscal_year,
+  superfunction
+ORDER BY
+  fiscal_year ASC,
+  total_outlay_in_election_year DESC;
+```",False,0.4,4.964831,,2026-02-05 17:04:31.729212
+66,When do wage growth and productivity growth move in opposite directions?,sql,medium,"```sql
+WITH WageGrowthData AS (
+    SELECT
+        year,
+        (AVG(numeric_value) - LAG(AVG(numeric_value), 1) OVER (ORDER BY year)) * 100.0 / LAG(AVG(numeric_value), 1) OVER (ORDER BY year) AS wage_growth_rate
+    FROM time_",False,0.0,10.205881,,2026-02-05 17:04:39.802371
+67,Which economic indicators consistently move together?,sql,medium,"-- SQL cannot directly calculate statistical correlation or ""consistent movement"" between economic indicators.
+-- To answer this question, one would typically retrieve the time series data for multiple indicators
+-- and then use statistical software (e.g., Python, R, Excel) to compute correlation coefficients or perform other time series analyses.
+
+-- The following query prepares data for the three key economic categories mentioned in the schema",False,0.0,9.378645,,2026-02-05 17:04:40.180948
+69,What relationships exist between unemployment and social services spending?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains information about government spending, including social services, but it does not contain any data related to unemployment. To analyze the relationship, unemployment data would be required.",False,0.0,1.117584,,2026-02-05 17:04:32.846921
+70,Which industries show correlated growth patterns?,sql,medium,"```sqlite
+WITH IndustryGrowth AS (
+    SELECT
+        industry_name,
+        year,
+        gdp_value,
+        LAG(gdp_value, 1) OVER (PARTITION BY industry_name ORDER BY year) AS previous_year_gdp
+    FROM
+        industry_gdp
+    WHERE
+        year BETWEEN 201",False,0.0,8.806051,,2026-02-05 17:04:41.653051
+72,What economic events correlate with spikes in specific spending categories?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but there is no information about ""economic events"" or any other external factors that could be correlated with spending spikes. To answer this question, a table containing economic event data would be required.",False,0.0,1.141027,,2026-02-05 17:04:34.293898
+73,Which indicators show the most dramatic changes during crisis periods?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,",False,0.0,8.505474,,2026-02-05 17:04:42.799461
+75,Which spending categories are most resilient to economic disruptions?,sql,medium,"```sql
+SELECT
+  function_name,
+  SUM(outlay_amount) AS total_outlays
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  total_outlays DESC;
+```",True,1.0,10.255934,,2026-02-05 17:04:45.809208
+76,Which budget functions show accelerating vs. decelerating growth patterns?,sql,medium,"```sqlite
+WITH AnnualOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS annual_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        fiscal",False,0.0,7.830721,,2026-02-05 17:04:47.633161
+78,Which economic indicators show compound growth effects?,sql,medium,"```sqlite
+SELECT DISTINCT
+  category,
+  indicator_id
+FROM time_series_data
+WHERE
+  category IN ('consumer_price_index', 'employment_cost_index') AND year BETWEEN 2014 AND 2024;
+```",False,0.0,9.702854,,2026-02-05 17:04:49.883884
+79,What spending patterns indicate policy priority shifts over time?,sql,medium,"```sql
+WITH YearlyTotal AS (
+    SELECT
+        fiscal_year,
+        SUM(outlay_amount) AS total_yearly_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year
+)
+SELECT
+    bo.fiscal_year,
+    bo.function_name,
+    SUM(bo.outlay_amount) AS function_outlay,
+    (SUM(bo.outlay_amount) * 100.0 / yt.total_yearly_outlay) AS percentage_of_total_outlay
+FROM
+    budget_outlays AS bo
+JOIN
+    YearlyTotal AS yt ON bo.fiscal_year = yt.fiscal_year
+WHERE
+    bo.fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+    bo.fiscal_year,
+    bo.function_name,
+    yt.total_yearly_outlay
+ORDER BY
+    bo.fiscal_year ASC,
+    percentage_of_total_outlay DESC;
+```",False,0.4,5.940634,,2026-02-05 17:04:47.593785
+83,Which industries show clustered vs. distributed growth patterns?,sql,medium,"```sql
+WITH IndustryGDP AS (
+    SELECT
+        industry_code,
+        industry_name,
+        year,
+        gdp_value,
+        LAG(gdp_value, 1, 0) OVER (PARTITION BY industry_code ORDER BY year) AS previous_year_gdp
+    FROM
+        industry_gdp
+    ",False,0.0,8.669003,,2026-02-05 17:04:51.468554
+84,What spending patterns reflect demographic changes over time?,sql,medium,"The provided database schema does not contain any demographic information, such as population age, gender, or other demographic indicators. Therefore, it is not possible to analyze spending patterns in relation to demographic changes using only the `budget_outlays` table.",False,0.0,1.289402,,2026-02-05 17:04:47.098767
+86,What economic factors might explain why healthcare spending grew 40% while education spending remained relatively flat over the past decade?,sql,medium,"```sqlite
+SELECT
+  function_name,
+  fiscal_year,
+  SUM(outlay_amount) AS total_outlay
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024 AND function_name IN ('Health', 'Education')
+GROUP BY
+  function_name,
+  fiscal_",False,0.0,9.591601,,2026-02-05 17:04:56.690508
+87,"How do unemployment rates, wage growth, and inflation collectively indicate economic health during different periods, and what do these patterns suggest about policy effectiveness?",sql,medium,"The question asks for an analysis of economic health and policy effectiveness based on unemployment rates, wage growth, and inflation. While SQL can retrieve the raw data for these indicators, it cannot perform the high-level economic analysis or suggest policy effectiveness as requested.
+
+Additionally, the provided schema for `time_series_data` lists `KEY CATEGORIES` as 'consumer_price_index',",False,0.0,10.264286,,2026-02-05 17:04:57.858159
+88,"Which government spending changes appear to respond primarily to economic conditions versus deliberate policy decisions, and how can we distinguish between these drivers?",sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        fiscal_year,
+        superfunction,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year,
+        superfunction
+),
+LaggedOutlays AS (
+    SELECT
+        fiscal_year,
+        superfunction,
+        total_outlay,
+        LAG(total_outlay, 1, 0) OVER (PARTITION BY superfunction ORDER BY fiscal_year) AS previous_year_outlay
+    FROM
+        YearlyOutlays
+)
+SELECT
+    fiscal_year,
+    superfunction,
+    total_outlay,
+    previous_year_outlay,
+    (total_outlay - previous_year_outlay) AS absolute_change,
+    CASE
+        WHEN previous_year_outlay > 0 THEN ((total_outlay -",False,0.0,9.068242,,2026-02-05 17:04:56.701505
+89,"What relationship exists between industry GDP contributions and employment cost trends, and how do these relationships change during economic transitions?",sql,medium,"```sqlite
+SELECT
+  ig.year,
+  ig.industry_name,
+  ig.gdp_value,
+  eci.avg_employment_cost_index_value
+FROM industry_gdp AS ig
+JOIN (
+  SELECT
+    year,
+    AVG(numeric_value) AS avg_employment_cost_index_value
+  FROM",False,0.0,9.830661,,2026-02-05 17:04:59.714649
+91,"Which spending categories show the strongest relationship with economic performance indicators, and what does this suggest about fiscal policy effectiveness?",sql,medium,"```sql
+SELECT
+  superfunction,
+  function_name,
+  SUM(outlay_amount) AS total_outlay
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction,
+  function_name
+ORDER BY
+  total_outlay DESC",True,1.0,9.350906,,2026-02-05 17:05:00.820256
+93,"How do changes in federal spending priorities correlate with economic outcomes, and which spending reallocations show the strongest measurable impacts?",sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        fiscal_year,
+        function_name,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year,
+        function_name
+),
+SpendingChanges AS (
+    SELECT
+        fiscal_year,
+        function_name,
+        total_outlay,
+        LAG(total_outlay, 1, 0) OVER (PARTITION BY function_name ORDER BY fiscal_year) AS previous_year_outlay
+    FROM
+        YearlyOutlays
+)
+SELECT
+    fiscal_year,
+    function_name",False,0.0,9.072175,,2026-02-05 17:05:05.762808
+94,"What economic conditions and policy decisions explain the divergent trends between wage growth in different sectors, and how sustainable are these trends?",sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains information about government spending but does not include data on wage growth in different sectors, economic conditions, or policy decisions that would allow for an analysis of divergent trends or their sustainability.",False,0.0,1.422928,,2026-02-05 17:04:58.124503
+95,"Based on historical patterns, which economic indicators best predict significant changes in government spending priorities, and what current patterns suggest future shifts?",sql,medium,"This question asks for predictive analysis (""best predict"", ""suggest future shifts"") which requires statistical modeling beyond the capabilities of a single SQL query. SQL can retrieve and aggregate data, but it cannot perform correlation, regression, or other predictive analytics to determine which indicators ""best predict"" changes or ""suggest future shifts"".
+
+However, to provide the most relevant data for a human analyst to perform",False,0.0,8.624021,,2026-02-05 17:05:06.482244
+96,"How do the relationships between different economic factors change during periods of economic stress versus stability, and what implications does this have for policy planning?",sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but it does not include information on other economic factors (like GDP, inflation, unemployment, etc.) or indicators to define periods of economic stress versus stability. Therefore, it is not possible to analyze the relationships between different economic factors or their implications for policy planning using only this data.",False,0.0,1.771188,,2026-02-05 17:04:59.895766
+97,Which combination of economic indicators and spending patterns most accurately reflect the underlying health of different economic sectors?,sql,medium,"```sqlite
+WITH AnnualCPI AS (
+    SELECT
+        year,
+        AVG(numeric_value) AS avg_consumer_price_index
+    FROM time_series_data
+    WHERE category = 'consumer_price_index'
+      AND year BETWEEN 2014 AND 2024
+    GROUP BY year
+),
+AnnualECI",False,0.0,9.613145,,2026-02-05 17:05:09.327846
+98,"How do the interactions between federal spending, industry performance, and economic indicators create feedback loops that influence long-term economic trajectories?",sql,medium,"This question is conceptual and asks for an explanation of economic feedback loops, which cannot be directly answered by a SQL query. SQL queries are used to retrieve and manipulate data, not to describe complex economic interactions or causal relationships.
+
+However, the provided database schema contains data that could be used by an economist or data analyst to *study* these interactions:
+- `budget_outlays`: Provides data on federal spending.
+- `industry_gdp` / `gdp_by_industry`: Provides data on industry performance.
+- `time_series_data`: Provides data on economic indicators (e.g., CPI, employment).
+
+An analysis of these datasets over time (within the 2014-2024 range) could reveal correlations and patterns that might suggest feedback loops, but the SQL query itself cannot describe ""how"" these loops are created or influence long-term trajectories.",False,0.0,3.970226,,2026-02-05 17:05:03.866078
+99,"What evidence exists for the effectiveness of government spending as an economic stabilization tool, based on the relationships between spending patterns and economic performance indicators?",sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but there are no tables or columns available that represent ""economic performance indicators"" to establish a relationship and assess the effectiveness of spending as an economic stabilization tool.",False,0.0,1.100181,,2026-02-05 17:05:01.920500
+101,What hierarchical relationships exist between different budget categories?,sql,medium,"```sql
+SELECT DISTINCT
+  superfunction,
+  function_name
+FROM budget_outlays
+ORDER BY
+  superfunction,
+  function_name;
+```",False,0.4,1.007851,,2026-02-05 17:05:02.928435
+102,Which datasets contain overlapping information about the same economic phenomena?,sql,medium,"There is only one dataset provided in the schema (`budget_outlays`), so it is not possible to identify overlapping information with other datasets.",False,0.0,1.059135,,2026-02-05 17:05:03.987686
+103,What naming conventions are used across different economic indicators?,sql,medium,"```sqlite
+SELECT DISTINCT category, subcategory, indicator_id, series_id
+FROM time_series_data
+WHERE year BETWEEN 2014 AND 2024;
+```",False,0.0,7.069178,,2026-02-05 17:05:10.935345
+104,How are industry classifications organized in the GDP data?,sql,medium,"```sqlite
+SELECT DISTINCT industry_code, industry_name
+FROM industry_gdp;
+```",False,0.0,1.083023,,2026-02-05 17:05:05.070852
+105,What budget categories have changed names or been reorganized over time?,sql,medium,"```sql
+SELECT
+  function_name
+FROM budget_outlays
+GROUP BY
+  function_name
+HAVING
+  COUNT(DISTINCT superfunction) > 1;
+```",False,0.4,5.317753,,2026-02-05 17:05:10.388725
+106,Which economic indicators use different measurement scales or units?,sql,medium,"```sql
+SELECT DISTINCT indicator_id, unit
+FROM time_series_data
+WHERE indicator_id IN (
+    SELECT indicator_id
+    FROM time_series_data
+    GROUP BY indicator_id
+    HAVING COUNT(DISTINCT unit) > 1
+)
+ORDER BY indicator_id, unit;
+```",True,1.0,3.154526,,2026-02-05 17:05:08.917412
+107,What data fields appear consistently across multiple datasets?,sql,medium,"I cannot answer this question with the provided database schema. The schema only contains one table (`budget_outlays`), which represents a single dataset. To identify data fields that appear consistently across multiple datasets, I would need access to information about multiple datasets and their respective fields.",False,0.0,1.113106,,2026-02-05 17:05:07.595451
+108,How are seasonal adjustments indicated in the time series data?,sql,medium,The provided database schema does not contain any information or columns indicating seasonal adjustments in the time series data.,False,0.0,1.21812,,2026-02-05 17:05:08.813645
+109,What categorization systems are used for different types of government spending?,sql,medium,"```sql
+SELECT DISTINCT superfunction FROM budget_outlays
+UNION
+SELECT DISTINCT function_name FROM budget_outlays;
+```",True,0.9741626794258373,1.157531,,2026-02-05 17:05:09.971267
+110,Which datasets include metadata about data collection methodology?,sql,medium,SELECT 'No datasets include metadata about data collection methodology based on the provided schema.' AS message;,False,0.4,9.557149,,2026-02-05 17:05:18.474684
+111,What spending categories appear most frequently across different budget functions?,sql,medium,"```sql
+SELECT
+  function_name,
+  COUNT(DISTINCT superfunction) AS distinct_superfunction_count
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  distinct_superfunction_count DESC;
+```",False,0.4,1.718528,,2026-02-05 17:05:11.046460
+112,Which economic indicators provide the broadest coverage of economic activity?,sql,medium,"```sql
+SELECT DISTINCT category
+FROM time_series_data
+WHERE category IN ('consumer_price_index', 'employment_cost_index', 'productivity_measures');
+```",True,1.0,4.460249,,2026-02-05 17:05:14.431595
+113,What data gaps exist in the current economic datasets?,sql,medium,"```sql
+WITH RECURSIVE AllYears(fiscal_year) AS (
+    SELECT 2014
+    UNION ALL
+    SELECT fiscal_year + 1 FROM AllYears WHERE fiscal_year < 2024
+)
+SELECT
+    'Missing fiscal_year in records' AS gap_type,
+    COUNT(*) AS number_of",True,1.0,9.802048,,2026-02-05 17:05:20.190837
+114,How are subcategories organized within major spending functions?,sql,medium,"```sqlite
+SELECT DISTINCT
+  superfunction,
+  function_name
+FROM budget_outlays
+ORDER BY
+  superfunction,
+  function_name;
+```",False,0.0,3.255627,,2026-02-05 17:05:14.191075
+115,Which industries have the most detailed GDP breakdowns available?,sql,medium,"```sqlite
+SELECT
+  industry_name,
+  COUNT(*) AS detail_level
+FROM gdp_by_industry
+WHERE
+  year BETWEEN 2014 AND 2024
+GROUP BY
+  industry_name
+ORDER BY
+  detail_level DESC
+LIMIT 10;
+```",False,0.0,2.545067,,2026-02-05 17:05:13.591599
+117,How are government enterprises distinguished from regular departments in budget data?,sql,medium,"SELECT DISTINCT superfunction, function_name FROM budget_outlays;",False,0.4,9.654302,,2026-02-05 17:05:23.245995
+118,What special categories exist for emergency or supplemental spending?,sql,medium,"```sqlite
+SELECT DISTINCT function_name
+FROM budget_outlays
+WHERE function_name LIKE '%emergency%' OR function_name LIKE '%supplemental%' OR function_name LIKE '%disaster%' OR function_name LIKE '%relief%' OR function_name LIKE '%contingency%'
+ORDER BY function_name;
+```",False,0.0,1.953416,,2026-02-05 17:05:16.144635
+120,What cross-references exist between different economic classification systems?,sql,medium,Data for cross-references between different economic classification systems is not available in the provided database schema. The `budget_outlays` table only contains one type of classification system (`superfunction` and `function_name`) and no tables exist to map or cross-reference these with other systems.,False,0.0,1.535676,,2026-02-05 17:05:15.967361
+121,Which datasets have been collected continuously without major breaks?,sql,medium,"```sql
+SELECT function_name
+FROM budget_outlays
+WHERE fiscal_year BETWEEN 2014 AND 2024
+GROUP BY function_name
+HAVING COUNT(DISTINCT fiscal_year) = (2024 - 2014 + 1);
+```",True,1.0,3.972635,,2026-02-05 17:05:19.940054
+122,What economic indicators show changes in measurement methodology over time?,sql,medium,"```sqlite
+SELECT DISTINCT
+  category,
+  subcategory,
+  indicator_id,
+  series_id
+FROM time_series_data
+WHERE
+  year BETWEEN 2014 AND 2024 AND
+  (
+    footnotes LIKE '%methodology change%' OR
+    footnotes LIKE '%revised methodology%' OR
+    footnotes LIKE '%new methodology%' OR
+    footnotes LIKE '%change in definition%' OR
+    footnotes LIKE '%reclassification%' OR
+    footnotes LIKE '%updated methods%' OR
+    footnotes LIKE '%data collection change%' OR
+    footnotes LIKE '%survey redesign%' OR
+    footnotes LIKE '%changed methodology%' OR
+    footnotes LIKE '%methodological revision%'
+  )
+ORDER BY
+  category, subcategory, indicator_id, series_id;
+```",False,0.0,6.507753,,2026-02-05 17:05:22.652470
+123,How far back do consistent budget category definitions extend?,sql,medium,"```sqlite
+SELECT MIN(fiscal_year) FROM budget_outlays
+```",False,0.0,6.900105,,2026-02-05 17:05:25.374889
+124,Which data series have provisional vs. final values?,sql,medium,"```sql
+SELECT DISTINCT
+  superfunction,
+  function_name,
+  source
+FROM budget_outlays
+WHERE
+  (source LIKE '%provisional%' OR source LIKE '%final%')
+  AND fiscal_year BETWEEN 2014 AND 2024;
+```",True,1.0,7.736342,,2026-02-05 17:05:27.676480
+125,What lag times exist between data collection and reporting for different indicators?,sql,medium,"I am sorry, but the provided database schema does not contain information about data collection dates or reporting dates. The `budget_outlays` table only includes `fiscal_year` which represents the period the data pertains to, but not when it was collected or reported. Therefore, it is not possible to calculate lag times between data collection and reporting using the available data.",False,0.0,1.571275,,2026-02-05 17:05:21.762177
+126,Which economic measurements are subject to regular revisions?,sql,medium,"Based on the provided database schema, there is no information available about which economic measurements are subject to regular revisions. The `budget_outlays` table contains government spending data, but it does not include details about the revision status of economic measurements.",False,0.0,1.14531,,2026-02-05 17:05:22.907569
+127,What historical events created discontinuities in data series?,sql,medium,"The provided database schema does not contain information about historical events or data discontinuities. It only contains government spending data. Therefore, it is not possible to answer this question with a SQL query based on the given schema.",False,0.0,4.574148,,2026-02-05 17:05:27.226674
+128,How are fiscal years aligned across different government datasets?,sql,medium,"```sqlite
+SELECT DISTINCT fiscal_year FROM budget_outlays ORDER BY fiscal_year;
+```",False,0.0,8.761816,,2026-02-05 17:05:31.669469
+129,Which indicators provide real-time vs. retrospective measurements?,sql,medium,"The provided database schema does not contain information about the nature of indicators (e.g., whether they are real-time or retrospective). The `budget_outlays` table contains historical government spending data, which is inherently retrospective. Therefore, it is not possible to answer this question using the given schema.",False,0.0,2.082433,,2026-02-05 17:05:25.328481
+130,What data series offer projections or forecasts beyond current periods?,sql,medium,"SELECT DISTINCT superfunction, function_name
+FROM budget_outlays
+WHERE fiscal_year = 2024;",True,1.0,10.074125,,2026-02-05 17:05:35.402658
+131,Which budget categories have the most complete historical records?,sql,medium,"```sqlite
+SELECT
+  function_name,
+  COUNT(DISTINCT fiscal_year) AS num_years_recorded
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  num_years_recorded DESC;
+```",False,0.0,1.421743,,2026-02-05 17:05:26.796732
+132,What economic indicators have missing data for certain periods?,sql,medium,"```sql
+SELECT DISTINCT
+  indicator_id
+FROM time_series_data
+WHERE
+  year BETWEEN 2014 AND 2024
+GROUP BY
+  indicator_id,
+  year,
+  period_type
+HAVING
+  (period_type = 'quarterly' AND COUNT(DISTINCT period_value) < 4) OR",False,0.0,8.510104,,2026-02-05 17:05:35.306904
+133,How are data quality issues documented in the datasets?,sql,medium,"The provided database schema does not contain information about how data quality issues are documented in the datasets. The `budget_outlays` table focuses on government spending data, not metadata or data quality documentation.",False,0.0,1.204488,,2026-02-05 17:05:28.431222
+134,Which spending categories have estimated vs. actual values?,sql,medium,"```sql
+SELECT
+  function_name
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+HAVING
+  SUM(CASE WHEN source = 'estimated' THEN 1 ELSE 0 END) > 0 AND
+  SUM(CASE WHEN source = 'actual' THEN 1 ELSE 0 END) > 0;
+```",True,1.0,2.297637,,2026-02-05 17:05:29.974186
+135,What level of granularity is available for different economic measurements?,sql,medium,"```sqlite
+SELECT 'Superfunction' AS Granularity_Dimension, COUNT(DISTINCT superfunction) AS Number_of_Distinct_Levels FROM budget_outlays
+UNION ALL
+SELECT 'Function Name' AS Granularity_Dimension, COUNT(DISTINCT function_name) AS Number_of_Distinct_Levels FROM budget_outlays
+UNION ALL
+SELECT 'Fiscal Year' AS",False,0.0,9.479715,,2026-02-05 17:05:37.911026
+136,Which datasets include confidence intervals or error margins?,sql,medium,"The provided database schema does not include any tables or columns that explicitly represent confidence intervals or error margins. Therefore, a SQL query cannot be generated to identify datasets with this information.",False,0.0,9.49235,,2026-02-05 17:05:39.466588
+137,How are data revisions tracked across different time periods?,sql,medium,"The provided database schema does not contain columns to track data revisions across different time periods (e.g., revision numbers, effective dates, or version IDs). Therefore, it is not possible to answer how data revisions are tracked using this schema.",False,0.0,6.489598,,2026-02-05 17:05:38.159127
+138,What supplementary data sources complement the primary datasets?,sql,medium,"```sqlite
+SELECT DISTINCT source
+FROM budget_outlays
+WHERE fiscal_year BETWEEN 2014 AND 2024;
+```",False,0.0,6.009867,,2026-02-05 17:05:41.316821
+139,Which economic indicators rely on sampling vs. complete enumeration?,sql,medium,"```sql
+SELECT
+  indicator_id,
+  CASE
+    WHEN MAX(is_estimated) = 1 THEN 'Relies on Sampling'
+    ELSE 'Relies on Complete Enumeration'
+  END AS collection_method
+FROM time_series_data
+WHERE
+  year BETWEEN 2014 AND 2024
+GROUP BY
+  indicator_id;
+```",False,0.4,7.495392,,2026-02-05 17:05:42.898146
+140,What validation methods are documented for different data series?,sql,medium,"I am sorry, but the provided database schema does not contain information about validation methods for data series. The `budget_outlays` table only contains government spending data and its source, but no details on how the data is validated.",False,0.0,1.07989,,2026-02-05 17:05:38.990966
+141,What industry groupings are used in employment statistics?,sql,medium,"```sqlite
+SELECT DISTINCT industry_name FROM industry_gdp
+```",False,0.0,1.658804,,2026-02-05 17:05:39.818016
+142,How are transfer payments categorized separately from direct spending?,sql,medium,"The provided database schema does not contain specific columns or information that categorize outlays explicitly as ""transfer payments"" or ""direct spending."" The `budget_outlays` table categorizes spending by `superfunction` and `function_name`, but it does not provide a mechanism to differentiate between these two types of spending within the available data. Therefore, this question cannot be answered using the current schema.",False,0.0,1.649754,,2026-02-05 17:05:40.640771
+143,Which budget functions distinguish between mandatory and discretionary spending?,sql,medium,"```sql
+SELECT DISTINCT T1.superfunction
+FROM budget_outlays AS T1
+WHERE T1.fiscal_year BETWEEN 2014 AND 2024
+  AND EXISTS (
+    SELECT 1
+    FROM budget_outlays AS T2
+    WHERE T2.superfunction = T1.superfunction
+      AND T2.fiscal",False,0.0,9.754328,,2026-02-05 17:05:49.220967
+145,How are public-private partnerships reflected in spending data?,sql,medium,"```sql
+SELECT
+  superfunction,
+  function_name,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024 AND (
+    function_name LIKE '%partnership%' OR
+    superfunction LIKE '%partnership%' OR
+    function_name LIKE '%private sector%' OR
+    superfunction LIKE '%private sector%' OR
+    function_name LIKE '%public-private%' OR
+    superfunction LIKE '%public-private%' OR
+    function_name LIKE '%private entity%' OR
+    superfunction LIKE '%private entity%'
+  )
+GROUP BY
+  superfunction,
+  function_name
+ORDER BY
+  total_outlay_amount DESC;
+```",True,1.0,5.41515,,2026-02-05 17:05:45.233277
+146,Which datasets separate capital expenditures from operating expenses?,sql,medium,"The provided database schema for `budget_outlays` does not contain columns that explicitly separate capital expenditures from operating expenses. Therefore, based on the given schema, no dataset is available to answer this question.",False,0.0,8.927427,,2026-02-05 17:05:49.568295
+147,What classifications exist for different types of government revenue?,sql,medium,"I am sorry, but the provided database schema does not contain any tables or columns related to government revenue. The `budget_outlays` table only contains information about government spending (outlays). Therefore, I cannot provide classifications for different types of government revenue from this schema.",False,0.0,1.026993,,2026-02-05 17:05:42.343867
+148,How are intergovernmental transfers tracked in the data?,sql,medium,"```sqlite
+SELECT DISTINCT superfunction, function_name
+FROM budget_outlays
+WHERE superfunction LIKE '%intergovernmental%' OR function_name LIKE '%intergovernmental%';
+```",False,0.0,1.241145,,2026-02-05 17:05:43.585097
+149,Which economic indicators distinguish between goods and services?,sql,medium,"```sql
+SELECT DISTINCT category, subcategory
+FROM time_series_data
+WHERE category LIKE '%goods%' OR category LIKE '%services%'
+   OR subcategory LIKE '%goods%' OR subcategory LIKE '%services%';
+```",True,1.0,5.833665,,2026-02-05 17:05:48.731941
+150,What demographic breakdowns are available in employment data?,sql,medium,"-- No employment data or demographic breakdowns are available in the provided schema.
+-- The schema only contains budget_outlays, which details government spending by function and fiscal year.
+-- Therefore, a SQL query to answer this question cannot be generated from the given schema.",False,0.0,9.267195,,2026-02-05 17:05:52.852336
+151,What base years are used for different inflation-adjusted series?,sql,medium,"```sqlite
+SELECT DISTINCT
+  series_id,
+  indicator_id,
+  category,
+  unit,
+  CASE
+    WHEN unit LIKE '%chained % dollars%' THEN SUBSTR(unit, INSTR(unit, 'chained ') + LENGTH('chained '), INSTR(unit, ' dollars') - (INSTR(unit, 'chained ') + LENGTH('chained ')))
+",False,0.0,9.642893,,2026-02-05 17:05:54.876295
+152,Which datasets use chain-weighted vs. fixed-weight methodologies?,sql,medium,"I am sorry, but the provided database schema does not contain information about the methodologies (chain-weighted vs. fixed-weight) used for the datasets. The `budget_outlays` table only provides government spending data by function and fiscal year, without details on the underlying calculation methodologies.",False,0.0,1.356574,,2026-02-05 17:05:50.088621
+153,How are seasonal adjustments calculated for different indicators?,sql,medium,The provided database schema does not contain information about seasonal adjustments or how they are calculated for different indicators. The `budget_outlays` table only provides government spending data by function and fiscal year.,False,0.0,1.330564,,2026-02-05 17:05:50.551579
+154,What deflators are used to convert nominal to real values?,sql,medium,"The provided database schema does not contain information about the specific deflators used to convert nominal to real values. The `budget_outlays` table contains `outlay_amount` and `unit` (which might indicate if the value is nominal or real), but it does not list the deflators themselves.",False,0.0,7.148704,,2026-02-05 17:05:56.717054
+155,Which economic measurements use survey-based vs. administrative data?,sql,medium,"```sqlite
+SELECT DISTINCT
+  function_name,
+  source
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+ORDER BY
+  source,
+  function_name;
+```",False,0.0,8.322182,,2026-02-05 17:05:58.410890
+156,What benchmarking procedures are used for different data series?,sql,medium,"I am sorry, but the provided database schema does not contain information about benchmarking procedures used for different data series. The `budget_outlays` table only contains government spending data and its source, but not details on how that data is benchmarked or validated.",False,0.0,1.183326,,2026-02-05 17:05:51.734962
+157,How are imputations handled for missing data points?,sql,medium,"The database schema does not contain information about how imputations are handled for missing data points. This information is related to data processing methodology, which is not stored in the `budget_outlays` table.",False,0.0,1.04504,,2026-02-05 17:05:52.780073
+158,Which indicators use moving averages or smoothing techniques?,sql,medium,"```sqlite
+SELECT DISTINCT source
+FROM budget_outlays
+WHERE source LIKE '%moving average%' OR source LIKE '%smoothing%';
+```",False,0.0,8.718688,,2026-02-05 17:06:01.498859
+159,What weighting schemes are used in composite indices?,sql,medium,-- Information about weighting schemes and composite indices is not available in the provided schema.,False,0.0,9.28104,,2026-02-05 17:06:02.133492
+160,How are outliers treated in different economic measurements?,sql,medium,The provided database schema does not contain information about how outliers are treated in different economic measurements. The `budget_outlays` table only contains government spending data and does not include metadata or methodological details regarding data analysis techniques.,False,0.0,1.089615,,2026-02-05 17:05:55.965994
+161,Which budget categories map directly to GDP government consumption components?,sql,medium,"Based on the provided database schema, there is no direct mapping table or information that links `budget_outlays` categories (superfunction, function_name) to specific ""GDP government consumption components"". The `industry_gdp` and `gdp_by_industry` tables provide GDP contributions by industry, not by consumption component, and there's no explicit link to government budget categories. Therefore, this question cannot be answered directly using the available schema.",False,0.0,1.780753,,2026-02-05 17:05:57.746825
+163,What connections exist between price indices and wage measurements?,sql,medium,I cannot generate a SQL query for this request because the provided database schema does not contain information about 'price indices' or 'wage measurements'. The `budget_outlays` table only contains government spending data.,False,0.0,8.206024,,2026-02-05 17:06:04.923158
+164,Which spending categories correlate with specific economic indicators?,sql,medium,"```sqlite
+SELECT
+  bo.fiscal_year,
+  bo.function_name AS spending_category,
+  SUM(bo.outlay_amount) AS total_outlay_amount,
+  tsd.category AS economic_indicator_category,
+  tsd.indicator_id AS economic_indicator_id,
+  AVG(tsd.numeric_value) AS",False,0.0,9.206281,,2026-02-05 17:06:06.953182
+166,What linking variables enable cross-dataset analysis?,sql,medium,"```sql
+SELECT 'fiscal_year' AS linking_variable
+UNION ALL
+SELECT 'superfunction'
+UNION ALL
+SELECT 'function_name';
+```",True,1.0,10.02812,,2026-02-05 17:06:08.439128
+167,Which economic measurements serve as inputs to other indicators?,sql,medium,,False,0.0,5.910544,'NoneType' object is not subscriptable,2026-02-05 17:06:07.409537
+168,How are government budget data reconciled with national accounts?,sql,medium,"The database schema provided does not contain information about national accounts or the reconciliation process between government budget data and national accounts. The `budget_outlays` table only provides government spending data by function and fiscal year. Therefore, this question cannot be answered using the current database.",False,0.0,1.169134,,2026-02-05 17:06:03.302709
+170,Which datasets share common classification standards?,sql,medium,"I am sorry, but based on the provided database schema, there is only one dataset (`budget_outlays`). Therefore, I cannot identify multiple datasets that share common classification standards.",False,0.0,1.255663,,2026-02-05 17:06:04.558460
+171,What economic activities are excluded from GDP measurements?,sql,medium,"I am sorry, but the provided database schema contains information about economic activities that *contribute* to GDP measurements, not those that are *excluded*. Therefore, I cannot answer this question with the available data.",False,0.0,1.064628,,2026-02-05 17:06:05.623137
+172,Which government functions fall outside standard budget categories?,sql,medium,"```sqlite
+SELECT DISTINCT function_name
+FROM budget_outlays
+WHERE superfunction IS NULL
+  AND fiscal_year BETWEEN 2014 AND 2024;
+```",False,0.0,7.865761,,2026-02-05 17:06:12.788985
+173,How are quasi-governmental entities treated in the datasets?,sql,medium,"The provided database schema does not contain information about how quasi-governmental entities are treated in the datasets. The `budget_outlays` table describes government spending data by function and fiscal year, but it does not include metadata or categories that would explain the treatment or inclusion of quasi-governmental entities.",False,0.0,1.774822,,2026-02-05 17:06:07.398024
+174,What thresholds determine inclusion in various economic surveys?,sql,medium,"I am sorry, but the provided database schema does not contain information about economic surveys or the thresholds that determine inclusion in them. The `budget_outlays` table only contains government spending data.",False,0.0,0.976502,,2026-02-05 17:06:07.929766
+176,How do spending patterns during economic expansions compare to those during contractions?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The schema contains government spending data (`budget_outlays`), but it does not include any information about economic expansions or contractions, or any data that could be used to infer these economic states. To answer this question, I would need a table that indicates the economic state (expansion or contraction) for each fiscal year.",False,0.0,1.186344,,2026-02-05 17:06:08.584424
+179,Which economic indicators show the greatest divergence during transition periods?,sql,medium,"-- The concept of ""transition periods"" is not defined within the provided database schema, making it impossible to identify or filter data specifically for such periods.
+-- Therefore, this query identifies economic indicators with the greatest overall variability (measured by standard deviation) across the entire available data range (2014-2024), as a proxy for ""divergence"".
+-- Note",False,0.0,10.424608,,2026-02-05 17:06:17.834201
+180,How do wartime and peacetime budget allocations compare?,sql,medium,"I am sorry, but the provided database schema does not contain information about war periods or a way to distinguish between wartime and peacetime. Therefore, I cannot generate a SQL query to compare wartime and peacetime budget allocations.",False,0.0,1.235507,,2026-02-05 17:06:09.165348
+182,How do spending patterns in the first vs. second half of decades typically compare?,sql,medium,"```sql
+SELECT
+  CASE
+    WHEN fiscal_year % 10 BETWEEN 0 AND 4 THEN 'First Half of Decade'
+    WHEN fiscal_year % 10 BETWEEN 5 AND 9 THEN 'Second Half of Decade'
+  END AS decade_half,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+GROUP BY
+  decade_half;
+```",False,0.4,6.504725,,2026-02-05 17:06:14.943924
+183,Which economic measurements show the most variation across different time horizons?,sql,medium,"```sql
+SELECT
+  function_name,
+  STDEV(outlay_amount) AS standard_deviation_of_outlays
+FROM
+  budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  standard_deviation_of_outlays DESC;
+```",False,0.0,3.104439,,2026-02-05 17:06:11.688913
+184,How do short-term fluctuations compare to long-term trends in government spending?,sql,medium,"```sqlite
+WITH AnnualSpending AS (
+    SELECT
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year
+),
+CalculatedTrends AS (
+    SELECT
+        fiscal_year,
+        total_outlay,
+        LAG(total_outlay, 1) OVER (ORDER BY fiscal_year) AS previous_year_outlay,
+        (total_outlay - LAG(total_outlay, 1) OVER (ORDER BY fiscal_year)) * 100.0 / LAG(total_outlay, 1) OVER (ORDER BY fiscal_year) AS yoy_percentage_change,
+        AVG(total_outlay) OVER (ORDER BY fiscal_year ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS five_year_moving_average
+    FROM
+        AnnualSpending
+)
+SELECT
+    fiscal_year,
+    total_outlay,
+    yoy_percentage_change, -- Represents short-term fluctuation (year-over-year percentage change)
+    five_year_moving_average -- Represents long-term trend (5-year moving average)
+FROM
+    CalculatedTrends
+ORDER BY
+    fiscal_year;
+```",False,0.0,7.920183,,2026-02-05 17:06:17.085595
+185,Which indicators show leading vs. lagging relationships with economic cycles?,sql,medium,"This database schema does not contain information about economic cycles or the leading/lagging relationships of indicators with them. The `budget_outlays` table only provides government spending data by function and fiscal year. Therefore, I cannot answer this question with the provided schema.",False,0.0,1.084268,,2026-02-05 17:06:12.773342
+186,How do productivity gains compare across different industries?,sql,medium,"```sqlite
+WITH ProductivityData AS (
+    SELECT
+        subcategory,
+        year,
+        numeric_value
+    FROM
+        time_series_data
+    WHERE
+        category = 'productivity_measures'
+        AND period_type = 'Annual'
+        AND year IN (2014, 2023)
+),
+Productivity",False,0.0,8.697885,,2026-02-05 17:06:21.471274
+187,Which sectors show the most divergent employment vs. output trends?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data and does not include information on employment, output, or economic sectors to analyze trends.",False,0.0,1.05534,,2026-02-05 17:06:13.844405
+188,How do capital-intensive vs. labor-intensive industries compare in economic contribution?,sql,medium,"The provided database schema does not contain information to classify industries as ""capital-intensive"" or ""labor-intensive,"" nor does it include data points such as capital expenditure or labor force to infer such classifications. Therefore, it is not possible to compare these types of industries based on the available data.",False,0.0,3.778069,,2026-02-05 17:06:17.622552
+189,Which industries show similar vs. different responses to policy changes?,sql,medium,"The provided database schema does not contain information about ""policy changes"" or a mechanism to measure or compare ""responses"" of industries to such changes. The tables `industry_gdp` and `gdp_by_industry` only provide GDP contribution data by industry over time. To answer this question, one would need additional data linking specific policy changes to economic indicators and a method to analyze their impact across different industries.",False,0.0,1.953267,,2026-02-05 17:06:16.897277
+190,How do traditional vs. emerging sectors compare in growth dynamics?,sql,medium,"```sql
+WITH SectorOutlays AS (
+    SELECT
+        fiscal_year,
+        CASE
+            WHEN superfunction IN ('Science, Space, and Technology', 'Energy') THEN 'Emerging Sectors'
+            WHEN superfunction IN (
+                'National Defense',
+                'Social Security',
+                'Medicare',
+                'Health',
+                'Income",False,0.0,9.103997,,2026-02-05 17:06:26.001332
+191,Which economic sectors show complementary vs. competitive relationships?,sql,medium,"-- This question requires advanced statistical analysis (e.g., correlation, regression) to determine complementary vs. competitive relationships between economic sectors, which cannot be directly performed by a single SQL query using the provided schema. SQL can retrieve and aggregate the raw data (GDP contributions over time), but the analytical step of identifying these relationships is beyond its scope.",False,0.0,9.811306,,2026-02-05 17:06:26.896996
+192,How do export-oriented vs. domestic-focused industries compare in stability?,sql,medium,"The provided database schema does not contain information to classify industries as ""export-oriented"" or ""domestic-focused"", nor does it contain metrics to directly assess ""stability"" in the context of such a classification. Therefore, it is not possible to answer this question with the available data.",False,0.0,1.027663,,2026-02-05 17:06:18.650288
+193,Which sectors show the strongest vs. weakest links to government spending?,sql,medium,"```sqlite
+SELECT
+  function_name,
+  SUM(outlay_amount) AS total_outlays
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name
+ORDER BY
+  total_outlays DESC;
+```",False,0.0,1.543423,,2026-02-05 17:06:19.377704
+194,How do regulated vs. unregulated industries compare in economic patterns?,sql,medium,"I am sorry, but the provided database schema does not contain information about whether an industry is regulated or unregulated. Therefore, I cannot generate a query to compare economic patterns between regulated and unregulated industries.",False,0.0,0.921045,,2026-02-05 17:06:19.571401
+195,Which industries show convergent vs. divergent productivity trends?,sql,medium,"The provided database schema does not contain sufficient information to directly calculate and compare industry-level productivity trends in a way that would allow for identifying ""convergent vs. divergent"" patterns using a single SQL query.
+
+Specifically:
+1.  The `time_series_data` table contains `productivity_measures`, but it lacks a clear column to link these measures to specific industries (like `",False,0.0,10.318405,,2026-02-05 17:06:29.696188
+197,Which economic indicators show the strongest response to fiscal interventions?,sql,medium,"The provided database schema does not contain information about ""fiscal interventions"" or a mechanism to measure the ""response"" of economic indicators to such interventions. Therefore, it is not possible to answer this question with the given schema.",False,0.0,1.245495,,2026-02-05 17:06:20.817043
+198,How do automatic stabilizers compare to discretionary spending in economic impact?,sql,medium,"-- The database schema does not contain specific categories or flags to distinguish between ""automatic stabilizers"" and ""discretionary spending"" within the `budget_outlays` table.
+-- Additionally, ""economic impact"" is a qualitative measure that cannot be directly calculated from the `outlay_amount` column alone.
+-- Therefore, a SQL query to answer this question as posed cannot be generated from",False,0.0,10.23459,,2026-02-05 17:06:31.051887
+199,Which budget categories show immediate vs. delayed policy effects?,sql,medium,"The provided database schema does not contain information about ""policy effects"" or metrics to distinguish between ""immediate"" and ""delayed"" effects. The `budget_outlays` table only provides government spending data by function and fiscal year, without any data related to policy outcomes or their timing. Therefore, this question cannot be answered using the current schema.",False,0.0,1.359548,,2026-02-05 17:06:22.830874
+200,How do supply-side vs. demand-side policies compare in their economic signatures?,sql,medium,"The database schema provided (budget_outlays) contains government spending data by function and fiscal year. It does not contain information that classifies policies as ""supply-side"" or ""demand-side,"" nor does it contain data on ""economic signatures"" (such as GDP, employment, inflation, etc.) that would allow for a comparison of their effects. Therefore, this question cannot be answered",False,0.0,10.141194,,2026-02-05 17:06:32.972151
+201,Which sectors benefit most vs. least from government spending increases?,sql,medium,"```sqlite
+WITH MinMaxYears AS (
+    SELECT
+        MIN(fiscal_year) AS min_year,
+        MAX(fiscal_year) AS max_year
+    FROM budget_outlays
+    WHERE fiscal_year BETWEEN 2014 AND 2024
+)
+SELECT
+    b.superfunction,
+    SUM(CASE WHEN b",False,0.0,9.582421,,2026-02-05 17:06:35.583808
+202,How do tax policy changes compare to spending changes in economic effect?,sql,medium,"The provided database schema contains information about government spending (budget_outlays) but does not include data on tax policy changes or their economic effects. Therefore, it is not possible to compare tax policy changes to spending changes in economic effect using the available data.",False,0.0,1.203609,,2026-02-05 17:06:28.100673
+203,Which economic indicators best capture policy effectiveness?,sql,medium,"```sql
+SELECT DISTINCT category
+FROM time_series_data
+WHERE category IN ('consumer_price_index', 'employment_cost_index', 'productivity_measures');
+```",True,1.0,5.811417,,2026-02-05 17:06:33.912182
+205,Which spending categories show the most vs. least policy responsiveness?,sql,medium,"```sql
+WITH FunctionAverages AS (
+    SELECT
+        function_name,
+        AVG(outlay_amount) AS avg_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name
+)
+SELECT
+    b.function_name,
+    SQRT(
+        SUM((b.outlay_amount - fa.avg_outlay) * (b.outlay_amount - fa.avg_outlay)) / COUNT(b.outlay_amount)
+    ) AS spending",False,0.0,9.199811,,2026-02-05 17:06:38.896185
+206,How do the largest spending categories compare in growth rates vs. absolute changes?,sql,medium,"```sql
+WITH TopCategories AS (
+    -- Identify the top 10 largest spending categories based on total outlays from 2014 to 2024
+    SELECT
+        function_name
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name
+    ORDER BY
+        SUM(outlay_amount) DESC
+    LIMIT 10
+),
+CategoryOutlays AS (
+    -- Get the outlay amounts for 2014 and 2024 for these top categories
+    SELECT
+        tc.function_name,
+        SUM(CASE WHEN bo.fiscal_year = 2014 THEN bo.outlay_amount ELSE 0 END) AS outlay_2014,
+        SUM(CASE WHEN bo.fiscal_year = 2024 THEN bo.outlay_amount ELSE 0 END) AS outlay_2024
+    FROM
+        TopCategories tc
+    JOIN
+        budget_outlays bo ON tc.function_name = bo.function_name
+    WHERE
+        bo.fiscal_year IN (2014, 2024)
+    GROUP BY
+        tc.function_name
+)
+-- Calculate absolute change and growth rate for each category
+SELECT
+    function_name,
+    outlay_2014,
+    outlay_2024,
+    (outlay_2024 - outlay_2014) AS absolute_change,
+    CASE
+        WHEN outlay_2014 IS NULL OR outlay_2014 = 0 THEN NULL -- Avoid division by zero or null
+        ELSE ((outlay_2024 - outlay_2014) * 100.0 / outlay_2014)
+    END AS growth_rate_percent
+FROM
+    Category",False,0.0,8.287917,,2026-02-05 17:06:39.340412
+207,Which economic indicators show the greatest relative vs. absolute volatility?,sql,medium,"```sql
+WITH IndicatorVolatility AS (
+    SELECT
+        category,
+        -- Calculate population standard deviation for absolute volatility
+        SQRT(AVG(numeric_value * numeric_value) - (AVG(numeric_value) * AVG(numeric_value))) AS absolute_volatility,
+        AVG(numeric_value) AS average_value
+    FROM
+        time_series_data
+    WHERE
+        year BETWEEN 2014 AND 2024
+        AND numeric_value IS NOT NULL
+    GROUP BY
+        category
+    HAVING
+        COUNT(numeric_value) > 1 -- Ensure at least two data points for standard deviation calculation
+        AND AVG(numeric_value) <> 0 -- Avoid division by zero for relative volatility
+)
+SELECT
+    category,
+    absolute_volatility,
+    (absolute_volatility / average_value) AS relative_volatility
+FROM
+    IndicatorVolatility
+ORDER BY
+    relative_volatility DESC,
+    absolute_volatility DESC;
+```",False,0.4,6.964328,,2026-02-05 17:06:39.937378
+208,How do percentage changes compare to level changes in revealing economic trends?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlays
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year
+),
+CalculatedChanges AS (
+    ",False,0.0,9.74313,,2026-02-05 17:06:43.656073
+209,Which budget functions show the largest gaps between planned and actual spending?,sql,medium,"```sqlite
+SELECT
+  function_name,
+  ABS(SUM(CASE WHEN source = 'Planned' THEN outlay_amount ELSE 0 END) -
+      SUM(CASE WHEN source = 'Actual' THEN outlay_amount ELSE 0 END)) AS spending_gap
+FROM budget_outlays
+WHERE fiscal_year BETWEEN 2014 AND 2",False,0.0,10.363317,,2026-02-05 17:06:45.947390
+211,Which sectors show the most skewed vs. normal distributions in performance?,sql,medium,"```sql
+WITH SectorStats AS (
+    SELECT
+        superfunction,
+        COUNT(outlay_amount) AS n,
+        AVG(outlay_amount) AS mean_outlay,
+        SUM(outlay_amount) AS sum_outlay,
+        SUM(outlay_amount * outlay_amount) AS sum_sq_out",False,0.0,8.750552,,2026-02-05 17:06:47.646828
+212,How do peak-to-trough variations compare across different economic cycles?,sql,medium,"The provided database schema does not contain information about economic cycles (e.g., recession/expansion periods) or other macroeconomic indicators necessary to identify peaks and troughs and compare variations across different economic cycles. The `budget_outlays` table only provides government spending data, which is insufficient to answer this question.",False,0.0,5.107411,,2026-02-05 17:06:44.447955
+213,Which indicators show the most compression vs. expansion in ranges over time?,sql,medium,"```sql
+WITH EarlyPeriodRanges AS (
+    SELECT
+        function_name,
+        MAX(outlay_amount) - MIN(outlay_amount) AS early_range
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2018
+    GROUP BY
+        function_name
+    ",False,0.0,9.255441,,2026-02-05 17:06:49.192938
+215,Which measurements show the greatest divergence between different calculation methods?,sql,medium,"```sqlite
+SELECT
+  superfunction,
+  function_name,
+  fiscal_year,
+  MAX(outlay_amount) - MIN(outlay_amount) AS divergence_amount
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction,
+  function_name,
+  fiscal_year
+HAVING
+  COUNT(DISTINCT source) > 1
+ORDER BY
+  divergence_amount DESC
+LIMIT 1;
+```",False,0.0,8.721206,,2026-02-05 17:06:52.377380
+216,How does the composition of GDP compare to the composition of government spending?,sql,medium,"```sql
+WITH GDP_Composition AS (
+    SELECT
+        industry_name AS category,
+        SUM(gdp_contribution) AS total_value
+    FROM
+        gdp_by_industry
+    WHERE
+        year BETWEEN 2014 AND 2024
+    GROUP BY
+        industry_name
+),
+Total_GDP AS (
+    SELECT
+        SUM(total_value) AS overall_total
+    FROM
+        GDP_Composition
+),
+Spending_Composition AS (
+    SELECT
+        function_name AS category,
+        SUM(outlay_amount) AS total_value
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name
+),
+Total_Spending AS (
+    SELECT
+        SUM(total_value) AS overall_total
+    FROM
+        Spending_Composition
+)
+SELECT
+    'GDP Composition' AS composition_type,
+    g.category,
+    (g.total_value * 100.0 / (SELECT overall_total FROM Total_GDP)) AS percentage
+FROM
+    GDP_Composition g
+
+UNION ALL
+
+SELECT
+    'Government Spending Composition' AS composition_type,
+    s.category,
+    (s.total_value * 100.0 / (SELECT overall_total FROM Total_Spending)) AS percentage
+FROM
+    Spending_Composition s
+ORDER BY
+    composition_type, percentage DESC;
+```",False,0.0,7.209317,,2026-02-05 17:06:51.657347
+217,Which economic structures show the most vs. least change over time?,sql,medium,"```sql
+SELECT
+  superfunction,
+  MAX(outlay_amount) - MIN(outlay_amount) AS absolute_change_over_time
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction
+ORDER BY
+  absolute_change_over_time DESC;
+```",False,0.4,3.583336,,2026-02-05 17:06:49.530997
+218,How do different sectors' shares of employment compare to their shares of output?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but it does not include information on employment, output, or economic sectors. Therefore, it is not possible to compare sectors' shares of employment to their shares of output using the available data.",False,0.0,1.442293,,2026-02-05 17:06:49.090090
+219,Which industries show increasing vs. decreasing concentration?,sql,medium,"```sqlite
+WITH AnnualIndustryPercentage AS (
+    SELECT
+        industry_name,
+        year,
+        AVG(percentage_of_total) AS avg_annual_percentage
+    FROM
+        gdp_by_industry
+    WHERE
+        year BETWEEN 2014 AND 2024
+    GROUP BY
+        industry_name,
+        ",False,0.0,8.491189,,2026-02-05 17:06:57.581885
+220,How do direct vs. indirect economic effects compare across sectors?,sql,medium,"The provided database schema does not contain information about ""direct vs. indirect economic effects"". The `budget_outlays` table only provides government spending amounts (`outlay_amount`) by function and fiscal year, but no data to distinguish between direct and indirect economic impacts. Therefore, this question cannot be answered with the available data.",False,0.0,6.027798,,2026-02-05 17:06:55.220954
+221,Which budget categories show fixed vs. variable cost structures?,sql,medium,"```sql
+SELECT
+  function_name,
+  AVG(outlay_amount) AS average_annual_outlay,
+  SQRT(SUM(POWER(outlay_amount - avg_outlay_per_function, 2)) / (COUNT(outlay_amount) - 1)) AS sample_std_dev_outlay,
+  (SQRT(SUM(POWER(outlay_amount - avg_outlay_per_function, 2)) / (COUNT(outlay_amount) - 1)) * 100.0 / avg_outlay_per_function) AS coefficient_of_variation_percent
+FROM (
+  SELECT
+    function_name,
+    outlay_amount,
+    AVG(outlay_amount) OVER (PARTITION BY function_name) AS avg_outlay_per_function,
+    COUNT(outlay_amount) OVER (PARTITION BY function_name) AS count_outlays_per_function
+  FROM
+    budget_outlays
+  WHERE
+    fiscal_year BETWEEN 2014 AND 2024
+) AS sub
+WHERE
+  count_outlays_per_function > 1 -- Exclude categories with only one year of data, as std dev cannot be calculated
+GROUP BY
+  function_name
+ORDER BY
+  coefficient_of_",False,0.0,8.433,,2026-02-05 17:06:57.964531
+222,How do centralized vs. decentralized spending patterns compare in effectiveness?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains information about government spending amounts and categories, but it does not include any data on the ""effectiveness"" of spending or classifications that distinguish between ""centralized"" and ""decentralized"" spending patterns.",False,0.0,1.023857,,2026-02-05 17:06:52.681620
+223,Which economic indicators show structural breaks vs. continuous evolution?,sql,medium,"```sql
+SELECT DISTINCT
+    category,
+    subcategory,
+    indicator_id,
+    series_id,
+    geographic_name
+FROM
+    time_series_data
+WHERE
+    year BETWEEN 2014 AND 2024;
+```",True,1.0,10.439524,,2026-02-05 17:07:02.816970
+224,How do leading vs. supporting industries compare in economic cycles?,sql,medium,"```sql
+WITH IndustryAnnualGDP AS (
+    SELECT
+        industry_name,
+        year,
+        SUM(gdp_contribution) AS annual_gdp
+    FROM
+        gdp_by_industry
+    WHERE
+        year BETWEEN 2014 AND 2024
+    GROUP BY
+        industry_name,
+        year
+",False,0.0,9.609898,,2026-02-05 17:07:02.292120
+225,Which sectors show the most vs. least structural interdependence?,sql,medium,"I am sorry, but the provided database schema `budget_outlays` contains information about government spending by function and fiscal year. It does not contain data that would allow for the measurement or analysis of ""structural interdependence"" between sectors. Therefore, I cannot answer this question with the available data.",False,0.0,1.194513,,2026-02-05 17:06:56.416230
+226,How do efficiency metrics compare across different government departments?,sql,medium,"```sql
+SELECT
+  superfunction,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction
+ORDER BY
+  total_outlay_amount DESC;
+```",True,1.0,8.553466,,2026-02-05 17:07:04.969961
+227,Which economic indicators show the best vs. worst predictive power?,sql,medium,-- The database schema does not contain information about 'predictive power' to answer this question.,False,0.0,8.321401,,2026-02-05 17:07:05.903427
+228,How do different productivity measurements compare in capturing economic progress?,sql,medium,"```sqlite
+SELECT
+  year,
+  indicator_id,
+  subcategory,
+  numeric_value,
+  unit
+FROM time_series_data
+WHERE
+  category = 'productivity_measures' AND year BETWEEN 2014 AND 2024
+ORDER BY
+  year,
+  indicator_id,
+  subcategory;
+```",False,0.0,2.519735,,2026-02-05 17:07:00.485099
+229,Which sectors show the highest vs. lowest returns on government investment?,sql,medium,"The provided database schema `budget_outlays` contains information about government spending (`outlay_amount`) by function (`function_name`), but it does not include any data related to ""returns"" or ""outcomes"" of these investments. Therefore, it is not possible to calculate or determine the highest vs. lowest returns on government investment using the available data. The schema only allows for analysis of spending levels, not the effectiveness or return on that spending.",False,0.0,1.798898,,2026-02-05 17:07:02.284549
+230,How do cost-benefit ratios compare across different spending categories?,sql,medium,"I am sorry, but the provided database schema does not contain information about the 'benefit' of spending categories, only the 'cost' (outlay_amount). Therefore, it is not possible to calculate or compare cost-benefit ratios with the available data.",False,0.0,1.117046,,2026-02-05 17:07:03.401816
+231,Which economic measurements show the most vs. least reliability?,sql,medium,"I am sorry, but the provided database schema does not contain information about the reliability of economic measurements. The `budget_outlays` table only provides government spending data and does not include any metrics or data points that could be used to assess or compare the reliability of different economic measurements. Therefore, I cannot answer this question with the given schema.",False,0.0,1.317958,,2026-02-05 17:07:03.610298
+232,How do different inflation measures compare in capturing price pressures?,sql,medium,"```sqlite
+SELECT
+  year,
+  category,
+  series_id,
+  period_name,
+  geographic_name,
+  unit,
+  numeric_value
+FROM
+  time_series_data
+WHERE
+  category IN ('consumer_price_index', 'employment_cost_index')
+  AND year BETWEEN 2014 AND 2024
+  AND period_name = 'Annual'
+  AND geographic_name = 'United States'
+ORDER BY
+  year,
+  category,
+  series_id;
+```",False,0.0,7.612012,,2026-02-05 17:07:10.429072
+233,Which indicators provide the earliest vs. latest signals of economic turning points?,sql,medium,"-- The provided database schema does not contain information about ""economic turning points"" or data that would allow for the identification of ""earliest vs. latest signals"" from various indicators. The `budget_outlays` table only contains government spending data by function and fiscal year, which is insufficient to answer this question.",False,0.0,10.250352,,2026-02-05 17:07:13.652689
+234,How do alternative GDP measurements compare to standard calculations?,sql,medium,"```sql
+SELECT
+  ig.year,
+  ig.industry_name,
+  ig.gdp_value AS industry_gdp_annual_value,
+  SUM(gbi.gdp_contribution) AS gdp_by_industry_annual_sum,
+  (ig.gdp_value - SUM(gbi.gdp_contribution))",False,0.0,8.783055,,2026-02-05 17:07:12.393671
+235,Which metrics best vs. worst capture economic welfare changes?,sql,medium,"The provided database schema `budget_outlays` contains government spending data, but it does not include metrics related to economic welfare or information that would allow for a comparison of which metrics best vs. worst capture economic welfare changes. Therefore, this question cannot be answered with the given schema.",False,0.0,1.385239,,2026-02-05 17:07:06.355310
+236,How do acceleration vs. deceleration patterns compare across indicators?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        superfunction,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        superfunction,
+        ",False,0.0,8.048413,,2026-02-05 17:07:13.952214
+237,Which economic measurements show smooth vs. volatile transitions?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        fiscal_year
+),
+OutlayChanges AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        total_outlay,
+        LAG(total_outlay, 1, 0) OVER (PARTITION BY function_name ORDER BY fiscal_year) AS previous_year_outlay
+    FROM
+        YearlyOutlays
+),
+PercentageChanges AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        total_outlay,
+        previous_year_outlay,
+        CASE
+            WHEN previous_year_outlay > 0 THEN ABS((total_outlay - previous_year_outlay) * 1.0 / previous_year_outlay) * 100
+            ELSE NULL
+        END AS absolute_percentage_change
+    FROM
+        OutlayChanges
+)
+SELECT
+    function_name,
+    AVG(absolute_percentage_change) AS average_absolute_percentage_change
+FROM
+    PercentageChanges
+WHERE
+    absolute_percentage_change IS NOT NULL
+GROUP BY
+    function_name
+ORDER BY
+    average_absolute_percentage_change ASC;
+```",True,1.0,7.721495,,2026-02-05 17:07:14.077006
+238,How do momentum indicators compare in different economic phases?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data and does not include information on ""momentum indicators"" or ""economic phases.""",False,0.0,0.786089,,2026-02-05 17:07:11.215671
+239,Which sectors show self-reinforcing vs. self-correcting dynamics?,sql,medium,"```sqlite
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        ",False,0.0,9.380395,,2026-02-05 17:07:20.597139
+240,How do leading indicators compare in their lead times?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""leading indicators"" or their ""lead times"". The `budget_outlays` table only contains government spending data. Therefore, I cannot answer this question with the available data.",False,0.0,1.156579,,2026-02-05 17:07:13.550539
+241,Which budget categories show the most vs. least inertia in spending changes?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        ",False,0.0,8.165795,,2026-02-05 17:07:21.717181
+242,How do diffusion indices compare across different economic sectors?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""diffusion indices"". The available tables (`industry_gdp` and `gdp_by_industry`) contain data related to GDP values and contributions by industry, but not diffusion indices. Therefore, I cannot answer this question with the current schema.",False,0.0,1.267859,,2026-02-05 17:07:14.920996
+243,Which indicators show linear vs. non-linear response patterns?,sql,medium,"The provided database schema `budget_outlays` contains government spending data over time. It does not contain information about ""indicators"" or their ""response patterns"" (linear vs. non-linear). This type of analysis requires statistical modeling beyond the capabilities of a direct SQL query on the given schema.",False,0.0,1.332566,,2026-02-05 17:07:15.285009
+244,How do short-term volatility and long-term stability compare across measures?,sql,medium,"```sql
+WITH LongTermStats AS (
+    SELECT
+        function_name,
+        COUNT(outlay_amount) AS count_lt,
+        SUM(outlay_amount) AS sum_outlay_lt,
+        SUM(outlay_amount * outlay_amount) AS sum_sq_outlay_lt
+    FROM
+        budget_outlays",False,0.0,8.246507,,2026-02-05 17:07:22.323818
+245,Which economic series show mean-reverting vs. trending behavior?,sql,medium,"```sql
+WITH SeriesData AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        outlay_amount
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+),
+RegressionStats AS (
+    SELECT
+        function_name,
+        COUNT(fiscal",False,0.0,9.418422,,2026-02-05 17:07:24.339492
+246,How do economic gains compare across different income segments?,sql,medium,"I am sorry, but the provided database schema `budget_outlays` contains information about government spending and does not include data on ""economic gains"" or ""income segments."" Therefore, I cannot answer your question with the available data.",False,0.0,1.06778,,2026-02-05 17:07:16.353060
+248,How do large vs. small businesses compare in economic indicators?,sql,medium,"The provided database schema does not contain information to distinguish between ""large businesses"" and ""small businesses"" for economic indicators. The `time_series_data` table includes categories like 'consumer_price_index', 'employment_cost_index', and 'productivity_measures', but lacks a column or attribute that classifies data by business size. Therefore, a direct comparison based on business size cannot be generated from this schema.",False,0.0,1.69505,,2026-02-05 17:07:18.048166
+249,Which demographic groups show divergent vs. convergent economic trends?,sql,medium,"The provided database schema does not contain information about demographic groups or their economic trends, which are necessary to answer this question. The `budget_outlays` table only contains government spending data.",False,0.0,10.148737,,2026-02-05 17:07:28.197098
+251,Which sectors show the most vs. least equitable distribution of growth?,sql,medium,"```sql
+WITH OutlaysByFunction AS (
+    SELECT
+        superfunction,
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM budget_outlays
+    WHERE fiscal_year IN (2014, 2023) -- Using 2014 as the",False,0.0,9.164811,,2026-02-05 17:07:29.762784
+252,How do different percentiles compare in wage and income measurements?,sql,medium,"I am sorry, but the provided database schema only contains information about government budget outlays. It does not include any tables or columns related to wage, income, or percentile measurements. Therefore, I cannot answer your question with the given schema.",False,0.0,0.966816,,2026-02-05 17:07:22.686378
+256,How do domestic economic indicators compare to international benchmarks?,sql,medium,"The provided database schema for `time_series_data` contains economic indicators primarily from BLS and BEA, which are U.S. government agencies. There is no information within this schema to identify or compare data against ""international benchmarks."" Therefore, it is not possible to generate a SQL query to answer this question with the available data.",False,0.0,2.648332,,2026-02-05 17:07:24.972614
+257,Which sectors show similar vs. different patterns compared to other countries?,sql,medium,"The provided database schema does not contain information about other countries, nor does it have a column to differentiate data by country. Therefore, it is not possible to compare sector patterns across countries using the available data.",False,0.0,1.44223,,2026-02-05 17:07:24.129750
+258,How do federal spending patterns compare to international norms?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains federal spending data, but there is no information or tables related to ""international norms"" or spending patterns from other countries to facilitate a comparison.",False,0.0,0.999628,,2026-02-05 17:07:25.129476
+259,Which economic measurements show convergence vs. divergence with global trends?,sql,medium,"The provided database schema does not contain information about ""economic measurements"" or ""global trends"" to determine convergence or divergence. The `budget_outlays` table only contains government spending data.",False,0.0,1.086916,,2026-02-05 17:07:25.426806
+260,How do trade-exposed vs. protected sectors compare in performance?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but it does not include information to classify sectors as ""trade-exposed"" or ""protected,"" nor does it contain data to measure their ""performance"" (e.g., economic output, employment, or revenue).",False,0.0,1.491245,,2026-02-05 17:07:26.463962
+261,Which indicators show the strongest vs. weakest international correlations?,sql,medium,"The provided database schema `budget_outlays` contains government spending data and does not include information about ""indicators"" or ""international correlations"". Therefore, I cannot answer this question with the available data.",False,0.0,0.917063,,2026-02-05 17:07:26.047097
+263,Which budget categories exist uniquely vs. commonly across countries?,sql,medium,"```sqlite
+SELECT
+  function_name,
+  CASE
+    WHEN COUNT(DISTINCT source) = 1 THEN 'Unique'
+    ELSE 'Common'
+  END AS category_existence_type,
+  COUNT(DISTINCT source) AS number_of_sources
+FROM budget_outlays
+WHERE fiscal_year BETWEEN 2014 AND 2024
+GROUP BY function_name
+ORDER BY category_existence_type DESC, function_name;
+```",False,0.0,4.387093,,2026-02-05 17:07:29.813990
+265,Which economic patterns appear universal vs. country-specific?,sql,medium,"```sql
+SELECT
+  bo.source,
+  bo.fiscal_year,
+  bo.superfunction,
+  SUM(bo.outlay_amount) AS total_outlay_for_superfunction,
+  (SUM(bo.outlay_amount) * 100.0 / SUM(SUM(bo.outlay_amount)) OVER (",False,0.0,9.1489,,2026-02-05 17:07:35.196599
+266,How do different inflation calculation methods compare in results?,sql,medium,"```sql
+SELECT
+  year,
+  category,
+  subcategory,
+  numeric_value,
+  unit
+FROM time_series_data
+WHERE
+  category IN ('consumer_price_index', 'employment_cost_index') AND
+  year BETWEEN 2014 AND 2024 AND
+  period_type = 'Annual' AND
+  (geographic_level = 'National' OR geographic_name = 'United States')
+ORDER BY
+  year,
+  category,
+  subcategory;
+```",True,1.0,7.961997,,2026-02-05 17:07:34.426228
+267,Which GDP components show the largest measurement revisions?,sql,medium,"Data on measurement revisions is not available in the provided database schema. The tables `industry_gdp` and `gdp_by_industry` contain reported GDP values and contributions, but do not include information about different versions or revisions of these measurements over time.",False,0.0,1.221754,,2026-02-05 17:07:29.419784
+268,How do survey-based vs. administrative data sources compare in accuracy?,sql,medium,SELECT 'The provided database schema does not contain information to compare data accuracy between sources.' AS explanation;,True,1.0,9.333855,,2026-02-05 17:07:38.753873
+269,Which indicators show the most vs. least sensitivity to methodology changes?,sql,medium,"The database schema does not contain information about methodology changes or indicators of sensitivity to such changes. Therefore, it is not possible to answer this question directly from the provided data.",False,0.0,9.37599,,2026-02-05 17:07:39.138888
+270,How do preliminary vs. final data releases typically compare?,sql,medium,"```sql
+SELECT
+  source,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  source
+ORDER BY
+  total_outlay_amount DESC;
+```",True,1.0,4.043485,,2026-02-05 17:07:33.857566
+271,Which measurements show the greatest divergence between alternative approaches?,sql,medium,"```sql
+SELECT
+  superfunction,
+  function_name,
+  fiscal_year,
+  unit,
+  MAX(outlay_amount) - MIN(outlay_amount) AS divergence
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction,
+  function_name,
+  fiscal_year,
+  unit
+HAVING
+  COUNT(DISTINCT source) > 1 AND COUNT(*) > 1
+ORDER BY
+  divergence DESC;
+```",False,0.4,7.337478,,2026-02-05 17:07:41.195529
+272,How do real-time vs. revised data compare in economic analysis?,sql,medium,"```sqlite
+SELECT
+  source,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  source
+ORDER BY
+  total_outlay_amount DESC;
+```",False,0.0,9.263196,,2026-02-05 17:07:43.689495
+273,Which indicators require the most vs. least statistical adjustment?,sql,medium,"I am sorry, but the provided database schema `budget_outlays` does not contain any information about ""statistical adjustment"" or metrics that would allow me to determine which indicators require the most or least adjustment. The table focuses on government spending data.",False,0.0,1.324922,,2026-02-05 17:07:36.522117
+274,How do different seasonal adjustment methods compare in results?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""seasonal adjustment methods"" or their comparison. The `budget_outlays` table only provides government spending data by function and fiscal year. Therefore, I cannot answer this question with the available data.",False,0.0,1.202528,,2026-02-05 17:07:37.724708
+276,What multi-year cycles appear in government spending beyond typical business cycles?,sql,medium,"```sqlite
+SELECT
+  fiscal_year,
+  SUM(outlay_amount) AS total_government_spending
+FROM
+  budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  fiscal_year
+ORDER BY
+  fiscal_year;
+```",False,0.0,7.330486,,2026-02-05 17:07:45.055795
+278,What echo effects appear in economic data following major disruptions?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but it does not include information about ""major disruptions"" or other economic indicators necessary to identify ""echo effects"" in economic data.",False,0.0,1.779234,,2026-02-05 17:07:40.533214
+279,Which patterns in early indicators reliably predict later budgetary changes?,sql,medium,"The provided database schema only contains `budget_outlays` which details government spending by function and fiscal year. It does not include any ""early indicators"" or data that could be used to establish predictive patterns for budgetary changes. Therefore, it is not possible to answer this question with the available data.",False,0.0,1.071374,,2026-02-05 17:07:40.210863
+281,What recursive patterns appear in the relationship between spending and growth?,sql,medium,"The database schema provided only contains information about government spending (`budget_outlays`) and does not include any data related to ""growth"" or metrics that would allow for the analysis of recursive patterns between spending and growth. Therefore, this question cannot be answered with the current schema.",False,0.0,1.247939,,2026-02-05 17:07:41.459018
+282,Which indicators show regime changes or structural shifts in their patterns?,sql,medium,"```sql
+WITH OutlaysByYear AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name, fiscal",False,0.0,9.094287,,2026-02-05 17:07:49.627941
+284,What patterns emerge in the timing of budget reallocations?,sql,medium,"```sql
+SELECT
+  current_year,
+  SUM(ABS(outlay_change)) AS total_absolute_reallocation_magnitude,
+  COUNT(CASE WHEN outlay_change > 0 THEN 1 END) AS num_functions_increased,
+  COUNT(CASE WHEN outlay_change < 0 THEN 1 END) AS num_functions_decreased",False,0.0,8.26128,,2026-02-05 17:07:49.456908
+285,Which economic measurements show fractal or self-similar patterns across time scales?,sql,medium,"```sql
+-- The provided database schema does not contain information or pre-calculated metrics related to fractal or self-similar patterns in economic measurements.
+-- Identifying such patterns would require advanced time series analysis beyond the capabilities of a standard SQL query on raw data.
+-- Therefore, this question cannot be answered using the given schema.
+```",False,0.0,9.86445,,2026-02-05 17:07:51.324136
+286,How do spending patterns reveal government priorities during different crisis types?,sql,medium,"The provided database schema does not contain information about ""crisis types"" or any data that would allow for the categorization of fiscal years by crisis type. Therefore, it is not possible to answer the question ""How do spending patterns reveal government priorities during different crisis types?"" using the available data.",False,0.0,1.068158,,2026-02-05 17:07:44.757709
+288,Which indicators show asymmetric responses to positive vs. negative shocks?,sql,medium,"The provided database schema `budget_outlays` contains government spending data by function and fiscal year. It does not contain information about ""shocks"" (positive or negative) or metrics that would allow for the identification or measurement of ""asymmetric responses"" to such shocks. Answering this question would require external data on economic or policy shocks and a more complex analytical framework (e.g., time series analysis, econometric modeling) that cannot be performed using only the provided SQL schema. Therefore, this question cannot be answered with the given database.",False,0.0,3.499668,,2026-02-05 17:07:48.257870
+289,How do feedback loops manifest in the relationship between spending and economic outcomes?,sql,medium,"The provided database schema contains information about government budget outlays but does not include data on economic outcomes (e.g., GDP, employment, inflation) that would be necessary to analyze the relationship or feedback loops between spending and economic outcomes. Therefore, this question cannot be answered with the current database.",False,0.0,1.001784,,2026-02-05 17:07:46.057742
+290,What patterns reveal threshold effects or tipping points in economic relationships?,sql,medium,"```sqlite
+WITH YearlyOutlays AS (
+    SELECT
+        fiscal_year,
+        function_name,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year,
+        function_name
+),
+LaggedOutlays AS (
+    SELECT
+        fiscal_year,
+        function_name,
+        total_outlay,
+        LAG(total_outlay, 1, 0) OVER (PARTITION BY function_name ORDER BY fiscal_year) AS previous_year_outlay
+    FROM
+        YearlyOutlays
+)
+SELECT
+    fiscal_year,
+    function_name,
+    total_outlay,
+    previous_year_outlay,
+    CASE
+        WHEN previous_year_outlay > 0 THEN ((total_outlay - previous_year_outlay) * 100.0 / previous_year_outlay",False,0.0,9.088758,,2026-02-05 17:07:55.146870
+291,Which sectors show adaptive vs. rigid responses to economic changes?,sql,medium,"```sqlite
+WITH YearlyOutlays AS (
+    SELECT
+        superfunction,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        superfunction,
+        fiscal_year
+),
+LaggedOutlays AS (
+    SELECT
+        superfunction,
+        fiscal_year,
+        total_outlay,
+        LAG(total_outlay, 1, 0) OVER (PARTITION BY superfunction ORDER BY fiscal_year) AS previous_year_outlay
+    FROM
+        YearlyOutlays
+),
+PercentageChanges AS (
+    SELECT
+        superfunction,
+        fiscal_year,
+        total_outlay,
+        previous_year_outlay,
+        CASE
+            WHEN previous_year_outlay > 0 THEN ABS((total_outlay - previous_year_outlay) * 100.0 / previous_year_outlay)
+            ELSE NULL
+        END AS abs_percentage_change
+    FROM
+        LaggedOutlays
+)
+SELECT
+    superfunction,
+    AVG(abs_percentage_change) AS average_absolute_yoy_percentage_change
+FROM
+    PercentageChanges
+WHERE
+    abs_percentage_change IS NOT NULL
+GROUP BY
+    superfunction
+ORDER BY
+    average_absolute_yoy",False,0.0,9.828162,,2026-02-05 17:07:58.086376
+294,Which indicators show hysteresis or path-dependent patterns?,sql,medium,"SELECT 'Identifying hysteresis or path-dependent patterns requires advanced statistical analysis beyond the capabilities of a standard SQL query. SQL can retrieve and aggregate data, but it cannot perform the complex time-series analysis needed to detect such patterns.' AS analysis_note;",True,1.0,10.148249,,2026-02-05 17:07:59.605320
+296,Which sets of indicators show increasing vs. decreasing synchronization over time?,sql,medium,"I am sorry, but the provided database schema `budget_outlays` does not contain information about ""indicators"" or ""synchronization,"" nor does it provide data that would allow for the analysis of increasing or decreasing synchronization over time. Therefore, I cannot answer this question with the given schema.",False,0.0,1.089968,,2026-02-05 17:07:50.718351
+297,What lead-lag patterns exist between different sectors of the economy?,sql,medium,"```sql
+SELECT
+  fiscal_year,
+  superfunction,
+  SUM(outlay_amount) AS total_outlay
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  fiscal_year,
+  superfunction
+ORDER BY
+  superfunction,
+  fiscal_year",True,1.0,9.348653,,2026-02-05 17:08:00.067536
+298,How do correlation patterns change during normal vs. crisis periods?,sql,medium,"The provided database schema for `budget_outlays` contains government spending data by function and fiscal year. It does not contain information that would allow for the calculation of correlation patterns between different economic indicators or spending categories, nor does it provide a mechanism to define or distinguish between ""normal"" and ""crisis"" periods for such an analysis. Therefore, this question cannot be answered using the current schema.",False,0.0,2.379995,,2026-02-05 17:07:53.704241
+300,What patterns emerge in the co-movement of fiscal and economic variables?,sql,medium,"The database schema provided only contains fiscal variables (`budget_outlays`). It does not include economic variables, which are necessary to analyze the co-movement between fiscal and economic variables. Therefore, a SQL query to answer this question cannot be generated with the current schema.",False,0.0,3.842468,,2026-02-05 17:07:57.547447
+302,Which measurements show convergence vs. divergence patterns over time?,sql,medium,"```sql
+SELECT
+  fiscal_year,
+  function_name,
+  SUM(outlay_amount) AS total_outlay
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  fiscal_year,
+  function_name
+ORDER BY
+  function_name,
+  ",False,0.0,9.240402,,2026-02-05 17:08:04.388351
+305,Which sectors show hub vs. peripheral patterns in economic relationships?,sql,medium,"The provided database schema contains information about government budget outlays by function and fiscal year. It does not contain data on economic relationships between sectors or information that could be used to identify ""hub vs. peripheral patterns"". Therefore, this question cannot be answered with the available data.",False,0.0,1.331355,,2026-02-05 17:07:58.879157
+306,What patterns in spending concentration reveal changing government priorities?,sql,medium,"```sql
+WITH AnnualFunctionOutlays AS (
+  SELECT
+    fiscal_year,
+    function_name,
+    SUM(outlay_amount) AS function_outlay
+  FROM budget_outlays
+  WHERE fiscal_year BETWEEN 2014 AND 2024
+  GROUP BY fiscal_year, function_name
+),
+AnnualTotalOutlays AS (
+  SELECT
+    fiscal_year,
+    SUM(outlay_amount) AS total_annual_outlay
+  FROM budget_outlays
+  WHERE fiscal_year BETWEEN 2014 AND 2024
+  GROUP BY fiscal_year
+)
+SELECT
+  afo.fiscal_year,
+  afo.function_name,
+  afo.function_outlay,
+  ato.total_annual_outlay,
+  (CAST(afo.function_outlay AS REAL) * 100.0 / ato.total_annual_outlay) AS percentage_of_total_outlay
+FROM AnnualFunctionOutlays AS afo
+JOIN AnnualTotalOutlays AS ato
+  ON afo.fiscal_year = ato.fiscal_year
+ORDER BY
+  afo.fiscal_year,
+  percentage_of_total_outlay DESC;
+```",False,0.4,5.656162,,2026-02-05 17:08:03.742848
+308,Which distributional patterns persist vs. change across economic cycles?,sql,medium,"The provided database schema does not contain information about ""economic cycles"" or indicators that could be used to define them (e.g., GDP, unemployment rates, recession periods). Therefore, it is not possible to analyze distributional patterns across economic cycles using the available data.",False,0.0,1.195118,,2026-02-05 17:08:00.074613
+309,What patterns in sectoral composition indicate economic transformation?,sql,medium,"```sql
+WITH AnnualTotalOutlays AS (
+    SELECT
+        fiscal_year,
+        SUM(outlay_amount) AS total_annual_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year
+),
+SuperfunctionOutlays AS (
+    SELECT
+        fiscal_year,
+        superfunction,
+        SUM(outlay_amount) AS superfunction_annual_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year,
+        superfunction
+)
+SELECT
+    sfo.fiscal_year,
+    sfo.superfunction,
+    sfo.superfunction_annual_outlay,
+    ato.total_annual_outlay,
+    CAST(sfo.superfunction_annual_outlay AS REAL) * 100 / ato.total_annual_outlay AS percentage_of_total_outlay
+FROM
+    SuperfunctionOutlays sfo
+JOIN
+    AnnualTotalOutlays ato ON sfo.fiscal_year = ato.fiscal_year
+ORDER BY
+    sfo.superfunction,
+    sfo.fiscal_year;
+```",True,1.0,5.719088,,2026-02-05 17:08:05.324538
+311,Which indicators show increasing vs. decreasing heterogeneity patterns?,sql,medium,"The database schema does not contain sufficient information to calculate ""heterogeneity patterns"" as it typically refers to statistical measures of dispersion (e.g., variance, standard deviation, Gini coefficient) over time, which are not directly supported by the available columns or standard SQL functions in a straightforward manner. The `outlay_amount` is a single value per function per year, not a distribution from",False,0.0,9.076287,,2026-02-05 17:08:09.143947
+315,What patterns in relative prices reveal structural economic changes?,sql,medium,"The provided database schema `budget_outlays` contains information about government spending (outlays) by function and fiscal year, but it does not include any data on prices or relative prices. Therefore, it is not possible to answer the question about patterns in relative prices using the available data.",False,0.0,1.095052,,2026-02-05 17:08:01.169775
+316,Which types of anomalies tend to cluster in time or across indicators?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""anomalies"" or their types, nor does it provide data that would allow for the analysis of clustering behavior of anomalies in time or across indicators. The `budget_outlays` table only contains government spending data.",False,0.0,1.157172,,2026-02-05 17:08:02.327520
+317,What patterns distinguish temporary shocks from permanent shifts?,sql,medium,"The provided database schema contains government spending data (`budget_outlays`) by function and fiscal year. While this data allows for tracking changes in spending over time, it does not inherently contain information or labels that would allow a SQL query to distinguish between ""temporary shocks"" and ""permanent shifts"" in an economic or budgetary sense.
+
+Identifying such patterns typically requires:
+1.  **External definitions or criteria:** What constitutes a ""shock"" versus a ""shift"" (e.g., duration, magnitude, underlying causes).
+2.  **Advanced analytical methods:** Time series analysis, statistical modeling, or comparison with economic indicators, which go beyond the capabilities of a direct SQL query on this schema.
+3.  **Contextual knowledge:** Understanding the events that might have caused changes in outlays.
+
+Therefore, a SQL query cannot directly answer this conceptual question using the given schema. The database provides raw outlay data, but not the analytical framework to categorize changes as temporary or permanent.",False,0.0,2.805345,,2026-02-05 17:08:05.132932
+319,Which indicators show predictable vs. random anomaly patterns?,sql,medium,"The database schema provided (`budget_outlays`) contains government spending data. It does not include information about anomaly patterns, nor does it classify indicators as showing ""predictable"" versus ""random"" anomaly patterns. To answer this question, the database would need to contain pre-computed anomaly detection results and a classification of these anomalies, which is not present in the current schema. Therefore, this question cannot be answered using the available data.",False,0.0,2.500076,,2026-02-05 17:08:06.243225
+320,What patterns in forecast errors reveal systematic biases?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""forecasts"" or ""forecast errors."" The `budget_outlays` table only contains actual outlay amounts. Therefore, I cannot generate a query to identify patterns in forecast errors or systematic biases.",False,0.0,1.108085,,2026-02-05 17:08:05.496496
+322,Which anomalies propagate vs. dissipate across economic indicators?,sql,medium,"-- This question requires advanced statistical analysis (e.g., anomaly detection, cross-correlation, time-series modeling) that cannot be performed directly with a single SQL query using the provided schema and standard SQLite functions. The schema provides raw time-series data but no pre-computed anomalies or tools for complex analytical comparisons across indicators to determine propagation vs. dissipation.",False,0.0,11.052009,,2026-02-05 17:08:16.187209
+325,Which extreme events create lasting vs. temporary pattern changes?,sql,medium,"I am sorry, but the provided database schema `budget_outlays` does not contain information about ""extreme events"" or ""pattern changes"" that would allow me to answer this question. The table only contains government spending data.",False,0.0,0.926853,,2026-02-05 17:08:06.251493
+326,What patterns characterize transitions between economic regimes?,sql,medium,"WITH YearlySuperfunctionOutlays AS (
+    SELECT
+        fiscal_year,
+        superfunction,
+        SUM(outlay_amount) AS total_outlay_for_superfunction
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_",False,0.0,9.075515,,2026-02-05 17:08:14.572209
+328,Which patterns signal impending phase transitions in economic cycles?,sql,medium,"The provided database schema contains information only about government budget outlays. Identifying patterns that signal impending phase transitions in economic cycles typically requires a broader range of economic indicators (e.g., GDP, inflation, unemployment rates, interest rates, consumer confidence, etc.) and sophisticated economic modeling, which cannot be derived solely from the `budget_outlays` table. Therefore, this question cannot be answered with the given database schema.",False,0.0,1.923815,,2026-02-05 17:08:08.167128
+329,What patterns emerge during periods of structural adjustment?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. The `budget_outlays` table contains government spending data, but it does not include information about ""periods of structural adjustment"" or any economic indicators that would allow for the identification of such patterns. To answer this question, I would need additional tables containing economic indicators, policy changes, or specific markers for structural adjustment periods.",False,0.0,1.369897,,2026-02-05 17:08:07.621555
+331,Which indicators show smooth vs. abrupt transition patterns?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        fiscal",False,0.0,9.62384,,2026-02-05 17:08:17.245447
+334,Which transition patterns are reversible vs. irreversible?,sql,medium,"The provided database schema for `budget_outlays` contains information about government spending by function and fiscal year. It does not contain data or attributes that would allow for the identification or classification of ""transition patterns"" as either reversible or irreversible. Therefore, this question cannot be answered with the given schema.",False,0.0,1.364668,,2026-02-05 17:08:09.532474
+335,What patterns characterize the boundaries between economic epochs?,sql,medium,"```sql
+SELECT
+  fiscal_year,
+  superfunction,
+  total_outlay,
+  LAG(total_outlay, 1, 0) OVER (PARTITION BY superfunction ORDER BY fiscal_year) AS previous_year_outlay,
+  CASE
+    WHEN LAG(total_outlay, 1, 0) OVER (PART",False,0.0,9.494991,,2026-02-05 17:08:18.639007
+337,What patterns emerge from the superposition of multiple economic cycles?,sql,medium,"```sqlite
+SELECT
+  fiscal_year,
+  superfunction,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  fiscal_year,
+  superfunction
+ORDER BY
+  fiscal_year,
+  superfunction;
+```",False,0.0,6.038928,,2026-02-05 17:08:15.571640
+338,Which indicators show regular vs. irregular cyclical patterns?,sql,medium,"This question cannot be answered directly using SQL. Identifying ""regular vs. irregular cyclical patterns"" requires advanced time-series analysis and statistical methods that are beyond the capabilities of a standard SQL query. SQL can retrieve the data (e.g., `outlay_amount` over `fiscal_year` for different `function_name`s), but the pattern analysis itself must be performed using external analytical tools or programming languages (like Python with libraries such as Pandas, NumPy, SciPy, or R).",False,0.0,2.146606,,2026-02-05 17:08:16.718935
+341,Which economic cycles show stable vs. evolving characteristics?,sql,medium,"-- The provided database schema `budget_outlays` contains government spending data by function and fiscal year.
+-- It does not contain information that defines ""economic cycles"" or provides metrics to directly classify them as ""stable"" or ""evolving"" characteristics.
+-- Answering this question would require external economic definitions and analytical models beyond the scope of a direct SQL query on the given schema.",False,0.0,9.972144,,2026-02-05 17:08:25.543907
+343,What patterns distinguish endogenous vs. exogenous cycles?,sql,medium,"The database schema provided does not contain information about ""endogenous"" or ""exogenous"" cycles, nor does it have data that can be used to distinguish patterns between them. The `budget_outlays` table contains government spending data, which is not sufficient to answer this conceptual question about economic cycles.",False,0.0,1.343163,,2026-02-05 17:08:17.530967
+344,Which indicators show pro-cyclical vs. counter-cyclical patterns?,sql,medium,"I am sorry, but I cannot answer this question with the provided database schema. To determine pro-cyclical vs. counter-cyclical patterns, I would need data on economic cycles (e.g., GDP, unemployment rates, inflation) in addition to the government budget outlays. The `budget_outlays` table only contains government spending data and does not include any indicators of the economic cycle.",False,0.0,1.701145,,2026-02-05 17:08:18.420135
+348,Which indicators show self-reinforcing vs. self-limiting patterns?,sql,medium,"The provided database schema for `budget_outlays` contains government spending data by function and fiscal year. It does not include information or indicators that would allow for the classification of patterns as ""self-reinforcing"" or ""self-limiting."" This type of analysis would require more complex data, such as time-series data with causal relationships or specific metrics designed to measure such patterns, which are not present in the current schema.",False,0.0,1.271376,,2026-02-05 17:08:18.517180
+349,What patterns reveal multiplier effects in government spending?,sql,medium,"The provided database schema contains information about government spending (budget_outlays) but does not include data on economic outcomes such as GDP, employment, or private sector investment, which would be necessary to identify or analyze multiplier effects. Therefore, it is not possible to answer this question using the current schema.",False,0.0,1.999549,,2026-02-05 17:08:19.530575
+351,Which feedback patterns stabilize vs. destabilize economic systems?,sql,medium,"The provided database schema does not contain information about feedback patterns, economic systems, or their stability. Therefore, this question cannot be answered using the available data.",False,0.0,0.854557,,2026-02-05 17:08:19.275858
+354,Which sectors show the strongest feedback pattern interactions?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""feedback pattern interactions"" or any data that could be used to determine such patterns. The `budget_outlays` table only contains government spending data. Therefore, I cannot answer this question with the available data.",False,0.0,1.142236,,2026-02-05 17:08:19.659479
+355,What patterns reveal the boundaries of feedback mechanism effectiveness?,sql,medium,"The provided database schema for `budget_outlays` contains information about government spending by function and fiscal year. It does not contain any data related to ""feedback mechanisms,"" ""effectiveness,"" or ""boundaries"" of such mechanisms. Therefore, it is not possible to answer this question using the current database.",False,0.0,1.058565,,2026-02-05 17:08:19.698006
+358,Which network patterns predict cascade effects in economic systems?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""network patterns"" or ""cascade effects in economic systems"". The `budget_outlays` table only provides government spending data by function and fiscal year. Therefore, I cannot answer this question with the available data.",False,0.0,1.158198,,2026-02-05 17:08:20.434118
+360,What patterns reveal critical nodes in economic networks?,sql,medium,"```sqlite
+SELECT
+  superfunction,
+  SUM(outlay_amount) AS total_outlay_amount
+FROM budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  superfunction
+ORDER BY
+  total_outlay_amount DESC
+LIMIT 10;
+```",False,0.0,2.154585,,2026-02-05 17:08:21.686137
+361,Which indicators show small-world vs. random network patterns?,sql,medium,"The provided database schema does not contain information about network patterns, indicators, or concepts like ""small-world"" or ""random networks"". Therefore, this question cannot be answered with the available data.",False,0.0,0.958741,,2026-02-05 17:08:20.618297
+364,Which network patterns facilitate vs. impede economic transmission?,sql,medium,"The provided database schema does not contain information about ""network patterns"" or ""economic transmission"" that would allow us to answer this question. The `budget_outlays` table only contains government spending data by function and fiscal year.",False,0.0,1.259598,,2026-02-05 17:08:20.957816
+368,Which indicators show evolutionary vs. revolutionary change patterns?,sql,medium,"The provided database schema `budget_outlays` contains government spending data over time. It does not contain any columns or pre-calculated metrics that would allow for the classification of spending patterns as ""evolutionary"" or ""revolutionary."" Identifying such patterns would require a more complex analysis of trends, volatility, and potentially external definitions or algorithms, which are beyond the scope of the current database schema. Therefore, this question cannot be answered directly using the available data.",False,0.0,2.377601,,2026-02-05 17:08:22.811800
+369,What patterns reveal economic selection and survival mechanisms?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name, fiscal_year",False,0.0,10.054375,,2026-02-05 17:08:30.673710
+371,Which sectors show convergent vs. divergent evolution patterns?,sql,medium,"```sql
+SELECT
+  'Analysis requires statistical modeling beyond standard SQL capabilities to define and identify ""convergent"" vs. ""divergent"" evolution patterns based on budget outlays.' AS analysis_note;
+```",True,1.0,10.821033,,2026-02-05 17:08:31.778972
+374,Which indicators show path-dependent evolutionary patterns?,sql,medium,"```sql
+SELECT
+  function_name,
+  fiscal_year,
+  SUM(outlay_amount) AS total_outlay_for_year
+FROM
+  budget_outlays
+WHERE
+  fiscal_year BETWEEN 2014 AND 2024
+GROUP BY
+  function_name,
+  fiscal_year
+ORDER",False,0.0,10.372819,,2026-02-05 17:08:32.059233
+375,What patterns reveal the pace of economic evolution?,sql,medium,"```sql
+SELECT
+  T1.fiscal_year,
+  T1.total_outlays,
+  CASE
+    WHEN LAG(T1.total_outlays, 1) OVER (ORDER BY T1.fiscal_year) IS NOT NULL AND LAG(T1.total_outlays, 1) OVER (ORDER BY T1.fiscal_year) != 0 THEN (T1.total_outlays - LAG(T1.total_outlays, 1) OVER (ORDER BY T1.fiscal_year)) * 100.0 / LAG(T1.total_outlays, 1) OVER (ORDER BY T1.fiscal_year)
+    ELSE NULL
+  END AS yoy_percentage_change_in_outlays
+FROM (
+  SELECT
+    fiscal_year,
+    SUM(outlay_amount) AS total_outlays
+  FROM
+    budget_outlays
+  WHERE
+    fiscal_year BETWEEN 2014 AND 2024
+  GROUP BY
+    fiscal_year
+) AS T1
+ORDER BY
+  T1.fiscal_year;
+```",True,1.0,7.440038,,2026-02-05 17:08:30.251969
+378,Which indicators show convergent vs. divergent spatial patterns?,sql,medium,"This question cannot be answered with the provided database schema. The `budget_outlays` table contains government spending data over time, but it does not include any information about spatial patterns, convergence, divergence, or indicators that would allow for such an analysis.",False,0.0,1.422489,,2026-02-05 17:08:26.970127
+381,Which spatial patterns persist vs. change across economic cycles?,sql,medium,"The database schema does not contain information about ""spatial patterns"" (e.g., geographical locations, regions, states). The `budget_outlays` table only provides government spending data by function and fiscal year, without any geographical dimension. Therefore, it is not possible to answer a question about spatial patterns using the provided schema.",False,0.0,3.100472,,2026-02-05 17:08:30.071144
+384,Which indicators show distance-decay patterns in economic relationships?,sql,medium,"The provided database schema does not contain information about economic relationships, distance, or indicators that would allow for the identification of ""distance-decay patterns"". The `budget_outlays` table only contains government spending data by function and fiscal year.",False,0.0,1.124597,,2026-02-05 17:08:31.196171
+386,What patterns in economic data reveal information asymmetries?,sql,medium,"```sql
+WITH YearlyOutlays AS (
+    SELECT
+        fiscal_year,
+        function_name,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        fiscal_year, function_",False,0.0,9.905644,,2026-02-05 17:08:40.157723
+391,Which patterns suggest manipulation vs. genuine economic signals?,sql,medium,"```sqlite
+WITH YearlyOutlays AS (
+    SELECT
+        fiscal_year,
+        function_name,
+        SUM(outlay_amount) AS total_outlay
+    FROM budget_outlays
+    WHERE fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY fiscal_year, function_name
+),
+LaggedOut",False,0.0,9.370496,,2026-02-05 17:08:40.044679
+392,What patterns emerge in the relationship between data frequency and reliability?,sql,medium,"I am sorry, but the provided database schema does not contain information about ""data frequency"" or ""reliability."" The `budget_outlays` table only provides government spending data, and there are no columns that track how frequently data is updated or any metrics related to data reliability. Therefore, I cannot generate a SQL query to answer this question.",False,0.0,1.484737,,2026-02-05 17:08:32.680972
+394,Which indicators show leading vs. misleading signal patterns?,sql,medium,"I am sorry, but the provided database schema `budget_outlays` does not contain information about ""indicators"" or ""signal patterns"" (leading or misleading). This table only contains government spending data. Therefore, I cannot answer your question with the available data.",False,0.0,1.177433,,2026-02-05 17:08:32.956846
+396,What patterns reveal the presence of economic thresholds or tipping points?,sql,medium,"```sqlite
+WITH YearlyOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        SUM(outlay_amount) AS total_outlay
+    FROM
+        budget_outlays
+    WHERE
+        fiscal_year BETWEEN 2014 AND 2024
+    GROUP BY
+        function_name,
+        fiscal_year
+),
+LaggedOutlays AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        total_outlay,
+        LAG(total_outlay, 1, 0) OVER (PARTITION BY function_name ORDER BY fiscal_year) AS previous_year_outlay
+    FROM
+        YearlyOutlays
+)
+SELECT
+    function_name,
+    fiscal_year,
+    total_outlay,
+    previous_year_outlay,
+    (total_outlay - previous_year_outlay) AS absolute_change,
+    CASE
+        WHEN previous_year_outlay > 0 THEN ((total_outlay - previous_year_outlay) * 100.0 / previous_year_outlay)
+        ELSE NULL
+    END AS percentage_change
+FROM
+    LaggedOutlays
+WHERE
+    previous_year_outlay IS NOT NULL AND previous_year_outlay != 0
+",False,0.0,9.411261,,2026-02-05 17:08:41.471430
+398,Which indicators show linear vs. nonlinear response patterns?,sql,medium,"```sqlite
+WITH YearlyOutlayChanges AS (
+    SELECT
+        function_name,
+        fiscal_year,
+        outlay_amount,
+        LAG(outlay_amount, 1, 0) OVER (PARTITION BY function_name ORDER BY fiscal_year) AS previous_year_outlay,
+        (outlay_amount - LAG(out",False,0.0,10.134357,,2026-02-05 17:08:42.815756
+115,Which industries have the most detailed GDP breakdowns available,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,14.516168,,2026-02-05 17:08:57.397584
+205,What GDP components show evidence of bubble behavior,function,easy,"I cannot answer this question with the available functions. The provided functions do not offer data on GDP components in a way that would allow for the analysis of ""bubble behavior.""",False,0.0,2.038854,,2026-02-05 17:08:44.924131
+116,What types of price indices exist beyond the standard CPI,function,easy,"I cannot answer this question with the available tools. My functions are designed to retrieve specific economic data, not to provide conceptual explanations or lists of economic indicators.",False,0.0,1.081346,,2026-02-05 17:08:43.969457
+171,What economic activities are excluded from GDP measurements,function,easy,"I cannot answer this question with the available functions. The provided functions are for retrieving specific economic data, not for explaining economic concepts or definitions.",False,0.0,1.02356,,2026-02-05 17:08:43.914961
+141,What industry groupings are used in employment statistics,function,easy,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2023, end_year=2024",False,0.0,22.235074,,2026-02-05 17:09:05.128836
+105,Which productivity measures show impact from government R&D investment,function,easy,"Function: get_productivity_data
+Parameters: start_year=2014, end_year=2024",False,0.0,21.21485,,2026-02-05 17:09:05.129910
+106,What industry GDP contributions predict transportation spending needs,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,13.420465,,2026-02-05 17:08:57.389977
+215,How do productivity measures across industries correlate with research and development budget allocations,function,hard,"I cannot fully answer this question as there is no function available to retrieve ""research and development budget allocations.""",False,0.0,9.405358,,2026-02-05 17:08:54.330071
+264,How do productivity comparisons vary by international standards used,function,medium,"I am sorry, but I cannot answer this question with the available functions. The provided tools do not offer data on international productivity comparisons or standards.",False,0.0,1.64311,,2026-02-05 17:08:55.973397
+155,What industry rankings show the most stability vs reshuffling,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2019, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,3.046163,,2026-02-05 17:08:59.019665
+371,Which sectors show convergent vs. divergent evolution patterns,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",True,0.75,8.013402,,2026-02-05 17:09:05.403479
+153,What productivity metrics show the strongest convergence patterns,function,hard,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,7.737837,,2026-02-05 17:09:05.135514
+197,What GDP measures show evidence of periodic integration,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,9.514949,,2026-02-05 17:09:08.534680
+194,Which productivity measures show evidence of stochastic trends,function,medium,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,7.048626,,2026-02-05 17:09:12.177526
+151,What base years are used for different inflation-adjusted series,function,easy,I cannot answer this question with the available functions. The provided functions retrieve economic data series but do not provide metadata about the base years used for inflation-adjusted series.,False,0.0,1.518493,,2026-02-05 17:09:06.648467
+163,What connections exist between price indices and wage measurements,function,easy,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,15.491805,,2026-02-05 17:09:20.627375
+163,Which industry codes demonstrate the most granular GDP breakdowns,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",True,0.75,8.936746,,2026-02-05 17:09:14.340288
+21,What is the full range of years covered in the employment data,function,easy,"Function: get_employment_cost_index
+Parameters: start_year=2014, end_year=2024",False,0.0,5.574594,,2026-02-05 17:09:12.223145
+152,Which price measures show the highest persistence in deviations,function,easy,"I cannot answer this question with the available functions. The provided functions are for retrieving specific economic data (CPI, ECI, productivity, GDP by industry, regional income) and do not offer tools for statistical analysis such as measuring ""persistence in deviations.""",False,0.0,1.176095,,2026-02-05 17:09:09.710843
+84,What budget functions correlate with consumer price index movements,function,hard,"I cannot answer this question with the available functions. The provided tools do not include any functions to retrieve data on ""budget functions"" or government budgets.",False,0.0,0.865079,,2026-02-05 17:09:10.575996
+108,What price stability measures align with monetary policy-related spending,function,hard,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024",False,0.0,1.789359,,2026-02-05 17:09:12.365409
+202,Which productivity indicators show regime-dependent variance,function,easy,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,5.641159,,2026-02-05 17:09:17.818775
+144,What regional classifications are used in economic data,function,easy,"I cannot answer this question with the available functions. The provided tools are for retrieving specific economic data, not for querying information about regional classifications or metadata.",False,0.0,1.247565,,2026-02-05 17:09:13.470801
+94,What price movements correlate with defense vs civilian spending shifts,function,hard,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024",False,0.0,6.540864,,2026-02-05 17:09:18.906330
+175,Which economic indicators have geographic or sectoral limitations,function,easy,"Function: get_regional_income
+Parameters: state=California, year=2023, line_code=SA1-1
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",False,0.25,7.097222,,2026-02-05 17:09:20.568197
+203,What price measures show evidence of volatility persistence,function,easy,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,4.352153,,2026-02-05 17:09:18.692498
+58,Which GDP industries show consistent quarterly growth within each annual cycle,function,easy,"The available functions do not support retrieving quarterly GDP by industry data, which is necessary to determine consistent quarterly growth within annual cycles. The `get_gdp_by_industry` function only allows for retrieval of annual data.",True,1.0,1.681407,,2026-02-05 17:09:19.500274
+169,Which regional data shows the strongest urban vs rural differentiation,function,medium,"The available functions do not provide data broken down by urban vs. rural areas. The `get_regional_income` function provides data at the state level, which does not allow for urban vs. rural differentiation.",False,0.0,2.148022,,2026-02-05 17:09:20.840596
+251,Which sectors show the most vs. least equitable distribution of growth,function,medium,None of the available functions can provide data on the equitable distribution of growth across sectors.,False,0.0,9.174,,2026-02-05 17:09:28.080384
+248,How do regional economic leading indicators predict federal spending distribution needs,function,hard,"I cannot answer this question with the available functions. The provided tools do not offer data on ""regional economic leading indicators"" or ""federal spending distribution needs.""",False,0.0,1.870245,,2026-02-05 17:09:21.370580
+166,What industry groupings show the most stable classification over time,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,9.730516,,2026-02-05 17:09:30.298809
+14,Which datasets include both nominal and real (inflation-adjusted) values,function,easy,"I cannot answer this question directly by calling any of the available functions. The provided functions are designed to retrieve specific economic data, not to describe the characteristics (like whether they include both nominal and real values) of the datasets themselves.",False,0.0,10.174599,,2026-02-05 17:09:30.802040
+117,Which GDP measurements show benchmark revision effects,function,easy,"I cannot answer this question with the available functions. None of the provided functions offer the capability to query for ""benchmark revision effects"" on GDP measurements. The `get_gdp_by_industry` function retrieves GDP data, but it does not provide information about revisions or their impact.",True,1.0,1.825799,,2026-02-05 17:09:22.666473
+10,Which industries are tracked for GDP contribution measurements,function,easy,"I cannot answer this question with the available functions. The `get_gdp_by_industry` function retrieves GDP data for a specified industry or all industries, but it does not provide a list or description of all industries tracked by the BEA.",True,1.0,1.406954,,2026-02-05 17:09:22.777621
+118,What employment data shows seasonal adjustment inconsistencies,function,easy,"The available functions do not support querying for ""seasonal adjustment inconsistencies"" in employment data or any other data type. The functions are designed to retrieve specific economic indicators, not to analyze methodological issues like seasonal adjustment.",False,0.0,2.147849,,2026-02-05 17:09:24.814395
+151,What employment indicators show the most pronounced cyclical components,function,easy,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,3.639769,,2026-02-05 17:09:26.417443
+32,Which CPI categories show more volatility than core inflation,function,easy,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0L1E, start_year=2014, end_year=2024",False,0.25,9.479611,,2026-02-05 17:09:34.294062
+70,Which employment cost indices show deceleration after initial growth,function,easy,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,3.119982,,2026-02-05 17:09:29.537527
+144,Which productivity indicators show the strongest mean reversion,function,easy,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,9.611085,,2026-02-05 17:09:37.691550
+100,What industry performance metrics predict infrastructure spending,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,2.348511,,2026-02-05 17:09:31.886120
+161,Which budget categories map directly to GDP government consumption components,function,easy,"I cannot answer this question with the available functions. The provided tools are for retrieving specific economic data series (CPI, ECI, productivity, GDP by industry, regional income), not for explaining conceptual mappings between budget categories and GDP components.",False,0.0,1.938191,,2026-02-05 17:09:32.237073
+104,What price trends indicate need for economic adjustment spending,function,medium,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024",False,0.0,1.238544,,2026-02-05 17:09:32.040671
+120,What productivity measures show definitional changes over the period,function,medium,I cannot answer this question with the available tools. The provided functions retrieve economic data but do not offer information about definitional changes in the underlying measures.,False,0.0,1.169906,,2026-02-05 17:09:33.056114
+150,Which GDP components show the strongest momentum characteristics,function,easy,"I cannot directly answer ""Which GDP components show the strongest momentum characteristics"" as the available functions only retrieve raw data and do not perform analytical tasks like identifying momentum. However, to gather the necessary data for such an analysis, you would need to retrieve GDP by industry data for multiple years. Since the `get_gdp_by_industry` function only accepts a single year, you would need",True,1.0,9.775074,,2026-02-05 17:09:41.815827
+185,Which regional dimensions show the most forecasting value,function,hard,"I cannot answer this question with the available functions. The provided tools retrieve economic data but do not offer capabilities to assess ""forecasting value"" or analyze predictive power of regional dimensions.",False,0.0,1.527737,,2026-02-05 17:09:33.764896
+440,How can economic data help identify emerging technologies and sectors before they become economically significant,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",True,0.75,10.83446,,2026-02-05 17:09:43.890658
+309,What patterns in sectoral composition indicate economic transformation,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2018, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,7.128852,,2026-02-05 17:09:40.894443
+38,Which industries contribute disproportionately to economic growth vs. their size,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2014, industry='ALL'
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry='ALL'",True,0.75,2.785417,,2026-02-05 17:09:37.079637
+170,What industry classifications show the most frequent reclassification,function,easy,"I cannot answer this question with the available functions. The provided tools retrieve economic data based on existing industry classifications, but do not provide information about the frequency or nature of industry reclassifications themselves.",False,0.0,1.087837,,2026-02-05 17:09:38.167557
+91,Which industries show GDP performance that tracks government investment,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,6.77038,,2026-02-05 17:09:44.462004
+99,Which price pressures trigger automatic spending adjustments Include analysis of both headline and core measures.,function,easy,"I cannot answer this question with the available functions. The question asks for an analysis of price pressures triggering automatic spending adjustments, which is a conceptual and policy-related question, not a direct data retrieval request that can be fulfilled by the provided BLS and BEA data functions.",False,0.0,1.402675,,2026-02-05 17:09:39.570317
+142,Which employment measures show the greatest distributional skewness Provide comparative analysis with historical context.,function,easy,"I cannot answer this question with the available functions. None of the functions provide data on employment measures that would allow for an analysis of ""distributional skewness"" or comparative analysis in that context.",False,0.0,2.204844,,2026-02-05 17:09:41.775252
+196,Which employment indicators show smooth transition autoregressive patterns Provide comparative analysis with historical context.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,4.749004,,2026-02-05 17:09:45.643566
+162,What regional patterns exist in employment cost variations Provide comparative analysis with historical context.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,8.919529,,2026-02-05 17:09:50.694868
+231,What relationships exist between infrastructure spending and regional economic development indicators Provide comparative analysis with historical context.,function,hard,"Function: get_regional_income
+Parameters: state=California, year=2024",False,0.5,10.300455,,2026-02-05 17:09:52.116385
+191,Which economic sectors show complementary vs. competitive relationships Compare their relative performance over the last 3 years.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,2.388766,,2026-02-05 17:09:46.279530
+8,Which worker classifications are included in the Employment Cost Index Provide comparative analysis with historical context.,function,easy,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.25,9.333795,,2026-02-05 17:09:53.795861
+143,What price categories demonstrate the highest volatility clustering Analyze the trends and identify significant changes.,function,medium,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024",False,0.0,9.291416,,2026-02-05 17:09:54.935051
+382,How do patterns in regional specialization affect economic outcomes Provide comparative analysis with historical context.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+
+Function: get_regional_income
+Parameters: state=California, year=2024",False,0.5,10.455671,,2026-02-05 17:09:56.735311
+195,What price series show GARCH effects in volatility Include analysis of both headline and core measures.,function,easy,"I cannot answer this question with the available functions. The provided tools are for retrieving economic data (CPI, ECI, GDP, etc.), not for performing statistical analysis like identifying GARCH effects in volatility.",False,0.0,0.980007,,2026-02-05 17:09:51.675007
+234,How do alternative GDP measurements compare to standard calculations Provide comparative analysis with historical context.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,8.469923,,2026-02-05 17:10:00.144978
+267,Which GDP components show the largest measurement revisions Provide comparative analysis with historical context.,function,easy,I cannot answer this question with the available functions. The provided functions do not offer data on GDP components or measurement revisions.,False,0.0,1.737216,,2026-02-05 17:09:53.854049
+291,Which sectors show adaptive vs. rigid responses to economic changes Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,2.594679,,2026-02-05 17:09:56.390624
+173,Which regional variations show the strongest persistence over time Provide comparative analysis with historical context.,function,easy,"Function: get_regional_income
+Parameters: state=California, year=2024",False,0.5,9.17856,,2026-02-05 17:10:03.032722
+216,How does the composition of GDP compare to the composition of government spending Provide comparative analysis with historical context.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2015, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2016, industry=ALL
+
+Function: get_gdp_",True,0.75,9.708783,,2026-02-05 17:10:04.643924
+162,How do employment classifications align with industry GDP categories Provide comparative analysis with historical context.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2015, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2016,",True,0.75,10.633122,,2026-02-05 17:10:07.023829
+18,Which industries have GDP contributions below 1% Provide comparative analysis with historical context.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+---
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,4.364272,,2026-02-05 17:10:01.099666
+146,Which industry contributions show the most stable shares over time Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,1.989116,,2026-02-05 17:10:02.134144
+15,What industries contribute more than 5% to total GDP Provide comparative analysis with historical context.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2019, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,5.12146,,2026-02-05 17:10:06.221202
+272,How do budget decentralization patterns affect regional economic development outcomes Provide comparative analysis with historical context.,function,hard,"I cannot answer this question with the available functions. The provided functions retrieve specific economic indicators (CPI, ECI, productivity, GDP by industry, regional income) but do not offer data on ""budget decentralization patterns"" or their effects on regional economic development.",False,0.0,2.123966,,2026-02-05 17:10:04.258170
+7,What categories of goods and services are measured for price changes Analyze the trends and identify significant changes.,function,medium,The available functions do not provide information on the categories of goods and services measured for price changes. They only retrieve the price index data itself.,False,0.0,2.123303,,2026-02-05 17:10:05.156120
+218,How do regional variations in federal spending correlate with regional economic performance metrics Provide comparative analysis with historical context.,function,hard,Data on federal spending is not available through the provided functions.,False,0.0,9.556013,,2026-02-05 17:10:13.814266
+187,Which sectors show the most divergent employment vs. output trends Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,9.68581,,2026-02-05 17:10:14.329804
+177,Which regional patterns show the most seasonal variation Provide comparative analysis with historical context.,function,hard,"The available functions do not provide data with the granularity (e.g., monthly or quarterly) required to analyze ""seasonal variation"" in regional patterns. The `get_regional_income` function provides annual data, which is insufficient for identifying seasonal fluctuations. Therefore, this question cannot be answered with the provided tools.",False,0.0,9.325346,,2026-02-05 17:10:14.481532
+442,"What evidence exists for the economic costs and benefits of environmental policies, and how do these effects distribute across sectors and time Provide comparative analysis with historical context.",function,easy,The available functions do not support answering this question.,False,0.0,1.971737,,2026-02-05 17:10:08.193156
+225,What correlations exist between industry-specific productivity and targeted government spending Provide comparative analysis with historical context.,function,hard,"Function: get_productivity_data
+Parameters: start_year=2014, end_year=2024",False,0.0,9.399398,,2026-02-05 17:10:16.423311
+90,What spending functions respond to productivity measurement changes Provide comparative analysis with historical context.,function,medium,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,3.290163,,2026-02-05 17:10:11.483443
+201,Which sectors benefit most vs. least from government spending increases Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,9.269221,,2026-02-05 17:10:20.752752
+86,What productivity improvements correspond to reduced government spending Provide comparative analysis with historical context.,function,easy,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,3.671179,,2026-02-05 17:10:17.485523
+165,Which regional economic indicators show convergence vs divergence Provide comparative analysis with historical context.,function,medium,"The provided functions are for data retrieval, not for performing comparative analysis or determining convergence/divergence. To answer this question, an analyst would need to retrieve regional income data for multiple states over a period of years and then perform a separate analysis.
+
+However, if the goal is to identify the function that provides the *data* most relevant to ""regional economic indicators"" for a ""comparative",False,0.0,10.085103,,2026-02-05 17:10:24.414973
+104,How are industry classifications organized in the GDP data Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,8.702027,,2026-02-05 17:10:23.183614
+239,Which sectors show self-reinforcing vs. self-correcting dynamics Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,3.892646,,2026-02-05 17:10:20.316033
+88,What GDP industries show leading indicators for budget reallocation Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,8.689057,,2026-02-05 17:10:26.174642
+342,How do patterns in cycle transmission manifest across sectors Provide comparative analysis with historical context.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,8.055483,,2026-02-05 17:10:28.371729
+174,What industry hierarchies show the most stability in definitions Provide comparative analysis with historical context.,function,easy,"I cannot answer this question with the available functions. The provided tools do not offer functionality to analyze industry hierarchies, their stability, or historical context of their definitions.",False,0.0,1.707688,,2026-02-05 17:10:22.460525
+64,Which productivity measures show consistent improvement trends Provide comparative analysis with historical context.,function,medium,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,1.334889,,2026-02-05 17:10:23.795465
+211,Which sectors show the most skewed vs. normal distributions in performance Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,3.601156,,2026-02-05 17:10:26.784859
+178,What industry structures show the most evolution in boundaries Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2015, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2016, industry=ALL
+
+Function: get_gdp_by",True,0.75,9.858166,,2026-02-05 17:10:33.653714
+260,How do trade-exposed vs. protected sectors compare in performance Provide comparative analysis with historical context.,function,medium,"The provided functions do not have the capability to categorize industries as ""trade-exposed"" or ""protected"" to perform the requested comparative analysis. The `get_gdp_by_industry` function can retrieve GDP data for specific industries, but it requires explicit industry codes, which are not provided in the question and cannot be inferred from the ""trade-exposed vs. protected"" distinction. Therefore,",True,1.0,9.917629,,2026-02-05 17:10:34.332670
+193,Which sectors show the strongest vs. weakest links to government spending Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL",True,0.75,69.081544,,2026-02-05 17:11:35.256389
+141,What GDP industries show the most stable rank ordering over time Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2015, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2016",True,0.75,73.742227,,2026-02-05 17:11:40.527248
+150,What demographic breakdowns are available in employment data Analyze the trends and identify significant changes.,function,medium,I cannot answer this question with the available functions. None of the provided functions offer demographic breakdowns for employment data.,False,0.0,1.854085,,2026-02-05 17:10:30.225943
+69,What price categories show accelerating inflation patterns Analyze the trends and identify significant changes.,function,hard,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024",False,0.25,10.292366,,2026-02-05 17:10:40.518379
+182,What industry categorizations show the most economic significance Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2015, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2016, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2017, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2018, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2019, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2020, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2021, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",True,0.75,62.673738,,2026-02-05 17:11:36.327546
+73,What productivity indicators show breakthrough improvements in specific years Provide comparative analysis with historical context.,function,hard,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,1.156944,,2026-02-05 17:10:35.489713
+40,Which industries show the strongest vs. weakest GDP contributions Provide comparative analysis with historical context.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,64.981332,,2026-02-05 17:11:40.471153
+181,Which sectors show consistent growth regardless of overall economic conditions Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,65.010345,,2026-02-05 17:11:45.528781
+211,Which budget functions show the strongest correlation with specific industry GDP performance over time Compare their relative performance over the last 3 years.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2024",False,0.5,15.256602,,2026-02-05 17:11:50.513793
+188,How do capital-intensive vs. labor-intensive industries compare in economic contribution Provide comparative analysis with historical context.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2023, industry='ALL'
+Function: get_gdp_by_industry
+Parameters: year=2014, industry='ALL'",True,0.75,14.793891,,2026-02-05 17:11:51.121800
+123,Which industry classifications show reclassification effects over time Compare their relative performance over the last 3 years.,function,medium,"I cannot answer the part of the question regarding ""reclassification effects over time"" as there is no function available to retrieve data on industry reclassifications. However, I can provide the function calls to compare the relative performance of industries over the last 3 years.
+
+Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL",True,0.75,14.841289,,2026-02-05 17:11:55.312544
+95,Which productivity sectors align with education and research spending Compare their relative performance over the last 3 years.,function,hard,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2022, end_year=2024",False,0.0,14.322079,,2026-02-05 17:11:54.849543
+66,Which industries show GDP contribution volatility increasing over time Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2015, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2016,",True,0.75,10.246751,,2026-02-05 17:11:55.775690
+137,What industry groups contribute to GDP growth acceleration periods Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,8.410347,,2026-02-05 17:11:58.924391
+229,Which sectors show the highest vs. lowest returns on government investment Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,5.501415,,2026-02-05 17:11:56.623430
+181,Which regional measurements show the strongest policy responsiveness Provide comparative analysis with historical context.,function,easy,"Function: get_regional_income
+Parameters: state=California, year=2023, line_code=SA1-1",False,0.0,7.697276,,2026-02-05 17:12:02.547173
+6,Which economic indicators are tracked in the Consumer Price Index data Include analysis of both headline and core measures.,function,easy,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2020, end_year=2024",False,0.25,8.4043,,2026-02-05 17:12:03.716989
+195,Which industries show convergent vs. divergent productivity trends Provide comparative analysis with historical context.,function,medium,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,9.319068,,2026-02-05 17:12:05.094995
+37,How do service sector contributions compare to manufacturing contributions Provide comparative analysis with historical context.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2019, industry=ALL, table_id=1
+Function: get_gdp_by_industry
+Parameters: year=2024,",True,0.75,9.591163,,2026-02-05 17:12:06.214870
+225,Which sectors show the most vs. least structural interdependence Compare their relative performance over the last 3 years.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,6.154552,,2026-02-05 17:12:05.079194
+81,Which budget functions correlate positively with GDP industry performance Compare their relative performance over the last 3 years.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL",True,0.75,9.590894,,2026-02-05 17:12:12.138157
+77,What industries show GDP contribution momentum effects Provide comparative analysis with historical context.,function,easy,"Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2019, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",True,0.75,6.618606,,2026-02-05 17:12:10.335708
+96,What GDP components show sensitivity to fiscal policy changes,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,8.572614,,2026-02-05 17:12:13.653216
+212,How do regional personal income patterns align with federal spending allocations to those regions,function,hard,"I cannot fully answer this question as there is no function available to retrieve data on ""federal spending allocations to those regions."" I can only provide data related to ""regional personal income patterns.""",False,0.0,10.12008,,2026-02-05 17:12:15.215309
+266,How do different inflation calculation methods compare in results,function,medium,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,6.685339,,2026-02-05 17:12:12.900587
+102,What GDP sectors demonstrate sensitivity to regulatory spending,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,9.533726,,2026-02-05 17:12:19.869665
+36,Which industries show higher GDP growth rates than the national average,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,8.858912,,2026-02-05 17:12:20.997131
+20,Which CPI categories show price changes above 10%,function,medium,"The provided functions do not support querying for ""CPI categories"" in a general way, nor do they support calculating price changes or filtering results based on a percentage threshold. The `get_cpi_data` function requires a specific `series_id` for a single CPI series and does not allow for comparison across multiple categories or conditional filtering. Therefore, this question cannot be answered with the available functions",False,0.5,10.611839,,2026-02-05 17:12:23.512529
+43,How do current inflation rates compare to historical averages Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024
+
+Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,8.160795,,2026-02-05 17:12:21.814064
+85,Which employment cost trends align with specific industry GDP patterns Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024
+
+Function: get_gdp_by_industry
+Parameters: year=2014, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2015, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2016, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2017, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2018, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2019, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2020, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2021, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2022, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1
+
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",False,0.4583333333333333,5.186716,,2026-02-05 17:12:20.402123
+216,What patterns emerge when comparing inflation-adjusted spending growth with real GDP growth by sector Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",False,0.5,8.87145,,2026-02-05 17:12:28.741287
+98,What employment trends predict healthcare spending adjustments Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,5.057589,,2026-02-05 17:12:25.459982
+213,What relationships exist between employment cost trends and budget outlays for education and training programs Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,5.283574,,2026-02-05 17:12:26.280791
+249,Which patterns in employment data best forecast education and training budget requirements Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"I cannot answer this question with the available functions. The provided functions do not offer the specific employment data (e.g., by occupation, skill gaps, or training needs) required to assess patterns for forecasting education and training budget requirements or to analyze causal relationships and econometric insights in that context.",False,0.0,1.695621,,2026-02-05 17:12:23.509748
+97,Which budget functions show multiplier effects on industry performance Evaluate cross-sector dependencies and spillover effects on economic stability.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",True,0.75,9.782725,,2026-02-05 17:12:33.292591
+48,How do government spending trends compare to private sector investment trends Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,I cannot answer this question with the available functions. The provided functions do not offer data on government spending trends or private sector investment trends that would allow for a direct comparison and analysis of underlying economic factors and policy implications.,False,0.0,1.916746,,2026-02-05 17:12:25.429315
+79,What employment measures show structural breaks in trend Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"I cannot answer this question with the available functions. The provided tools are for retrieving specific economic data, not for performing analytical tasks such as identifying structural breaks, assessing predictive relationships, or identifying leading indicators.",False,0.0,1.353755,,2026-02-05 17:12:26.783270
+45,How do recent wage growth trends compare to pre-2020 trends Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_employment_cost_index
+Parameters: start_year=2014, end_year=2019
+
+Function: get_employment_cost_index
+Parameters: start_year=2020, end_year=2024",False,0.0,3.145576,,2026-02-05 17:12:28.605830
+110,What productivity differential patterns predict regional development spending Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"Function: get_productivity_data
+Parameters: start_year=2014, end_year=2024",False,0.0,8.929148,,2026-02-05 17:12:35.210119
+101,Which budget allocations show feedback effects on measured productivity Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,2.706394,,2026-02-05 17:12:29.489742
+78,Which price indices demonstrate regime changes in volatility Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,8.889484,,2026-02-05 17:12:37.495397
+190,How do traditional vs. emerging sectors compare in growth dynamics Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,69.968363,,2026-02-05 17:13:38.709703
+119,Which price indices demonstrate base year effect patterns Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,7.138767,,2026-02-05 17:12:36.628766
+232,How do different inflation measures compare in capturing price pressures Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,4.099472,,2026-02-05 17:12:37.392345
+89,Which price index categories predict employment cost changes Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024
+
+Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024",False,0.0,6.107875,,2026-02-05 17:12:41.318204
+315,What patterns in relative prices reveal structural economic changes Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024",False,0.0,9.275039,,2026-02-05 17:12:45.904118
+103,Which employment patterns predict budget function reorganization Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"I cannot answer this question with the available functions. The provided functions are for retrieving specific economic data (CPI, ECI, productivity, GDP, regional income) and do not support assessing causal relationships, predicting budget function reorganization, or providing econometric insights into such patterns.",False,0.0,1.712099,,2026-02-05 17:12:39.104697
+93,Which employment indicators predict changes in social program spending Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"I cannot answer this question. The available functions do not provide data on ""social program spending"" or tools for assessing causal relationships and econometric insights.",False,0.0,1.589413,,2026-02-05 17:12:39.084867
+218,How do different sectors' shares of employment compare to their shares of output Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,59.496129,,2026-02-05 17:13:38.581081
+72,Which GDP industries demonstrate maturity curves (slowing growth) Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,59.919638,,2026-02-05 17:13:39.024430
+107,Which employment cost trends correlate with education spending levels Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,5.037028,,2026-02-05 17:12:46.355277
+33,How do different worker categories compare in total compensation growth Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.25,8.807708,,2026-02-05 17:12:54.711909
+251,How do productivity trend patterns relate to long-term infrastructure investment needs Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,3.186536,,2026-02-05 17:12:49.541911
+436,"How do patterns in economic data reveal the process of technological adoption and its effects on productivity, employment, and economic structure Assess causal relationships and provide econometric insights into observed patterns.",function,hard,"Function: get_productivity_data
+Parameters: start_year=2014, end_year=2024
+---
+Function: get_employment_cost_index
+Parameters: start_year=2014, end_year=2024
+---
+Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",False,0.16666666666666666,49.223247,,2026-02-05 17:13:38.765244
+301,How do spillover effects create patterns across related economic sectors Evaluate cross-sector dependencies and spillover effects on economic stability.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,44.547147,,2026-02-05 17:13:39.259115
+82,What spending categories show inverse relationships with productivity growth Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.25,14.770516,,2026-02-05 17:13:53.351822
+83,Which industries have GDP growth that predicts budget allocation changes Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,11.475701,,2026-02-05 17:13:50.185493
+109,Which GDP volatility patterns predict emergency spending activation Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"The provided functions are for retrieving economic data (CPI, ECI, Productivity, GDP by industry, Regional Income). They do not support assessing causal relationships, predicting emergency spending activation, or providing econometric insights into observed patterns. Therefore, this question cannot be answered with the available tools.",False,0.0,14.285403,,2026-02-05 17:13:53.050777
+186,How do productivity gains compare across different industries Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,14.911342,,2026-02-05 17:13:53.935858
+252,How do different percentiles compare in wage and income measurements Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"The available functions do not provide data on wage and income measurements by different percentiles, nor do they offer tools to analyze the underlying economic factors driving these differences or their policy implications. Therefore, this question cannot be answered with the current set of tools.",False,0.0,7.060021,,2026-02-05 17:13:46.319405
+46,How do inflation rates compare to wage growth rates across different periods Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+---
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,2.227362,,2026-02-05 17:13:48.547077
+242,How do diffusion indices compare across different economic sectors Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"I cannot answer this question with the available functions. None of the functions provide data on ""diffusion indices"".",False,0.0,1.15022,,2026-02-05 17:13:49.697403
+31,How do private sector wage increases compare to public sector wage increases Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_employment_cost_index
+Parameters: series_id=CIU2010000000000I, start_year=2014, end_year=2024
+Function: get_employment_cost_index
+Parameters: series_id=CIU3010000000000I, start_year=2014, end_year=2024",False,0.25,5.575203,,2026-02-05 17:13:55.273359
+49,Which economic indicators show stronger correlation with GDP growth Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL",True,0.75,9.551207,,2026-02-05 17:13:59.736779
+61,What industries demonstrate seasonal employment patterns across monthly data Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"I am sorry, but I cannot answer this question with the available functions. None of the provided functions offer monthly employment data by industry, which would be necessary to identify seasonal employment patterns.",False,0.0,1.428673,,2026-02-05 17:13:54.479556
+35,How does wage growth compare to productivity growth across sectors Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024
+---
+Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,3.534116,,2026-02-05 17:13:56.886009
+220,How do direct vs. indirect economic effects compare across sectors Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"I cannot answer this question with the available functions. The provided functions retrieve specific economic data points (CPI, ECI, productivity, GDP by industry, regional income) but do not perform analysis on direct vs. indirect economic effects, underlying factors, or policy implications.",False,0.0,1.65065,,2026-02-05 17:13:55.586579
+354,Which sectors show the strongest feedback pattern interactions Evaluate cross-sector dependencies and spillover effects on economic stability.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL, table_id=1",True,0.75,5.234761,,2026-02-05 17:13:59.714376
+204,Which employment series show structural change in persistence Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,9.092015,,2026-02-05 17:14:04.365436
+62,Which price indices show compound annual growth rates above 5% Identify leading indicators and assess predictive relationships with other economic measures.,function,hard,"Function: get_cpi_data
+Parameters: series_id=CUUR0000SA0, start_year=2014, end_year=2024
+
+Function: get_employment_cost_index
+Parameters: series_id=CIU1010000000000I, start_year=2014, end_year=2024",False,0.0,5.037489,,2026-02-05 17:14:00.624195
+228,How do different productivity measurements compare in capturing economic progress Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_productivity_data
+Parameters: series_id=PRS85006092, start_year=2014, end_year=2024",False,0.0,6.162291,,2026-02-05 17:14:03.048378
+217,Which budget categories show the most responsive relationship to changes in unemployment indicators Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"I cannot answer this question with the available functions. The provided tools do not offer data on ""budget categories"" or ""unemployment indicators"" to assess their relationship.",False,0.0,1.612634,,2026-02-05 17:14:01.327074
+297,What lead-lag patterns exist between different sectors of the economy Evaluate cross-sector dependencies and spillover effects on economic stability.,function,hard,"Function: get_gdp_by_industry
+Parameters: year=2023, industry=ALL",True,0.75,7.950062,,2026-02-05 17:14:07.687113
+257,Which sectors show similar vs. different patterns compared to other countries Analyze the underlying economic factors driving these differences and their policy implications.,function,hard,"I am sorry, but I cannot answer this question with the available functions. The provided tools do not offer data for international comparisons or analysis of policy implications.",False,0.0,1.813253,,2026-02-05 17:14:02.437540
+305,Which sectors show hub vs. peripheral patterns in economic relationships Evaluate cross-sector dependencies and spillover effects on economic stability.,function,hard,"I cannot answer this question with the available functions. The provided functions offer macroeconomic indicators (CPI, ECI, productivity) and industry-specific GDP or regional income data, but they do not provide the necessary data or analytical capabilities to evaluate cross-sector dependencies, spillover effects, or identify ""hub vs. peripheral patterns"" in economic relationships. This type of analysis typically requires input-output tables or more complex inter-industry data which are not accessible through these functions.",False,0.0,2.792762,,2026-02-05 17:14:04.119885
+92,What budget functions demonstrate crowding-out effects with private GDP Assess causal relationships and provide econometric insights into observed patterns.,function,hard,"I cannot answer this question with the available functions. The provided tools are for retrieving specific economic data (CPI, ECI, productivity, GDP by industry, regional income) and do not support analysis of budget functions, crowding-out effects, causal relationships, or econometric insights.",False,0.0,1.563216,,2026-02-05 17:14:04.000829
+39,How do different sectors compare in terms of economic stability Analyze the underlying economic factors driving these differences and their policy implications.,function,medium,"Function: get_gdp_by_industry
+Parameters: year=2024, industry=ALL, table_id=1",True,0.75,4.314769,,2026-02-05 17:14:07.363290
+413,"What role does economic diversity - across sectors, regions, and policy tools - play in creating resilient economic systems, and how can this be measured and optimized",function,easy,"The available functions are designed to retrieve specific economic data points (e.g., CPI, ECI, GDP by industry, regional income). They do not provide capabilities for theoretical analysis, measurement of economic diversity's role in resilience, or optimization strategies. Therefore, this question cannot be answered using the provided functions.",False,0.0,1.247016,,2026-02-05 17:14:05.247970
